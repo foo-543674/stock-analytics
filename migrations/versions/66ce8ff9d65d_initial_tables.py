@@ -72,13 +72,6 @@ def upgrade():
         sa.Column("nickname", sa.String(100), nullable=False),
     )
     op.create_table(
-        "credentials",
-        sa.Column("id", sa.String(26), primary_key=True),
-        sa.Column("user_id", sa.String(26), sa.ForeignKey(
-            "users.id"), nullable=False, unique=True),
-        sa.Column("hashed_password", sa.String(256), nullable=False),
-    )
-    op.create_table(
         "investors",
         sa.Column("id", sa.String(26), primary_key=True),
         sa.Column("user_id", sa.String(26), sa.ForeignKey(
@@ -108,7 +101,6 @@ def downgrade():
     op.drop_table("portfolio_items")
     op.drop_table("portfolios")
     op.drop_table("investors")
-    op.drop_table("credentials")
     op.drop_table("users")
     op.drop_table("ir_scores")
     op.drop_table("ir_reports")
