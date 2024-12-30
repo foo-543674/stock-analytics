@@ -1,0 +1,70 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the
+// README at: https://github.com/devcontainers/templates/tree/main/src/ubuntu
+{
+	"name": "stock-analytics-dev",
+	// Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
+	"image": "mcr.microsoft.com/devcontainers/base:jammy",
+	"features": {
+		"ghcr.io/devcontainers/features/docker-outside-of-docker:1": {},
+		"ghcr.io/devcontainers/features/python:1": {},
+		"ghcr.io/devcontainers/features/rust:1": {},
+		"ghcr.io/devcontainers/features/node:1": {},
+		"ghcr.io/devcontainers-extra/features/ts-node:1": {},
+	},
+	"customizations": {
+		"vscode": {
+			"settings": {
+				"editor.indentSize": "tabSize",
+				"editor.tabSize": 2,
+				"python.pythonPath": "/usr/local/python/current/bin/python",
+				"files.eol": "\n",
+				"python.linting.enabled": true,
+				"python.linting.pylintEnabled": false,
+				"python.linting.pep8Enabled": false,
+				"python.linting.flake8Enabled": true,
+				"python.linting.flake8Args": [
+					"--ignore=E111, E114, E402, E501"
+				],
+				"python.formatting.provider": "autopep8",
+				"python.formatting.autopep8Args": [
+					"--indent-size=2",
+					"--ignore=E111, E114, E402, E501"
+				],
+				"[python]": {
+					"editor.tabSize": 2,
+					"editor.formatOnSave": true,
+					"editor.formatOnPaste": false,
+					"editor.formatOnType": false
+				},
+			},
+			"extensions": [
+				"ms-python.python",
+				"ms-python.debugpy",
+				"yoavbls.pretty-ts-errors",
+				"esbenp.prettier-vscode",
+				"rust-lang.rust-analyzer",
+				"mhutchie.git-graph",
+				"GitHub.copilot",
+				"GitHub.copilot-chat",
+				"codezombiech.gitignore",
+				"eamodio.gitlens",
+				"vitest.explorer",
+				"mikestead.dotenv",
+				"ms-vscode.makefile-tools",
+				"ms-python.autopep8",
+				"ms-python.flake8",
+				"oderwat.indent-rainbow",
+			]
+		}
+	}
+	// Features to add to the dev container. More info: https://containers.dev/features.
+	// "features": {},
+	// Use 'forwardPorts' to make a list of ports inside the container available locally.
+	// "forwardPorts": [],
+	// Use 'postCreateCommand' to run commands after the container is created.
+	// "postCreateCommand": "uname -a",
+	// Configure tool-specific properties.
+	// "customizations": {},
+	// Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
+	// "remoteUser": "root"
+}
