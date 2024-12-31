@@ -19,6 +19,11 @@
 				"editor.detectIndentation": false,
 				"python.pythonPath": "/usr/local/python/current/bin/python",
 				"files.eol": "\n",
+        "python.testing.pytestArgs": [
+          "scripts"
+        ],
+        "python.testing.unittestEnabled": false,
+        "python.testing.pytestEnabled": true,
 				"python.linting.enabled": true,
 				"python.linting.pylintEnabled": false,
 				"python.linting.pep8Enabled": false,
