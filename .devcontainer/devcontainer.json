@@ -54,6 +54,7 @@
 				"ms-python.autopep8",
 				"ms-python.flake8",
 				"oderwat.indent-rainbow",
+				"GitHub.vscode-github-actions"
 			]
 		}
 	}
