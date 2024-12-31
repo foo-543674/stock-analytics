@@ -16,6 +16,7 @@
 			"settings": {
 				"editor.indentSize": "tabSize",
 				"editor.tabSize": 2,
+				"editor.detectIndentation": false,
 				"python.pythonPath": "/usr/local/python/current/bin/python",
 				"files.eol": "\n",
 				"python.linting.enabled": true,
@@ -36,6 +37,16 @@
 					"editor.formatOnPaste": false,
 					"editor.formatOnType": false
 				},
+				"[rust]": {
+					"editor.tabSize": 2,
+					"editor.formatOnSave": true,
+					"editor.formatOnPaste": false,
+					"editor.formatOnType": false
+				},
+        "rust-analyzer.testExplorer": true,
+				"rust-analyzer.rustfmt.extraArgs": [
+					"--tab-spaces=2"
+				],
 			},
 			"extensions": [
 				"ms-python.python",
@@ -54,7 +65,8 @@
 				"ms-python.autopep8",
 				"ms-python.flake8",
 				"oderwat.indent-rainbow",
-				"GitHub.vscode-github-actions"
+				"GitHub.vscode-github-actions",
+				"tamasfe.even-better-toml"
 			]
 		}
 	}
