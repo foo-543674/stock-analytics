@@ -2,7 +2,7 @@ use std::error::Error;
 use std::fmt;
 
 #[derive(Debug)]
-pub struct RepositoryError(Box<dyn Error>);
+pub struct RepositoryError(Box<dyn Error + Send + Sync>);
 
 impl fmt::Display for RepositoryError {
   fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {

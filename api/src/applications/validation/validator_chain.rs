@@ -7,7 +7,7 @@ pub struct ValidatorChain<T> {
   validators: Vec<Box<dyn Validator<T>>>
 }
 
-impl<T> ValidatorChain<T> {
+impl<T: Send + Sync> ValidatorChain<T> {
   pub fn new(validators: Vec<Box<dyn Validator<T>>>) -> Self {
     ValidatorChain {
       validators
