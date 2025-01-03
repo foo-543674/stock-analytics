@@ -52,7 +52,7 @@ impl<T> ValidatorChain<T> {
 #[cfg(test)]
 mod tests {
     use std::iter;
-    use crate::applications::{common::resource_key::resource_key, validation::validator::MockValidator};
+    use crate::applications::{common::resource_key::resource_key, validation::{validation_failure::validation_failure, validator::MockValidator}};
 
   #[test]
   fn validator_chain_should_use_all_validators() {
@@ -101,7 +101,7 @@ mod tests {
       .map(|k| {
         let mut mock = MockValidator::new();
         mock.expect_validate().times(1).returning(|_| Box::pin(async { 
-          Err(ApplicationError::ValidationError(vec![ValidationFailure::new(k.to_string(), resource_key!("foo"))]))
+          Err(ApplicationError::ValidationError(vec![validation_failure!(k, "foo")]))
         }));
         mock
       })
@@ -125,7 +125,7 @@ mod tests {
       .map(|k| {
         let mut mock = MockValidator::new();
         mock.expect_validate().times(1).returning(|_| Box::pin(async { 
-          Err(ApplicationError::ValidationError(vec![ValidationFailure::new(k.to_string(), resource_key!("foo"))]))
+          Err(ApplicationError::ValidationError(vec![validation_failure!(k, "foo")]))
         }));
         mock
       })

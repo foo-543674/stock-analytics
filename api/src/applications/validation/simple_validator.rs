@@ -31,19 +31,19 @@ impl<T: Send + Sync> Validator<T> for SimpleValidator<T> {
 #[cfg(test)]
 mod tests {
   use super::*;
-  use crate::applications::validation::validation_failure::ValidationFailure;
+  use crate::applications::validation::validation_failure::validation_failure;
   use crate::applications::common::resource_key::resource_key;
 
   #[test]
   fn simple_validator_should_return_ok_when_true() {
-    let validator = SimpleValidator::new(|_| true, || ValidationFailure::new("field".to_string(), resource_key!("key")));
+    let validator = SimpleValidator::new(|_| true, || validation_failure!("field", "key"));
     let result = futures::executor::block_on(validator.validate(&"target"));
     assert!(result.is_ok());
   }
 
   #[test]
   fn simple_validator_should_return_error_when_false() {
-    let validator = SimpleValidator::new(|_| false, || ValidationFailure::new("field".to_string(), resource_key!("key")));
+    let validator = SimpleValidator::new(|_| false, || validation_failure!("field", "key"));
     let result = futures::executor::block_on(validator.validate(&"target"));
     assert!(result.is_err());
   }

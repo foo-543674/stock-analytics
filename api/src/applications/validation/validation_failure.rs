@@ -27,3 +27,11 @@ impl std::fmt::Display for ValidationFailure{
     write!(f, "{}:{}", self.field, self.keys.iter().map(|key| key.to_string()).collect::<Vec<_>>().join(","))
   }
 }
+
+macro_rules! validation_failure {
+  ($field:expr, $key:expr $(, $params:expr)* $(,)?) => {
+    $crate::applications::validation::validation_failure::ValidationFailure::new($field.to_string(), resource_key!($key $(, $params)*))
+  };
+}
+
+pub(crate) use validation_failure;
