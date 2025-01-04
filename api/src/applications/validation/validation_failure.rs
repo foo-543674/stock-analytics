@@ -35,3 +35,32 @@ macro_rules! validation_failure {
 }
 
 pub(crate) use validation_failure;
+
+#[cfg(test)]
+mod tests {
+  use super::*;
+  use crate::applications::common::resource_key::resource_key;
+
+  #[test]
+  fn validation_failure_should_able_to_merge_keys() {
+    let failure1 = validation_failure!("field", "key1", "param1");
+    let failure2 = validation_failure!("field", "key2", "param2");
+    let merged = failure1.merge(&failure2);
+    assert_eq!(merged.field, "field");
+    assert_eq!(merged.keys.len(), 2);
+    assert_eq!(merged.keys[0], resource_key!("key1", "param1"));
+    assert_eq!(merged.keys[1], resource_key!("key2", "param2"));
+  }
+
+  #[test]
+  fn validation_failure_should_display_field_and_key_and_params() {
+    let failure = validation_failure!("field", "key", "param");
+    assert_eq!(failure.to_string(), "field:key(param)");
+  }
+
+  #[test]
+  fn validation_failure_should_allow_not_string_params() {
+    let failure = validation_failure!("field", "key", 1);
+    assert_eq!(failure.to_string(), "field:key(1)");
+  }
+}
