@@ -2,6 +2,7 @@ use crate::domains::macros::entity_id::*;
 
 define_id!(CategoryId);
 
+#[derive(Debug, Clone)]
 pub struct Category {
   pub id: CategoryId,
   pub name: String,

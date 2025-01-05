@@ -27,6 +27,7 @@ impl BrandCode {
   }
 }
 
+#[derive(Debug, Clone)]
 pub struct Brand {
   pub id: BrandId,
   pub name: String,

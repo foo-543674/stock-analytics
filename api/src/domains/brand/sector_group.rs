@@ -28,6 +28,7 @@ impl SectorGroupCode {
   }
 }
 
+#[derive(Debug, Clone)]
 pub struct SectorGroup {
   pub id: SectorGroupId,
   pub name: String,
