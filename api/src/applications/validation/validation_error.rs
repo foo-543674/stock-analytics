@@ -8,19 +8,19 @@ macro_rules! validation_error {
 
   ($field:literal, $($keys:expr),+) => {
     ApplicationError::ValidationError(
-      validation_failure!($field, $($keys),+)
+      crate::applications::validation::validation_failure::validation_failure!($field, $($keys),+)
     )
   };
 
   ($field:expr, $($keys:expr),+) => {
     ApplicationError::ValidationError(
-      validation_failure!($field, $($keys),+)
+      crate::applications::validation::validation_failure::validation_failure!($field, $($keys),+)
     )
   };
 
   (@list $($fields:expr),+) => {{
     ApplicationError::ValidationError(
-      validation_failure!(@list $($fields),+)
+      crate::applications::validation::validation_failure::validation_failure!(@list $($fields),+)
     )
   }};
 }
@@ -59,6 +59,130 @@ impl<T> ResultExt<T, ApplicationError> for Result<T, ApplicationError> {
       (Ok(_), Err(ApplicationError::ValidationError(failures))) => Err(validation_error!(failures)),
       (Err(err), _) => Err(err),
       (_, Err(err)) => Err(err),
+    }
+  }
+}
+
+#[cfg(test)]
+mod tests {
+  use super::*;
+  use crate::applications::validation::{
+    validation_failure::validation_failure,
+    validation_message_keys::{
+      numeric_only,
+      required
+    }
+  };
+
+  #[test]
+  fn is_validation_error_and_has_field_return_true_when_field_exists() {
+    let result: Result<(), ApplicationError> = Err(validation_error!("field", required()));
+    assert!(result.is_validation_error_and_has_field("field"));
+  }
+
+  #[test]
+  fn is_validation_error_and_has_field_return_false_when_field_does_not_exist() {
+    let result: Result<(), ApplicationError> = Err(validation_error!("field", required()));
+    assert!(!result.is_validation_error_and_has_field("another_field"));
+  }
+
+  #[test]
+  fn add_or_overwrite_validation_failure_overwrite_ok_when_other_is_err() {
+    let result: Result<(), ApplicationError> = Ok(());
+    let failure = validation_failure!("field", required());
+    let result = result.add_or_overwrite_validation_failure(&failure);
+    if let Err(ApplicationError::ValidationError(failure)) = result {
+      assert!(failure.has_field("field"));
+    } else {
+      panic!("Expected error but got {:?}", result);
+    }
+  }
+
+  #[test]
+  fn add_or_overwrite_validation_failure_add_err_when_other_is_err() {
+    let result: Result<(), ApplicationError> = Err(validation_error!("field1", required()));
+    let failure = validation_failure!("field2", numeric_only());
+    let result = result.add_or_overwrite_validation_failure(&failure);
+    if let Err(ApplicationError::ValidationError(failure)) = result {
+      assert!(failure.has_field("field1"));
+      assert!(failure.has_field("field2"));
+      assert_eq!(failure.fields_count(), 2);
+    } else {
+      panic!("Expected error but got {:?}", result);
+    }
+  }
+
+  #[test]
+  fn add_or_overwrite_validation_failure_return_as_is_when_not_validation_error() {
+    let result: Result<(), ApplicationError> = Err(ApplicationError::UnexpectedError("unexpected".to_string()));
+    let failure = validation_failure!("field", numeric_only());
+    let result = result.add_or_overwrite_validation_failure(&failure);
+    if let Err(ApplicationError::UnexpectedError(message)) = result {
+      assert_eq!(message, "unexpected");
+    } else {
+      panic!("Expected error but got {:?}", result);
+    }
+  }
+
+  #[test]
+  fn merge_or_overwrite_when_either_error_return_ok_when_both_ok_and_value_not_change() {
+    let result1: Result<String, ApplicationError> = Ok("before".to_string());
+    let result2: Result<String, ApplicationError> = Ok("after".to_string());
+    let result = result1.merge_or_overwrite_when_either_error(result2);
+    if let Ok(value) = result {
+      assert_eq!(value, "before");
+    } else {
+      panic!("Expected Ok but got {:?}", result);
+    }
+  }
+
+  #[test]
+  fn merge_or_overwrite_when_either_error_return_merged_validation_error_when_both_validation_error() {
+    let result1: Result<String, ApplicationError> = Err(validation_error!("field1", required()));
+    let result2: Result<String, ApplicationError> = Err(validation_error!("field2", numeric_only()));
+    let result = result1.merge_or_overwrite_when_either_error(result2);
+    if let Err(ApplicationError::ValidationError(failure)) = result {
+      assert!(failure.has_field("field1"));
+      assert!(failure.has_field("field2"));
+      assert_eq!(failure.fields_count(), 2);
+    } else {
+      panic!("Expected error but got {:?}", result);
+    }
+  }
+
+  #[test]
+  fn merge_or_overwrite_when_either_error_overwrite_ok_to_validation_error() {
+    let result1: Result<String, ApplicationError> = Ok("before".to_string());
+    let result2: Result<String, ApplicationError> = Err(validation_error!("field", required()));
+    let result = result1.merge_or_overwrite_when_either_error(result2);
+    if let Err(ApplicationError::ValidationError(failure)) = result {
+      assert!(failure.has_field("field"));
+    } else {
+      panic!("Expected error but got {:?}", result);
+    }
+  }
+
+  #[test]
+  fn merge_or_overwrite_when_either_error_return_as_is_when_not_validation_error() {
+    let result1: Result<String, ApplicationError> = Err(ApplicationError::UnexpectedError("unexpected".to_string()));
+    let result2: Result<String, ApplicationError> = Err(validation_error!("field", required()));
+    let result = result1.merge_or_overwrite_when_either_error(result2);
+    if let Err(ApplicationError::UnexpectedError(message)) = result {
+      assert_eq!(message, "unexpected");
+    } else {
+      panic!("Expected error but got {:?}", result);
+    }
+  }
+
+  #[test]
+  fn merge_or_overwrite_when_either_error_overwrite_ok_when_other_is_error_but_not_validation_error() {
+    let result1: Result<String, ApplicationError> = Ok("before".to_string());
+    let result2: Result<String, ApplicationError> = Err(ApplicationError::UnexpectedError("unexpected".to_string()));
+    let result = result1.merge_or_overwrite_when_either_error(result2);
+    if let Err(ApplicationError::UnexpectedError(message)) = result {
+      assert_eq!(message, "unexpected");
+    } else {
+      panic!("Expected error but got {:?}", result);
     }
   }
 }
