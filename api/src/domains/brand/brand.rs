@@ -1,4 +1,4 @@
-use crate::domains::macros::define_id::*;
+use crate::domains::macros::entity_id::*;
 use crate::domains::brand::sector::Sector;
 
 define_id!(BrandId);
@@ -28,6 +28,21 @@ pub struct Brand {
   pub name: String,
   pub code: BrandCode,
   pub sector: Sector,
+}
+
+#[cfg(test)]
+use crate::util::ulid::default_ulid;
+
+#[cfg(test)]
+impl Default for Brand {
+  fn default() -> Self {
+    Brand {
+      id: BrandId::new(default_ulid()),
+      name: "company".to_string(),
+      code: BrandCode::new("0000".to_string()),
+      sector: Default::default(),
+    }
+  }
 }
 
 #[cfg(test)]

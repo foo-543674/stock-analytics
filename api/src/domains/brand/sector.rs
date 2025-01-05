@@ -1,4 +1,4 @@
-use crate::domains::macros::define_id::*;
+use crate::domains::macros::entity_id::*;
 use crate::domains::brand::sector_group::SectorGroup;
 use crate::domains::brand::category::Category;
 
@@ -30,6 +30,22 @@ pub struct Sector {
   pub code: SectorCode,
   pub group: SectorGroup,
   pub category: Category,
+}
+
+#[cfg(test)]
+use crate::util::ulid::default_ulid;
+
+#[cfg(test)]
+impl Default for Sector {
+  fn default() -> Self {
+    Sector {
+      id: SectorId::new(default_ulid()),
+      name: "sector".to_string(),
+      code: SectorCode::new("0000".to_string()),
+      group: Default::default(),
+      category: Default::default(),
+    }
+  }
 }
 
 #[cfg(test)]
