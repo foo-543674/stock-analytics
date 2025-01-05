@@ -2,7 +2,6 @@ pub use ulid::Ulid;
 pub use std::fmt;
 
 pub trait Identitable {
-  fn new(value: Ulid) -> Self;
   fn to_string(&self) -> String;
 }
 
@@ -11,11 +10,17 @@ macro_rules! define_id {
     #[derive(Debug, Clone, PartialEq, Eq, Hash)]
     pub struct $name(Ulid);
 
-    impl Identitable for $name {
-      fn new(value: Ulid) -> Self {
-        $name(value)
+    impl $name {
+      pub fn new(id: Ulid) -> Self {
+        $name(id)
       }
+      
+      pub fn from_string(value: &str) -> Self {
+        $name(ulid::Ulid::from_string(value).unwrap())
+      }
+    }
 
+    impl Identitable for $name {
       fn to_string(&self) -> String {
         self.0.to_string()
       }
