@@ -8,7 +8,7 @@ pub enum ApplicationError {
   #[error("Repository error: {0}")]
   RepositoryError(#[from] RepositoryError),
   #[error("Validation error: {0:?}")]
-  ValidationError(Vec<ValidationFailure>),
+  ValidationError(ValidationFailure),
   #[error("Unexpected error: {0}")]
   UnexpectedError(String),
 }
