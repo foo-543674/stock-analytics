@@ -1,7 +1,6 @@
 use std::sync::Arc;
 
 use async_trait::async_trait;
-use regex::Regex;
 use crate::{
   applications::{
     brand::repositories::{
@@ -23,7 +22,10 @@ use crate::{
     }
   }, 
   domains::brand::{brand::BrandCode, sector::SectorId},
-  util::ulid::StringExt
+  util::{
+    str::StringExt, 
+    ulid::StringExtForUlid
+  }
 };
 
 pub struct BrandRegisterInput {
@@ -60,7 +62,7 @@ impl BrandRegisterInputValidator {
           || validation_failure!("code", length_equals(CODE_LENGTH)))
         ),
         Box::new(SimpleValidator::new(
-          |target: &BrandRegisterInput| Regex::new(r"^\d+$").unwrap().is_match(&target.code),
+          |target: &BrandRegisterInput| target.code.is_numeric(),
           || validation_failure!("code", numeric_only()))
         ),
         Box::new(SimpleValidator::new(
