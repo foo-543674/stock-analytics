@@ -85,6 +85,7 @@ impl Validator<BrandRegisterInput> for BrandRegisterInputValidator {
   async fn validate(&self, target: &BrandRegisterInput) -> Result<(), ApplicationError> {
     let base_result = self.base_validator.validate(target).await;
 
+    // NOTE: If validation error for code is already exists, BrandCode cannot construct.
     let code_dupulicate_validation_result = if base_result.is_validation_error_and_has_field("code")  {
       Ok(())
     } else {
@@ -95,6 +96,7 @@ impl Validator<BrandRegisterInput> for BrandRegisterInputValidator {
       }
     };
 
+    // NOTE: If validation error for sector_id is already exists, SectorId cannot construct.
     let sector_exists_validation_result = if base_result.is_validation_error_and_has_field("sector_id") {
       Ok(())
     } else {
