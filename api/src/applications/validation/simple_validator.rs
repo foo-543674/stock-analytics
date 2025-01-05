@@ -1,7 +1,11 @@
 use axum::async_trait;
 
 use crate::applications::errors::application_error::ApplicationError;
-use super::{validation_failure::ValidationFailure, validator::Validator};
+use super::{
+  validation_error::validation_error,
+  validation_failure::ValidationFailure,
+  validator::Validator
+};
 
 pub struct SimpleValidator<T> {
   pub f: fn(&T) -> bool,
@@ -23,27 +27,29 @@ impl<T: Send + Sync> Validator<T> for SimpleValidator<T> {
     if (self.f)(target) {
       Ok(())
     } else {
-      Err(ApplicationError::ValidationError(vec![(self.when_error)()]))
+      Err(validation_error!((self.when_error)()))
     }
   }
 }
 
 #[cfg(test)]
 mod tests {
+  use crate::applications::validation::{
+    validation_failure::validation_failure,
+    validation_message_keys::required
+  };
   use super::*;
-  use crate::applications::validation::validation_failure::validation_failure;
-  use crate::applications::common::resource_key::resource_key;
 
   #[test]
   fn simple_validator_should_return_ok_when_true() {
-    let validator = SimpleValidator::new(|_| true, || validation_failure!("field", "key"));
+    let validator = SimpleValidator::new(|_| true, || validation_failure!("field", required()));
     let result = futures::executor::block_on(validator.validate(&"target"));
     assert!(result.is_ok());
   }
 
   #[test]
   fn simple_validator_should_return_error_when_false() {
-    let validator = SimpleValidator::new(|_| false, || validation_failure!("field", "key"));
+    let validator = SimpleValidator::new(|_| false, || validation_failure!("field", required()));
     let result = futures::executor::block_on(validator.validate(&"target"));
     assert!(result.is_err());
   }
