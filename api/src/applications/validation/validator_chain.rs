@@ -38,7 +38,6 @@ mod tests {
     use std::iter;
     use crate::{
       applications::validation::{
-        validation_failure::validation_failure,
         validation_message_keys::required,
         validator::MockValidator
       }, 
