@@ -22,6 +22,10 @@ impl SectorCode {
     }
     SectorCode(value)
   }
+
+  pub fn from_string(value: &str) -> Self {
+    SectorCode::new(value.to_string())
+  }
 }
 
 pub struct Sector {

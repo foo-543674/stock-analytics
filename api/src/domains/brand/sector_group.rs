@@ -22,6 +22,10 @@ impl SectorGroupCode {
       SectorGroupCode(value)
     }
   }
+
+  pub fn from_i32(value: &i32) -> Self {
+    SectorGroupCode::new(value.clone())
+  }
 }
 
 pub struct SectorGroup {

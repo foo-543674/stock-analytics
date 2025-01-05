@@ -21,6 +21,10 @@ impl BrandCode {
     }
     BrandCode(value)
   }
+
+  pub fn from_string(value: &str) -> Self {
+    BrandCode::new(value.to_string())
+  }
 }
 
 pub struct Brand {
