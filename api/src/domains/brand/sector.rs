@@ -12,7 +12,7 @@ impl SectorCode {
     &self.0
   }
 
-  const SECTOR_CODE_LENGTH: usize = 4;
+  pub const SECTOR_CODE_LENGTH: usize = 4;
   pub fn new(value: String) -> Self {
     if value.len() != Self::SECTOR_CODE_LENGTH {
       panic!("SectorCode must be {} characters", Self::SECTOR_CODE_LENGTH);

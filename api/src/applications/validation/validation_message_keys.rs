@@ -20,3 +20,6 @@ pub fn ulid() -> ResourceKey {
 pub fn resource_not_found() -> ResourceKey {
   resource_key!(format!("{}.resource_not_found", VALIDATION_MESSAGE_PREFIX))
 }
+pub fn max_length(length: usize) -> ResourceKey {
+  resource_key!(format!("{}.max_length", VALIDATION_MESSAGE_PREFIX), length.to_string())
+}

@@ -11,7 +11,7 @@ impl BrandCode {
     &self.0
   }
 
-  const BRAND_CODE_LENGTH: usize = 4;
+  pub const BRAND_CODE_LENGTH: usize = 4;
   pub fn new(value: String) -> Self {
     if value.len() != Self::BRAND_CODE_LENGTH {
       panic!("BrandCode must be {} characters", Self::BRAND_CODE_LENGTH);

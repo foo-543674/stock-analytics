@@ -40,8 +40,6 @@ pub struct BrandRegisterInputValidator {
   sector_repository: Arc<dyn SectorRepository>,
 }
 
-const CODE_LENGTH: usize = 4;
-
 impl BrandRegisterInputValidator {
   pub fn new(
     brand_repository: Arc<dyn BrandRepository>,
@@ -58,8 +56,8 @@ impl BrandRegisterInputValidator {
           || validation_failure!("code", required()))
         ),
         Box::new(SimpleValidator::new(
-          |target: &BrandRegisterInput| target.code.len() == CODE_LENGTH,
-          || validation_failure!("code", length_equals(CODE_LENGTH)))
+          |target: &BrandRegisterInput| target.code.len() == BrandCode::BRAND_CODE_LENGTH,
+          || validation_failure!("code", length_equals(BrandCode::BRAND_CODE_LENGTH)))
         ),
         Box::new(SimpleValidator::new(
           |target: &BrandRegisterInput| target.code.is_numeric(),
@@ -142,7 +140,7 @@ mod tests {
     #[test]
     fn brand_register_input_validator_should_return_error_when_name_is_empty(
       name in empty(),
-      code in fixed_length_numeric_string(CODE_LENGTH),
+      code in fixed_length_numeric_string(BrandCode::BRAND_CODE_LENGTH),
       sector_id in unambiguous_ulid()
     ) {
       let mut brand_repository = MockBrandRepository::new();
@@ -184,7 +182,7 @@ mod tests {
     #[test]
     fn brand_register_input_validator_should_return_error_when_code_length_does_not_4(
       name in random_text(),
-      code in fixed_length_numeric_string_except(CODE_LENGTH),
+      code in fixed_length_numeric_string_except(BrandCode::BRAND_CODE_LENGTH),
       sector_id in unambiguous_ulid()
     ) {
       let mut brand_repository = MockBrandRepository::new();
@@ -205,7 +203,7 @@ mod tests {
     #[test]
     fn brand_register_input_validator_should_return_error_when_code_is_not_numeric(
       name in random_text(),
-      code in alphanumeric_string(CODE_LENGTH),
+      code in alphanumeric_string(BrandCode::BRAND_CODE_LENGTH),
       sector_id in unambiguous_ulid()
     ) {
       let mut brand_repository = MockBrandRepository::new();
@@ -226,7 +224,7 @@ mod tests {
     #[test]
     fn brand_register_input_validator_should_return_error_when_sector_id_is_empty(
       name in random_text(),
-      code in fixed_length_numeric_string(CODE_LENGTH)
+      code in fixed_length_numeric_string(BrandCode::BRAND_CODE_LENGTH)
     ) {
       let mut brand_repository = MockBrandRepository::new();
       brand_repository.expect_find_by_code().times(1).returning(|_| Box::pin(async { Ok(None) }));
@@ -246,7 +244,7 @@ mod tests {
     #[test]
     fn brand_register_input_validator_should_return_error_when_sector_id_is_not_ulid(
       name in random_text(),
-      code in fixed_length_numeric_string(CODE_LENGTH),
+      code in fixed_length_numeric_string(BrandCode::BRAND_CODE_LENGTH),
       sector_id in random_text()
     ) {
       let mut brand_repository = MockBrandRepository::new();
@@ -267,7 +265,7 @@ mod tests {
     #[test]
     fn brand_register_input_validator_should_return_error_when_same_code_exists(
       name in random_text(),
-      code in fixed_length_numeric_string(CODE_LENGTH),
+      code in fixed_length_numeric_string(BrandCode::BRAND_CODE_LENGTH),
       sector_id in unambiguous_ulid()
     ) {
       let mut brand_repository = MockBrandRepository::new();
@@ -288,7 +286,7 @@ mod tests {
     #[test]
     fn brand_register_input_validator_should_return_error_when_sector_not_found(
       name in random_text(),
-      code in fixed_length_numeric_string(CODE_LENGTH),
+      code in fixed_length_numeric_string(BrandCode::BRAND_CODE_LENGTH),
       sector_id in unambiguous_ulid()
     ) {
       let mut brand_repository = MockBrandRepository::new();
@@ -309,7 +307,7 @@ mod tests {
     #[test]
     fn brand_register_input_validator_should_return_ok_when_all_fields_are_not_satisfy_above_conditions(
       name in random_text(),
-      code in fixed_length_numeric_string(CODE_LENGTH),
+      code in fixed_length_numeric_string(BrandCode::BRAND_CODE_LENGTH),
       sector_id in unambiguous_ulid()
     ) {
       let mut brand_repository = MockBrandRepository::new();
