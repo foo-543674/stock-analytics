@@ -125,7 +125,7 @@ mod tests {
   }
 
   #[test]
-  fn combine_with_return_ok_when_both_ok_and_value_not_change() {
+  fn combine_with_return_ok_and_value_not_change_when_both_ok() {
     let result1: Result<String, ApplicationError> = Ok("before".to_string());
     let result2: Result<String, ApplicationError> = Ok("after".to_string());
     let result = result1.combine_with(result2);
@@ -175,7 +175,7 @@ mod tests {
   }
 
   #[test]
-  fn combine_with_overwrite_ok_when_other_is_error_but_not_validation_error() {
+  fn combine_with_overwrite_ok_when_other_is_error_and_not_validation_error() {
     let result1: Result<String, ApplicationError> = Ok("before".to_string());
     let result2: Result<String, ApplicationError> = Err(ApplicationError::UnexpectedError("unexpected".to_string()));
     let result = result1.combine_with(result2);
