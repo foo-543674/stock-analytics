@@ -16,6 +16,13 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+    - uses: actions/cache@v2
+      with:
+        path: |
+          ~/.cargo/registry
+          ~/.cargo/git
+          api/target
+        key: ${{ runner.os }}-cargo-${{ hashFiles('api/Cargo.lock') }}
     - name: Build
       run: cargo build --verbose
       working-directory: api
