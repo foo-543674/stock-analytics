@@ -224,7 +224,8 @@ mod tests {
     #[test]
     fn brand_register_input_validator_should_return_error_when_sector_id_is_empty(
       name in random_text(),
-      code in fixed_length_numeric_string(BrandCode::BRAND_CODE_LENGTH)
+      code in fixed_length_numeric_string(BrandCode::BRAND_CODE_LENGTH),
+      sector_id in empty()
     ) {
       let mut brand_repository = MockBrandRepository::new();
       brand_repository.expect_find_by_code().times(1).returning(|_| Box::pin(async { Ok(None) }));
@@ -235,7 +236,7 @@ mod tests {
       let input = BrandRegisterInput {
         name,
         code,
-        sector_id: "".to_string(),
+        sector_id,
       };
       let result = futures::executor::block_on(validator.validate(&input));
       assert_result_is_err!(result);
