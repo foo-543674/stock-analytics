@@ -1,3 +1,4 @@
+use crate::util::unempty_string::UnemptyString;
 use crate::domains::macros::entity_id::*;
 use crate::domains::brand::sector_group::SectorGroup;
 use crate::domains::brand::category::Category;
@@ -31,7 +32,7 @@ impl SectorCode {
 #[derive(Debug, Clone)]
 pub struct Sector {
   pub id: SectorId,
-  pub name: String,
+  pub name: UnemptyString,
   pub code: SectorCode,
   pub group: SectorGroup,
   pub category: Category,
@@ -45,7 +46,7 @@ impl Default for Sector {
   fn default() -> Self {
     Sector {
       id: SectorId::new(default_ulid()),
-      name: "sector".to_string(),
+      name: UnemptyString::from_string("sector"),
       code: SectorCode::new("0000".to_string()),
       group: Default::default(),
       category: Default::default(),

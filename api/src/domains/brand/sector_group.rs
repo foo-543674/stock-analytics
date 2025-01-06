@@ -1,4 +1,4 @@
-use crate::domains::macros::entity_id::*;
+use crate::{domains::macros::entity_id::*, util::unempty_string::UnemptyString};
 
 define_id!(SectorGroupId);
 
@@ -31,7 +31,7 @@ impl SectorGroupCode {
 #[derive(Debug, Clone)]
 pub struct SectorGroup {
   pub id: SectorGroupId,
-  pub name: String,
+  pub name: UnemptyString,
   pub code: SectorGroupCode,
 }
 
@@ -43,7 +43,7 @@ impl Default for SectorGroup {
   fn default() -> Self {
     SectorGroup {
       id: SectorGroupId::new(default_ulid()),
-      name: "group".to_string(),
+      name: UnemptyString::from_string("sector group"),
       code: SectorGroupCode::new(1),
     }
   }

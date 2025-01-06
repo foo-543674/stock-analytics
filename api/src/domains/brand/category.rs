@@ -1,11 +1,11 @@
-use crate::domains::macros::entity_id::*;
+use crate::{domains::macros::entity_id::*, util::unempty_string::UnemptyString};
 
 define_id!(CategoryId);
 
 #[derive(Debug, Clone)]
 pub struct Category {
   pub id: CategoryId,
-  pub name: String,
+  pub name: UnemptyString,
 }
 
 #[cfg(test)]
@@ -16,7 +16,7 @@ impl Default for Category {
   fn default() -> Self {
     Category {
       id: CategoryId::new(default_ulid()),
-      name: "category".to_string(),
+      name: UnemptyString::from_string("category"),
     }
   }
 }

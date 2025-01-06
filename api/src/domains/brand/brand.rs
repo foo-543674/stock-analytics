@@ -1,5 +1,6 @@
 use crate::domains::macros::entity_id::*;
 use crate::domains::brand::sector::Sector;
+use crate::util::unempty_string::UnemptyString;
 
 define_id!(BrandId);
 
@@ -30,7 +31,7 @@ impl BrandCode {
 #[derive(Debug, Clone)]
 pub struct Brand {
   pub id: BrandId,
-  pub name: String,
+  pub name: UnemptyString,
   pub code: BrandCode,
   pub sector: Sector,
 }
@@ -43,7 +44,7 @@ impl Default for Brand {
   fn default() -> Self {
     Brand {
       id: BrandId::new(default_ulid()),
-      name: "company".to_string(),
+      name: UnemptyString::from_string("company"),
       code: BrandCode::new("0000".to_string()),
       sector: Default::default(),
     }
