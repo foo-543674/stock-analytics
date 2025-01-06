@@ -35,3 +35,17 @@ pub fn empty() -> impl Strategy<Value = String> {
 pub fn random_text() -> impl Strategy<Value = String> {
   proptest::string::string_regex("\\PC+").unwrap()
 }
+
+#[cfg(test)]
+pub fn random_text_length_at_most(max_length: usize) -> impl Strategy<Value = String> {
+  proptest::collection::vec(any::<char>(), 1..=max_length)
+    .prop_map(|chars| chars.into_iter().collect::<String>())
+    //NOTE: Multibyte characters can exceed the byte limit
+    .prop_filter("Generated string exceeds max_bytes", move |s| s.len() <= max_length)
+}
+
+#[cfg(test)]
+pub fn random_text_length_at_least(min_length: usize) -> impl Strategy<Value = String> {
+  proptest::collection::vec(any::<char>(), min_length..=min_length + 10000)
+    .prop_map(|chars| chars.into_iter().collect())
+}

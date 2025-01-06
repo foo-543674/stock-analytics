@@ -13,7 +13,7 @@ use crate::{
       },
       validation_failure::validation_failure,
       validation_message_keys::{
-        duplicate, length_equals, numeric_only, required, resource_not_found, ulid
+        duplicate, length_equals, max_length, numeric_only, required, resource_not_found, ulid
       },
       validator_chain::ValidatorChain
     }
@@ -34,6 +34,8 @@ pub struct BrandFactory {
   id_generator: Arc<dyn IdGenerator<BrandId>>,
 }
 
+const NAME_MAX_LENGTH: usize = 100;
+
 impl BrandFactory {
   pub fn new(
     brand_repository: Arc<dyn BrandRepository>,
@@ -45,6 +47,10 @@ impl BrandFactory {
         Box::new(SimpleValidator::new(
           |target: &BrandRegisterInput| !target.name.is_empty(),
           || validation_failure!("name", required()))
+        ),
+        Box::new(SimpleValidator::new(
+          |target: &BrandRegisterInput| target.name.len() <= NAME_MAX_LENGTH,
+          || validation_failure!("name", max_length(NAME_MAX_LENGTH)))
         ),
         Box::new(SimpleValidator::new(
           |target: &BrandRegisterInput| !target.code.is_empty(),
@@ -133,6 +139,8 @@ mod tests {
         empty,
         fixed_length_numeric_string,
         fixed_length_numeric_string_except,
+        random_text_length_at_least,
+        random_text_length_at_most,
         random_text
       },
       unambiguous_ulid::unambiguous_ulid
@@ -164,8 +172,31 @@ mod tests {
     }
 
     #[test]
+    fn brand_factory_should_return_error_when_name_length_is_over_100(
+      name in random_text_length_at_least(NAME_MAX_LENGTH + 1),
+      code in fixed_length_numeric_string(BrandCode::BRAND_CODE_LENGTH),
+      sector_id in unambiguous_ulid()
+    ) {
+      let mut brand_repository = MockBrandRepository::new();
+      brand_repository.expect_find_by_code().times(1).returning(|_| Box::pin(async { Ok(None) }));
+      let mut sector_repository = MockSectorRepository::new();
+      sector_repository.expect_find_by_id().times(1).returning(|_| Box::pin(async { Ok(Default::default()) }));
+      let mut id_generator = MockIdGenerator::new();
+      id_generator.expect_generate().times(0);
+
+      let factory = BrandFactory::new(Arc::new(brand_repository), Arc::new(sector_repository), Arc::new(id_generator));
+      let input = BrandRegisterInput {
+        name,
+        code,
+        sector_id,
+      };
+      let result = futures::executor::block_on(factory.create(&input));
+      assert_result_is_err!(result);
+    }
+
+    #[test]
     fn brand_factory_should_return_error_when_code_is_empty(
-      name in random_text(),
+      name in random_text_length_at_most(NAME_MAX_LENGTH),
       code in empty(),
       sector_id in unambiguous_ulid()
     ) {
@@ -188,7 +219,7 @@ mod tests {
 
     #[test]
     fn brand_factory_should_return_error_when_code_length_does_not_4(
-      name in random_text(),
+      name in random_text_length_at_most(NAME_MAX_LENGTH),
       code in fixed_length_numeric_string_except(BrandCode::BRAND_CODE_LENGTH),
       sector_id in unambiguous_ulid()
     ) {
@@ -211,7 +242,7 @@ mod tests {
 
     #[test]
     fn brand_factory_should_return_error_when_code_is_not_numeric(
-      name in random_text(),
+      name in random_text_length_at_most(NAME_MAX_LENGTH),
       code in alphanumeric_string(BrandCode::BRAND_CODE_LENGTH),
       sector_id in unambiguous_ulid()
     ) {
@@ -234,7 +265,7 @@ mod tests {
 
     #[test]
     fn brand_factory_should_return_error_when_sector_id_is_empty(
-      name in random_text(),
+      name in random_text_length_at_most(NAME_MAX_LENGTH),
       code in fixed_length_numeric_string(BrandCode::BRAND_CODE_LENGTH),
       sector_id in empty()
     ) {
@@ -257,7 +288,7 @@ mod tests {
 
     #[test]
     fn brand_factory_should_return_error_when_sector_id_is_not_ulid(
-      name in random_text(),
+      name in random_text_length_at_most(NAME_MAX_LENGTH),
       code in fixed_length_numeric_string(BrandCode::BRAND_CODE_LENGTH),
       sector_id in random_text()
     ) {
@@ -280,7 +311,7 @@ mod tests {
 
     #[test]
     fn brand_factory_should_return_error_when_same_code_exists(
-      name in random_text(),
+      name in random_text_length_at_most(NAME_MAX_LENGTH),
       code in fixed_length_numeric_string(BrandCode::BRAND_CODE_LENGTH),
       sector_id in unambiguous_ulid()
     ) {
@@ -303,7 +334,7 @@ mod tests {
 
     #[test]
     fn brand_factory_should_return_error_when_sector_not_found(
-      name in random_text(),
+      name in random_text_length_at_most(NAME_MAX_LENGTH),
       code in fixed_length_numeric_string(BrandCode::BRAND_CODE_LENGTH),
       sector_id in unambiguous_ulid()
     ) {
@@ -326,7 +357,7 @@ mod tests {
 
     #[test]
     fn brand_factory_should_return_brand_when_all_fields_are_not_satisfy_above_conditions(
-      name in random_text(),
+      name in random_text_length_at_most(NAME_MAX_LENGTH),
       code in fixed_length_numeric_string(BrandCode::BRAND_CODE_LENGTH),
       sector_id in unambiguous_ulid()
     ) {
