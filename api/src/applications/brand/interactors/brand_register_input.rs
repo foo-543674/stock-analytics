@@ -106,8 +106,8 @@ impl Validator<BrandRegisterInput> for BrandRegisterInputValidator {
     };
 
     base_result
-      .merge_or_overwrite_when_either_error(code_dupulicate_validation_result)
-      .merge_or_overwrite_when_either_error(sector_exists_validation_result)
+      .combine_with(code_dupulicate_validation_result)
+      .combine_with(sector_exists_validation_result)
   }
 }
 
