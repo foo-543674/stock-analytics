@@ -9,7 +9,7 @@ define_id!(SectorId);
 pub struct SectorCode(String);
 
 impl SectorCode {
-  pub fn value(&self) -> &String {
+  pub fn value(&self) -> &str {
     &self.0
   }
 
@@ -28,6 +28,14 @@ impl SectorCode {
     SectorCode::new(value.to_string())
   }
 }
+
+impl PartialEq<Sector> for Sector {
+  fn eq(&self, other: &Sector) -> bool {
+    self.id == other.id
+  }
+}
+
+impl Eq for Sector {}
 
 #[derive(Debug, Clone)]
 pub struct Sector {
@@ -56,6 +64,8 @@ impl Default for Sector {
 
 #[cfg(test)]
 mod tests {
+  use crate::test_support::unambiguous_ulid::unambiguous_ulid;
+
   use super::*;
   use proptest::prelude::*;
 
@@ -79,5 +89,31 @@ mod tests {
         assert!(result.is_err());
       }
     }
+
+    #[test]
+    fn sector_should_not_be_equal_when_id_is_different(id1 in unambiguous_ulid(), id2 in unambiguous_ulid()) {
+      let sector1 = Sector {
+        id: SectorId::from_string(&id1),
+        name: UnemptyString::from_string("sector"),
+        code: SectorCode::new("0000".to_string()),
+        group: Default::default(),
+        category: Default::default(),
+      };
+      let sector2 = Sector {
+        id: SectorId::from_string(&id2),
+        name: UnemptyString::from_string("sector"),
+        code: SectorCode::new("0000".to_string()),
+        group: Default::default(),
+        category: Default::default(),
+      };
+      assert_ne!(sector1, sector2);
+    }
+  }
+
+  #[test]
+  fn sector_should_be_equal_when_id_is_equal() {
+    let sector1 = Sector::default();
+    let sector2 = Sector::default();
+    assert_eq!(sector1, sector2);
   }
 }

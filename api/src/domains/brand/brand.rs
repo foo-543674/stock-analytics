@@ -8,7 +8,7 @@ define_id!(BrandId);
 pub struct BrandCode(String);
 
 impl BrandCode {
-  pub fn value(&self) -> &String {
+  pub fn value(&self) -> &str {
     &self.0
   }
 
@@ -27,6 +27,14 @@ impl BrandCode {
     BrandCode::new(value.to_string())
   }
 }
+
+impl PartialEq<Brand> for Brand {
+  fn eq(&self, other: &Brand) -> bool {
+    self.id == other.id
+  }
+}
+
+impl Eq for Brand {}
 
 #[derive(Debug, Clone)]
 pub struct Brand {
@@ -55,6 +63,7 @@ impl Default for Brand {
 mod tests {
   use super::*;
   use proptest::prelude::*;
+  use crate::test_support::unambiguous_ulid::unambiguous_ulid;
 
   proptest! {
     #[test]
@@ -76,5 +85,32 @@ mod tests {
         assert!(result.is_err());
       }
     }
+
+    #[test]
+    fn brand_should_not_be_equal_when_id_is_different(
+      id1 in unambiguous_ulid(),
+      id2 in unambiguous_ulid(),
+    ) {
+      let brand1 = Brand {
+        id: BrandId::from_string(&id1),
+        name: UnemptyString::from_string("company"),
+        code: BrandCode::from_string("0000"),
+        sector: Default::default(),
+      };
+      let brand2 = Brand {
+        id: BrandId::from_string(&id2),
+        name: UnemptyString::from_string("company"),
+        code: BrandCode::from_string("0000"),
+        sector: Default::default(),
+      };
+      assert_ne!(brand1, brand2);
+    }
+  }
+
+  #[test]
+  fn brand_should_be_equal_when_id_is_same() {
+    let brand1 = Brand::default();
+    let brand2 = Brand::default();
+    assert_eq!(brand1, brand2);
   }
 }
