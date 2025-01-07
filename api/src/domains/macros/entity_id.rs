@@ -18,6 +18,10 @@ macro_rules! define_id {
       pub fn from_string(value: &str) -> Self {
         $name(ulid::Ulid::from_string(value).unwrap())
       }
+
+      pub fn value(&self) -> &Ulid {
+        &self.0
+      }
     }
 
     impl Identitable for $name {
