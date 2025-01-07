@@ -62,7 +62,7 @@ mod tests {
   use super::*;
   use std::panic::*;
   use proptest::prelude::*;
-  use crate::test_support::unambiguous_ulid::unambiguous_ulid;
+  use crate::test_support::ulid::random_ulid;
 
   #[test]
   fn sector_group_code_should_panic_when_below_1() {
@@ -89,16 +89,16 @@ mod tests {
 
     #[test]
     fn sector_group_should_not_be_equal_when_id_is_different(
-      id1 in unambiguous_ulid(),
-      id2 in unambiguous_ulid(),
+      id1 in random_ulid(),
+      id2 in random_ulid(),
     ) {
       let sector_group1 = SectorGroup {
-        id: SectorGroupId::from_string(&id1),
+        id: SectorGroupId::new(id1),
         name: UnemptyString::from_string("sector group"),
         code: SectorGroupCode::from_i32(&1),
       };
       let sector_group2 = SectorGroup {
-        id: SectorGroupId::from_string(&id2),
+        id: SectorGroupId::new(id2),
         name: UnemptyString::from_string("sector group"),
         code: SectorGroupCode::from_i32(&1),
       };

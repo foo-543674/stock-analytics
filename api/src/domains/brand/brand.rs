@@ -63,7 +63,7 @@ impl Default for Brand {
 mod tests {
   use super::*;
   use proptest::prelude::*;
-  use crate::test_support::unambiguous_ulid::unambiguous_ulid;
+  use crate::test_support::ulid::random_ulid;
 
   proptest! {
     #[test]
@@ -88,17 +88,17 @@ mod tests {
 
     #[test]
     fn brand_should_not_be_equal_when_id_is_different(
-      id1 in unambiguous_ulid(),
-      id2 in unambiguous_ulid(),
+      id1 in random_ulid(),
+      id2 in random_ulid(),
     ) {
       let brand1 = Brand {
-        id: BrandId::from_string(&id1),
+        id: BrandId::new(id1),
         name: UnemptyString::from_string("company"),
         code: BrandCode::from_string("0000"),
         sector: Default::default(),
       };
       let brand2 = Brand {
-        id: BrandId::from_string(&id2),
+        id: BrandId::new(id2),
         name: UnemptyString::from_string("company"),
         code: BrandCode::from_string("0000"),
         sector: Default::default(),

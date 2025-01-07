@@ -31,7 +31,7 @@ impl Default for Category {
 
 #[cfg(test)]
 mod tests {
-  use crate::test_support::unambiguous_ulid::unambiguous_ulid;
+  use crate::test_support::ulid::random_ulid;
 
   use super::*;
   use proptest::prelude::*;
@@ -39,15 +39,15 @@ mod tests {
   proptest! {
     #[test]
     fn category_should_not_be_equal_when_id_is_different(
-      id1 in unambiguous_ulid(),
-      id2 in unambiguous_ulid(),
+      id1 in random_ulid(),
+      id2 in random_ulid(),
     ) {
       let category1 = Category {
-        id: CategoryId::from_string(&id1),
+        id: CategoryId::new(id1),
         name: UnemptyString::from_string("category"),
       };
       let category2 = Category {
-        id: CategoryId::from_string(&id2),
+        id: CategoryId::new(id2),
         name: UnemptyString::from_string("category"),
       };
       assert_ne!(category1, category2);

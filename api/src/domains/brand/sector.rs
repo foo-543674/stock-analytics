@@ -64,7 +64,7 @@ impl Default for Sector {
 
 #[cfg(test)]
 mod tests {
-  use crate::test_support::unambiguous_ulid::unambiguous_ulid;
+  use crate::test_support::ulid::random_ulid;
 
   use super::*;
   use proptest::prelude::*;
@@ -91,16 +91,16 @@ mod tests {
     }
 
     #[test]
-    fn sector_should_not_be_equal_when_id_is_different(id1 in unambiguous_ulid(), id2 in unambiguous_ulid()) {
+    fn sector_should_not_be_equal_when_id_is_different(id1 in random_ulid(), id2 in random_ulid()) {
       let sector1 = Sector {
-        id: SectorId::from_string(&id1),
+        id: SectorId::new(id1),
         name: UnemptyString::from_string("sector"),
         code: SectorCode::new("0000".to_string()),
         group: Default::default(),
         category: Default::default(),
       };
       let sector2 = Sector {
-        id: SectorId::from_string(&id2),
+        id: SectorId::new(id2),
         name: UnemptyString::from_string("sector"),
         code: SectorCode::new("0000".to_string()),
         group: Default::default(),
