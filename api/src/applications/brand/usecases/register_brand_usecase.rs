@@ -55,25 +55,12 @@ mod test {
         validator::MockValidator
       }
     }, 
-    domains::brand::brand::{
-      Brand, 
-      BrandCode, 
-      BrandId
-    }, 
-    util::{
-      ulid::default_ulid, 
-      unempty_string::UnemptyString
-    }
+    domains::brand::brand::Brand, 
   };
 
   #[tokio::test]
   async fn register_brand_usecase_should_save_brand_when_validator_resutn_success() {
-    let brand = Brand {
-      id: BrandId::new(default_ulid()),
-      name: UnemptyString::from_string("name"),
-      code: BrandCode::from_string("0000"),
-      sector: Default::default(),
-    };
+    let brand = Brand::default();
 
     let mut brand_repository = MockBrandRepository::new();
     brand_repository.expect_add().times(1).returning(|_| Box::pin(async { Ok(()) }));

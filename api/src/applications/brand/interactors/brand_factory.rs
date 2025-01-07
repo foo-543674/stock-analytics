@@ -9,7 +9,7 @@ use crate::{
     BrandCode, 
     BrandId
   }, 
-  util::unempty_string::UnemptyString
+  util::{unempty_string::UnemptyString, version::Version}
 };
 use super::{
   brand_register_input::BrandRegisterInput, 
@@ -43,6 +43,7 @@ impl BrandFactory for BrandFactoryImpl {
       name: UnemptyString::from_string(&input.name),
       code: BrandCode::from_string(&input.code),
       sector: validation_success.found_sector.clone(),
+      version: Version::new(),
     })
   }
 }
@@ -104,6 +105,7 @@ mod tests {
       assert_eq!(brand.name.value(), name);
       assert_eq!(brand.code.value(), code);
       assert_eq!(brand.sector, sector);
+      assert_eq!(brand.version.value(), 0);
     }
   }
 }
