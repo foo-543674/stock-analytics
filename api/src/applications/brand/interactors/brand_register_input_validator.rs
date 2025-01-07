@@ -82,6 +82,7 @@ impl BrandRegisterInputValidator {
 
 }
 
+#[derive(Debug, Clone)]
 pub struct BrandRegisterInputValidationSuccess {
   pub found_sector: Sector,
 }

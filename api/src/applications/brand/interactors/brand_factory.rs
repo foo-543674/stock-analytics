@@ -15,7 +15,10 @@ use super::{
   brand_register_input::BrandRegisterInput, 
   brand_register_input_validator::BrandRegisterInputValidationSuccess
 };
+#[cfg(test)]
+use mockall::automock;
 
+#[cfg_attr(test, automock)]
 pub trait BrandFactory {
   fn create(&self, input: &BrandRegisterInput, validation_success: &BrandRegisterInputValidationSuccess) -> Result<Brand, ApplicationError>;
 }
