@@ -11,4 +11,6 @@ pub enum ApplicationError {
   ValidationError(ValidationFailure),
   #[error("Unexpected error: {0}")]
   UnexpectedError(String),
+  #[error("Conflict error: {0}")]
+  ConflictError(String),
 }
