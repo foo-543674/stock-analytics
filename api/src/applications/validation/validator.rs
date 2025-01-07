@@ -6,6 +6,6 @@ use crate::applications::errors::application_error::ApplicationError;
 
 #[async_trait]
 #[cfg_attr(test, automock)]
-pub trait Validator<T: std::marker::Send + std::marker::Sync>: Sync + Send {
-  async fn validate(&self, target: &T) -> Result<(), ApplicationError>;
+pub trait Validator<T: Send + Sync, R: Send + Sync>: Sync + Send {
+  async fn validate(&self, target: &T) -> Result<R, ApplicationError>;
 }
