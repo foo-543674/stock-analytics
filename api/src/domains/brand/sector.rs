@@ -1,3 +1,4 @@
+use crate::util::unempty_string::UnemptyString;
 use crate::domains::macros::entity_id::*;
 use crate::domains::brand::sector_group::SectorGroup;
 use crate::domains::brand::category::Category;
@@ -8,11 +9,11 @@ define_id!(SectorId);
 pub struct SectorCode(String);
 
 impl SectorCode {
-  pub fn value(&self) -> &String {
+  pub fn value(&self) -> &str {
     &self.0
   }
 
-  const SECTOR_CODE_LENGTH: usize = 4;
+  pub const SECTOR_CODE_LENGTH: usize = 4;
   pub fn new(value: String) -> Self {
     if value.len() != Self::SECTOR_CODE_LENGTH {
       panic!("SectorCode must be {} characters", Self::SECTOR_CODE_LENGTH);
@@ -28,10 +29,18 @@ impl SectorCode {
   }
 }
 
+impl PartialEq<Sector> for Sector {
+  fn eq(&self, other: &Sector) -> bool {
+    self.id == other.id
+  }
+}
+
+impl Eq for Sector {}
+
 #[derive(Debug, Clone)]
 pub struct Sector {
   pub id: SectorId,
-  pub name: String,
+  pub name: UnemptyString,
   pub code: SectorCode,
   pub group: SectorGroup,
   pub category: Category,
@@ -45,7 +54,7 @@ impl Default for Sector {
   fn default() -> Self {
     Sector {
       id: SectorId::new(default_ulid()),
-      name: "sector".to_string(),
+      name: UnemptyString::from_string("sector"),
       code: SectorCode::new("0000".to_string()),
       group: Default::default(),
       category: Default::default(),
@@ -55,6 +64,8 @@ impl Default for Sector {
 
 #[cfg(test)]
 mod tests {
+  use crate::test_support::ulid::random_ulid;
+
   use super::*;
   use proptest::prelude::*;
 
@@ -78,5 +89,31 @@ mod tests {
         assert!(result.is_err());
       }
     }
+
+    #[test]
+    fn sector_should_not_be_equal_when_id_is_different(id1 in random_ulid(), id2 in random_ulid()) {
+      let sector1 = Sector {
+        id: SectorId::new(id1),
+        name: UnemptyString::from_string("sector"),
+        code: SectorCode::new("0000".to_string()),
+        group: Default::default(),
+        category: Default::default(),
+      };
+      let sector2 = Sector {
+        id: SectorId::new(id2),
+        name: UnemptyString::from_string("sector"),
+        code: SectorCode::new("0000".to_string()),
+        group: Default::default(),
+        category: Default::default(),
+      };
+      assert_ne!(sector1, sector2);
+    }
+  }
+
+  #[test]
+  fn sector_should_be_equal_when_id_is_equal() {
+    let sector1 = Sector::default();
+    let sector2 = Sector::default();
+    assert_eq!(sector1, sector2);
   }
 }

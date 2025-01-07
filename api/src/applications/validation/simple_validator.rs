@@ -22,7 +22,7 @@ impl<T> SimpleValidator<T> {
 }
 
 #[async_trait]
-impl<T: Send + Sync> Validator<T> for SimpleValidator<T> {
+impl<T: Send + Sync> Validator<T, ()> for SimpleValidator<T> {
   async fn validate(&self, target: &T) -> Result<(), ApplicationError> {
     if (self.f)(target) {
       Ok(())
@@ -42,14 +42,20 @@ mod tests {
 
   #[test]
   fn simple_validator_should_return_ok_when_true() {
-    let validator = SimpleValidator::new(|_| true, || validation_failure!("field", required()));
+    let validator = SimpleValidator::new(
+      |_| true,
+      || validation_failure!("field", required())
+    );
     let result = futures::executor::block_on(validator.validate(&"target"));
     assert!(result.is_ok());
   }
 
   #[test]
   fn simple_validator_should_return_error_when_false() {
-    let validator = SimpleValidator::new(|_| false, || validation_failure!("field", required()));
+    let validator = SimpleValidator::new(
+      |_| false,
+      || validation_failure!("field", required())
+    );
     let result = futures::executor::block_on(validator.validate(&"target"));
     assert!(result.is_err());
   }

@@ -3,12 +3,12 @@ use futures::StreamExt;
 use crate::applications::errors::application_error::ApplicationError;
 use super::{validation_error::validation_error, validator::Validator};
 
-pub struct ValidatorChain<T> {
-  validators: Vec<Box<dyn Validator<T>>>
+pub struct ValidatorChain<T, R> {
+  validators: Vec<Box<dyn Validator<T, R>>>
 }
 
-impl<T: Send + Sync> ValidatorChain<T> {
-  pub fn new(validators: Vec<Box<dyn Validator<T>>>) -> Self {
+impl<T: Send + Sync, R: Send + Sync> ValidatorChain<T, R> {
+  pub fn new(validators: Vec<Box<dyn Validator<T, R>>>) -> Self {
     ValidatorChain {
       validators
     }
@@ -52,12 +52,12 @@ mod tests {
     use super::*;
 
     let validators = iter::repeat_with(|| {
-        let mut mock = MockValidator::new();
-        mock.expect_validate().times(1).returning(|_| Box::pin(async { Ok(()) }));
+        let mut mock = MockValidator::<_, &str>::new();
+        mock.expect_validate().times(1).returning(|_| Box::pin(async { Ok("Success") }));
         mock
       })
       .take(3)
-      .map(|v| Box::new(v) as Box<dyn Validator<_>>)
+      .map(|v| Box::new(v) as Box<dyn Validator<_, &str>>)
       .collect::<Vec<_>>();
     let chain = ValidatorChain::new(validators);
     let result = futures::executor::block_on(chain.validate(&"foo".to_string()));
@@ -79,7 +79,7 @@ mod tests {
         mock.expect_validate().times(1).returning(|_| Box::pin(async { Err(validation_error!("foo", required())) }));
         mock
       }))
-      .map(|v| Box::new(v) as Box<dyn Validator<_>>)
+      .map(|v| Box::new(v) as Box<dyn Validator<_, _>>)
       .collect::<Vec<_>>();
     let chain = ValidatorChain::new(validators);
     let result = futures::executor::block_on(chain.validate(&"foo".to_string()));
@@ -92,13 +92,13 @@ mod tests {
 
     let validators = ["key1", "key2", "key3"].into_iter()
       .map(|k| {
-        let mut mock = MockValidator::new();
+        let mut mock = MockValidator::<_, &str>::new();
         mock.expect_validate().times(1).returning(|_| Box::pin(async { 
           Err(validation_error!(k, required()))
         }));
         mock
       })
-      .map(|v| Box::new(v) as Box<dyn Validator<_>>)
+      .map(|v| Box::new(v) as Box<dyn Validator<_, _>>)
       .collect::<Vec<_>>();
     let chain = ValidatorChain::new(validators);
     let result = futures::executor::block_on(chain.validate(&"foo".to_string()));
@@ -115,7 +115,7 @@ mod tests {
     use super::*;
 
     let validators = iter::repeat_with(|| {
-        let mut mock = MockValidator::new();
+        let mut mock = MockValidator::<_, &str>::new();
         mock.expect_validate().times(1).returning(|_| Box::pin(async { Err(validation_error!("foo", required())) }));
         mock
       })
@@ -125,7 +125,7 @@ mod tests {
         mock.expect_validate().times(1).returning(|_| Box::pin(async { Err(ApplicationError::UnexpectedError("foo".to_string())) }));
         mock
       }))
-      .map(|v| Box::new(v) as Box<dyn Validator<_>>)
+      .map(|v| Box::new(v) as Box<dyn Validator<_, _>>)
       .collect::<Vec<_>>();
     let chain = ValidatorChain::new(validators);
     let result = futures::executor::block_on(chain.validate(&"foo".to_string()));

@@ -1,5 +1,6 @@
 use crate::domains::macros::entity_id::*;
 use crate::domains::brand::sector::Sector;
+use crate::util::unempty_string::UnemptyString;
 
 define_id!(BrandId);
 
@@ -7,11 +8,11 @@ define_id!(BrandId);
 pub struct BrandCode(String);
 
 impl BrandCode {
-  pub fn value(&self) -> &String {
+  pub fn value(&self) -> &str {
     &self.0
   }
 
-  const BRAND_CODE_LENGTH: usize = 4;
+  pub const BRAND_CODE_LENGTH: usize = 4;
   pub fn new(value: String) -> Self {
     if value.len() != Self::BRAND_CODE_LENGTH {
       panic!("BrandCode must be {} characters", Self::BRAND_CODE_LENGTH);
@@ -27,10 +28,18 @@ impl BrandCode {
   }
 }
 
+impl PartialEq<Brand> for Brand {
+  fn eq(&self, other: &Brand) -> bool {
+    self.id == other.id
+  }
+}
+
+impl Eq for Brand {}
+
 #[derive(Debug, Clone)]
 pub struct Brand {
   pub id: BrandId,
-  pub name: String,
+  pub name: UnemptyString,
   pub code: BrandCode,
   pub sector: Sector,
 }
@@ -43,7 +52,7 @@ impl Default for Brand {
   fn default() -> Self {
     Brand {
       id: BrandId::new(default_ulid()),
-      name: "company".to_string(),
+      name: UnemptyString::from_string("company"),
       code: BrandCode::new("0000".to_string()),
       sector: Default::default(),
     }
@@ -54,6 +63,7 @@ impl Default for Brand {
 mod tests {
   use super::*;
   use proptest::prelude::*;
+  use crate::test_support::ulid::random_ulid;
 
   proptest! {
     #[test]
@@ -75,5 +85,32 @@ mod tests {
         assert!(result.is_err());
       }
     }
+
+    #[test]
+    fn brand_should_not_be_equal_when_id_is_different(
+      id1 in random_ulid(),
+      id2 in random_ulid(),
+    ) {
+      let brand1 = Brand {
+        id: BrandId::new(id1),
+        name: UnemptyString::from_string("company"),
+        code: BrandCode::from_string("0000"),
+        sector: Default::default(),
+      };
+      let brand2 = Brand {
+        id: BrandId::new(id2),
+        name: UnemptyString::from_string("company"),
+        code: BrandCode::from_string("0000"),
+        sector: Default::default(),
+      };
+      assert_ne!(brand1, brand2);
+    }
+  }
+
+  #[test]
+  fn brand_should_be_equal_when_id_is_same() {
+    let brand1 = Brand::default();
+    let brand2 = Brand::default();
+    assert_eq!(brand1, brand2);
   }
 }

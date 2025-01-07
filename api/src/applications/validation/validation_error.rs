@@ -29,8 +29,8 @@ pub(crate) use validation_error;
 
 pub trait ResultExt<T, E> {
   fn is_validation_error_and_has_field(&self, field: &str) -> bool;
-  fn add_or_overwrite_validation_failure(self, other: &ValidationFailure) -> Result<T, E>;
-  fn merge_or_overwrite_when_either_error(self, other: Result<T, E>) -> Result<T, E>;
+  fn add_validation_failure(self, other: &ValidationFailure) -> Result<T, E>;
+  fn combine_with(self, other: Result<T, E>) -> Result<T, E>;
 }
 
 impl<T> ResultExt<T, ApplicationError> for Result<T, ApplicationError> {
@@ -42,7 +42,7 @@ impl<T> ResultExt<T, ApplicationError> for Result<T, ApplicationError> {
     }
   }
 
-  fn add_or_overwrite_validation_failure(self, other: &ValidationFailure) -> Result<T, ApplicationError> {
+  fn add_validation_failure(self, other: &ValidationFailure) -> Result<T, ApplicationError> {
     match self {
       Ok(_) => Err(validation_error!(other.clone())),
       Err(ApplicationError::ValidationError(failure)) => Err(validation_error!(failure.merge(other))),
@@ -50,7 +50,7 @@ impl<T> ResultExt<T, ApplicationError> for Result<T, ApplicationError> {
     }
   }
 
-  fn merge_or_overwrite_when_either_error(self, other: Result<T, ApplicationError>) -> Result<T, ApplicationError> {
+  fn combine_with(self, other: Result<T, ApplicationError>) -> Result<T, ApplicationError> {
     match (self, other) {
       (Err(ApplicationError::ValidationError(self_error)), Err(ApplicationError::ValidationError(failures))) => {
         Err(validation_error!(self_error.merge(&failures)))
@@ -87,10 +87,10 @@ mod tests {
   }
 
   #[test]
-  fn add_or_overwrite_validation_failure_overwrite_ok_when_other_is_err() {
+  fn add_validation_failure_overwrite_ok_when_other_is_err() {
     let result: Result<(), ApplicationError> = Ok(());
     let failure = validation_failure!("field", required());
-    let result = result.add_or_overwrite_validation_failure(&failure);
+    let result = result.add_validation_failure(&failure);
     if let Err(ApplicationError::ValidationError(failure)) = result {
       assert!(failure.has_field("field"));
     } else {
@@ -99,10 +99,10 @@ mod tests {
   }
 
   #[test]
-  fn add_or_overwrite_validation_failure_add_err_when_other_is_err() {
+  fn add_validation_failure_add_err_when_other_is_err() {
     let result: Result<(), ApplicationError> = Err(validation_error!("field1", required()));
     let failure = validation_failure!("field2", numeric_only());
-    let result = result.add_or_overwrite_validation_failure(&failure);
+    let result = result.add_validation_failure(&failure);
     if let Err(ApplicationError::ValidationError(failure)) = result {
       assert!(failure.has_field("field1"));
       assert!(failure.has_field("field2"));
@@ -113,10 +113,10 @@ mod tests {
   }
 
   #[test]
-  fn add_or_overwrite_validation_failure_return_as_is_when_not_validation_error() {
+  fn add_validation_failure_return_as_is_when_not_validation_error() {
     let result: Result<(), ApplicationError> = Err(ApplicationError::UnexpectedError("unexpected".to_string()));
     let failure = validation_failure!("field", numeric_only());
-    let result = result.add_or_overwrite_validation_failure(&failure);
+    let result = result.add_validation_failure(&failure);
     if let Err(ApplicationError::UnexpectedError(message)) = result {
       assert_eq!(message, "unexpected");
     } else {
@@ -125,10 +125,10 @@ mod tests {
   }
 
   #[test]
-  fn merge_or_overwrite_when_either_error_return_ok_when_both_ok_and_value_not_change() {
+  fn combine_with_return_ok_and_value_not_change_when_both_ok() {
     let result1: Result<String, ApplicationError> = Ok("before".to_string());
     let result2: Result<String, ApplicationError> = Ok("after".to_string());
-    let result = result1.merge_or_overwrite_when_either_error(result2);
+    let result = result1.combine_with(result2);
     if let Ok(value) = result {
       assert_eq!(value, "before");
     } else {
@@ -137,10 +137,10 @@ mod tests {
   }
 
   #[test]
-  fn merge_or_overwrite_when_either_error_return_merged_validation_error_when_both_validation_error() {
+  fn combine_with_return_merged_validation_error_when_both_validation_error() {
     let result1: Result<String, ApplicationError> = Err(validation_error!("field1", required()));
     let result2: Result<String, ApplicationError> = Err(validation_error!("field2", numeric_only()));
-    let result = result1.merge_or_overwrite_when_either_error(result2);
+    let result = result1.combine_with(result2);
     if let Err(ApplicationError::ValidationError(failure)) = result {
       assert!(failure.has_field("field1"));
       assert!(failure.has_field("field2"));
@@ -151,10 +151,10 @@ mod tests {
   }
 
   #[test]
-  fn merge_or_overwrite_when_either_error_overwrite_ok_to_validation_error() {
+  fn combine_with_overwrite_ok_to_validation_error() {
     let result1: Result<String, ApplicationError> = Ok("before".to_string());
     let result2: Result<String, ApplicationError> = Err(validation_error!("field", required()));
-    let result = result1.merge_or_overwrite_when_either_error(result2);
+    let result = result1.combine_with(result2);
     if let Err(ApplicationError::ValidationError(failure)) = result {
       assert!(failure.has_field("field"));
     } else {
@@ -163,10 +163,10 @@ mod tests {
   }
 
   #[test]
-  fn merge_or_overwrite_when_either_error_return_as_is_when_not_validation_error() {
+  fn combine_with_return_as_is_when_not_validation_error() {
     let result1: Result<String, ApplicationError> = Err(ApplicationError::UnexpectedError("unexpected".to_string()));
     let result2: Result<String, ApplicationError> = Err(validation_error!("field", required()));
-    let result = result1.merge_or_overwrite_when_either_error(result2);
+    let result = result1.combine_with(result2);
     if let Err(ApplicationError::UnexpectedError(message)) = result {
       assert_eq!(message, "unexpected");
     } else {
@@ -175,10 +175,10 @@ mod tests {
   }
 
   #[test]
-  fn merge_or_overwrite_when_either_error_overwrite_ok_when_other_is_error_but_not_validation_error() {
+  fn combine_with_overwrite_ok_when_other_is_error_and_not_validation_error() {
     let result1: Result<String, ApplicationError> = Ok("before".to_string());
     let result2: Result<String, ApplicationError> = Err(ApplicationError::UnexpectedError("unexpected".to_string()));
-    let result = result1.merge_or_overwrite_when_either_error(result2);
+    let result = result1.combine_with(result2);
     if let Err(ApplicationError::UnexpectedError(message)) = result {
       assert_eq!(message, "unexpected");
     } else {

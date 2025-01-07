@@ -16,15 +16,15 @@ impl StringExtForUlid for str {
 
 #[cfg(test)]
 mod tests {
-  use crate::test_support::{string::random_text, unambiguous_ulid::unambiguous_ulid};
+  use crate::test_support::{string::random_text, ulid::random_ulid};
 
 use super::*;
   use proptest::prelude::*;
 
   proptest!{
     #[test]
-    fn string_is_ulid_should_return_true_when_valid_ulid(value in unambiguous_ulid()) {
-      assert_eq!(value.is_ulid(), true, "value should be ulid: {}", value);
+    fn string_is_ulid_should_return_true_when_valid_ulid(value in random_ulid()) {
+      assert_eq!(value.to_string().is_ulid(), true, "value should be ulid: {}", value);
     }
 
     #[test]
