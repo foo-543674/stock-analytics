@@ -1,4 +1,6 @@
-#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+use serde::Serialize;
+
+#[derive(Debug, Clone, PartialEq, Eq, Hash, Serialize)]
 pub struct ResourceKey {
   pub key: String,
   pub params: Vec<String>,

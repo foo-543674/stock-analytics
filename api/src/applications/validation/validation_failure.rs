@@ -1,6 +1,7 @@
 use crate::applications::common::resource_key::ResourceKey;
+use serde::Serialize;
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize)]
 pub struct ValidationFailedField {
   pub name: String,
   pub keys: Vec<ResourceKey>
@@ -39,7 +40,7 @@ macro_rules! validation_failure_field {
 
 pub(crate) use validation_failure_field;
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize)]
 pub struct ValidationFailure {
   pub fields: Vec<ValidationFailedField>
 }
