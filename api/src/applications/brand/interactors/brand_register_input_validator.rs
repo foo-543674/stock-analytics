@@ -83,13 +83,14 @@ impl BrandRegisterInputValidator {
 }
 
 #[derive(Debug, Clone)]
-pub struct BrandRegisterInputValidationSuccess {
+pub struct ValidatedBrandRegisterInput {
+  pub input: BrandRegisterInput,
   pub found_sector: Sector,
 }
 
 #[async_trait]
-impl Validator<BrandRegisterInput, BrandRegisterInputValidationSuccess> for BrandRegisterInputValidator {
-  async fn validate(&self, target: &BrandRegisterInput) -> Result<BrandRegisterInputValidationSuccess, ApplicationError> {
+impl Validator<BrandRegisterInput, ValidatedBrandRegisterInput> for BrandRegisterInputValidator {
+  async fn validate(&self, target: &BrandRegisterInput) -> Result<ValidatedBrandRegisterInput, ApplicationError> {
     return self.base_validator.validate(target)
       .then(|result| async {
         // NOTE: If validation error for code is already exists, BrandCode cannot construct.
@@ -118,7 +119,8 @@ impl Validator<BrandRegisterInput, BrandRegisterInputValidationSuccess> for Bran
         }
       })
       .and_then(|sector| async {
-        Ok(BrandRegisterInputValidationSuccess {
+        Ok(ValidatedBrandRegisterInput {
+          input: target.clone(),
           found_sector: sector,
         })
       }).await;

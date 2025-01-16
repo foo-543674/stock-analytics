@@ -11,16 +11,13 @@ use crate::{
   }, 
   util::{unempty_string::UnemptyString, version::Version}
 };
-use super::{
-  brand_register_input::BrandRegisterInput, 
-  brand_register_input_validator::BrandRegisterInputValidationSuccess
-};
+use super::brand_register_input_validator::ValidatedBrandRegisterInput;
 #[cfg(test)]
 use mockall::automock;
 
 #[cfg_attr(test, automock)]
 pub trait BrandFactory {
-  fn create(&self, input: &BrandRegisterInput, validation_success: &BrandRegisterInputValidationSuccess) -> Result<Brand, ApplicationError>;
+  fn create(&self, validated_input: &ValidatedBrandRegisterInput) -> Result<Brand, ApplicationError>;
 }
 
 pub struct BrandFactoryImpl{
@@ -36,13 +33,14 @@ impl BrandFactoryImpl {
 }
 
 impl BrandFactory for BrandFactoryImpl {
-  fn create(&self, input: &BrandRegisterInput, validation_success: &BrandRegisterInputValidationSuccess) -> Result<Brand, ApplicationError> {
+  fn create(&self, validated_input: &ValidatedBrandRegisterInput) -> Result<Brand, ApplicationError> {
+    let input = &validated_input.input;
     let ulid = self.id_generator.generate()?;
     Ok(Brand{
       id: BrandId::new(ulid),
       name: UnemptyString::from_string(&input.name),
       code: BrandCode::from_string(&input.code),
-      sector: validation_success.found_sector.clone(),
+      sector: validated_input.found_sector.clone(),
       version: Version::new(),
     })
   }
@@ -58,7 +56,6 @@ mod tests {
       brand::interactors::{
         brand_factory::BrandFactory, 
         brand_register_input::BrandRegisterInput, 
-        brand_register_input_validator::BrandRegisterInputValidationSuccess
       },
       common::ulid_generator::MockUlidGenerator
     }, 
@@ -90,7 +87,8 @@ mod tests {
         sector_id: sector_id.to_string(),
       };
       let sector: Sector = Default::default();
-      let validation_success = BrandRegisterInputValidationSuccess {
+      let validated_input = ValidatedBrandRegisterInput {
+        input: input,
         found_sector: sector.clone(),
       };
 
@@ -99,7 +97,7 @@ mod tests {
       id_generator.expect_generate().returning(move || Ok(id_clone));
 
       let factory = BrandFactoryImpl::new(Arc::new(id_generator));
-      let brand = factory.create(&input, &validation_success).unwrap();
+      let brand = factory.create(&validated_input).unwrap();
 
       assert_eq!(brand.id.value(), &id);
       assert_eq!(brand.name.value(), name);
