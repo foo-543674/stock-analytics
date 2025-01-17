@@ -1,15 +1,18 @@
 use axum::{
-  routing::post,
-  Router
+  routing::post, Json, Router
 };
 
-use crate::https::brand::post_brand_handler::PostBrandHandler;
+use crate::{https::brand::post_brands::{post_brands, PostBrandBody}, modules::root::RootModule};
 
-fn api_base_path(path: &str) -> String {
-  format!("/api{}", path)
-}
+pub fn router(module: RootModule) -> Router {
+  let api_routes = Router::new()
+    .route("/brands", post(move |json: Json<PostBrandBody>| {
+      let module = module.clone();
+      async move {
+        post_brands(json, module.brand.register_brand_usecase()).await
+      }
+    }));
 
-pub fn router() -> Router {
-  Router::new()
-    // .route(&api_base_path(PostBrandHandler::PATH), post(PostBrandHandler::new().handle))
+  return Router::new()
+    .nest("/api", api_routes);
 }
