@@ -26,20 +26,8 @@ impl PostBrandBody {
   }
 }
 
-pub struct PostBrandHandler {
-  usecase: RegisterBrandUsecase,
-}
-
-impl PostBrandHandler {
-  pub fn new(usecase: RegisterBrandUsecase) -> Self {
-    Self { usecase }
-  }
-
-  pub const PATH: &str = "/brands";
-
-  pub async fn handle(&self, Json(payload): Json<PostBrandBody>) -> Result<Json<BrandJson>, ApplicationError> {
-    let input = payload.to_input();
-    let result = self.usecase.execute(input).await?;
-    Ok(Json(BrandJson::from_brand(result)))
-  }
+pub async fn post_brands(Json(payload): Json<PostBrandBody>, usecase: RegisterBrandUsecase) -> Result<Json<BrandJson>, ApplicationError> {
+  let input = payload.to_input();
+  let result = usecase.execute(input).await?;
+  Ok(Json(BrandJson::from_brand(result)))
 }

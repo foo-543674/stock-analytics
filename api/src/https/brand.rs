@@ -1,2 +1,2 @@
 pub mod brand_json;
-pub mod post_brand_handler;
+pub mod post_brands;
