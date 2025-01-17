@@ -41,7 +41,7 @@ impl BrandModule {
     Self {}
   }
 
-  pub fn register_brand_usecase(&self) -> RegisterBrandUsecase {
+  pub fn resolve_register_brand_usecase(&self) -> RegisterBrandUsecase {
     let brand_repository: Arc<dyn BrandRepository> = Arc::new(BrandRepositoryOnMemory::new());
     let sector_repository: Arc<dyn SectorRepository> = Arc::new(SectorRepositoryOnMemory::new());
     let validator: Arc<dyn Validator<BrandRegisterInput, ValidatedBrandRegisterInput>> = Arc::new(BrandRegisterInputValidator::new(Arc::clone(&brand_repository), sector_repository));

@@ -9,7 +9,7 @@ pub fn router(module: RootModule) -> Router {
     .route("/brands", post(move |json: Json<PostBrandBody>| {
       let module = module.clone();
       async move {
-        post_brands(json, module.brand.register_brand_usecase()).await
+        post_brands(json, module.brand.resolve_register_brand_usecase()).await
       }
     }));
 
