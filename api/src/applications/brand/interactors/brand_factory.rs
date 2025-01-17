@@ -16,7 +16,7 @@ use super::brand_register_input_validator::ValidatedBrandRegisterInput;
 use mockall::automock;
 
 #[cfg_attr(test, automock)]
-pub trait BrandFactory {
+pub trait BrandFactory: Sync + Send {
   fn create(&self, validated_input: &ValidatedBrandRegisterInput) -> Result<Brand, ApplicationError>;
 }
 
