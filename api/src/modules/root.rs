@@ -1,13 +1,15 @@
+use std::sync::Arc;
+
 use super::brand::BrandModule;
 
 pub struct RootModule {
-  pub brand: BrandModule
+  pub brand: Arc<BrandModule>
 }
 
 impl RootModule {
   pub fn new() -> Self {
     Self {
-      brand: BrandModule::new()
+      brand: Arc::new(BrandModule::new())
     }
   }
 }
