@@ -64,9 +64,8 @@ mod tests {
       sector::Sector
     }, 
     test_support::{
-      string::{
-        fixed_length_numeric_string, random_text
-      }, 
+      string::*,
+      mock::*,
       ulid::random_ulid
     }
   };
@@ -81,20 +80,12 @@ mod tests {
       code in fixed_length_numeric_string(BrandCode::BRAND_CODE_LENGTH),
       sector_id in random_ulid(),
     ) {
-      let input = BrandRegisterInput {
-        name: name.clone(),
-        code: code.clone(),
-        sector_id: sector_id.to_string(),
-      };
+      let input = BrandRegisterInput::new(&name, &code, &sector_id.to_string());
       let sector: Sector = Default::default();
-      let validated_input = ValidatedBrandRegisterInput {
-        input: input,
-        found_sector: sector.clone(),
-      };
+      let validated_input = ValidatedBrandRegisterInput::new(&input, sector.clone());
 
-      let mut id_generator = MockUlidGenerator::new();
       let id_clone = id.clone();
-      id_generator.expect_generate().returning(move || Ok(id_clone));
+      let id_generator = create_mock::<MockUlidGenerator>(|mock| { mock.expect_generate().returning(move || Ok(id_clone)); });
 
       let factory = BrandFactoryImpl::new(Arc::new(id_generator));
       let brand = factory.create(&validated_input).unwrap();

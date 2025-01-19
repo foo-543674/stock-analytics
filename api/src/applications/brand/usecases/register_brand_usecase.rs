@@ -56,36 +56,25 @@ mod test {
       }
     }, 
     domains::brand::brand::Brand, 
+    test_support::mock::*
   };
 
   #[tokio::test]
   async fn register_brand_usecase_should_save_brand_when_validator_resutn_success() {
-    let input = BrandRegisterInput {
-      name: "name".to_string(),
-      code: "code".to_string(),
-      sector_id: "sector_id".to_string(),
-    };
+    let input = BrandRegisterInput::new("name", "code", "sector_id"); 
     let brand = Brand::default();
-
-    let mut brand_repository = MockBrandRepository::new();
-    brand_repository.expect_add().times(1).returning(|_| Box::pin(async { Ok(()) }));
-
-    let mut brand_register_input_validator = MockValidator::new();
-    brand_register_input_validator.expect_validate().times(1).returning(|input: &BrandRegisterInput  | {
-      let input_clone = input.clone();
-      Box::pin(async move { Ok(ValidatedBrandRegisterInput{
-        input: input_clone,
-        found_sector: Default::default(),
-      }) })
+    let brand_repository = create_mock::<MockBrandRepository>(|mock| { once_returning!(mock, expect_add, box_ok!(())); });
+    let validator = create_mock::<MockValidator<BrandRegisterInput, ValidatedBrandRegisterInput>>(|mock| {
+      once_returning!(mock, expect_validate, |input| {
+        let result = ValidatedBrandRegisterInput::new(input, Default::default());
+        box_ok!(@move result)
+      } => closure);
     });
-
-    let mut brand_factory = MockBrandFactory::new();
-    let brand_clone = brand.clone();
-    brand_factory.expect_create().times(1).returning(move |_| Ok(brand_clone.clone()));
+    let brand_factory = create_mock::<MockBrandFactory>(|mock| { once_returning!(mock, expect_create, Ok(Default::default())); });
 
     let usecase = RegisterBrandUsecase::new( 
       Arc::new(brand_repository),
-      Arc::new(brand_register_input_validator),
+      Arc::new(validator),
       Arc::new(brand_factory),
     );
 
@@ -97,26 +86,19 @@ mod test {
 
   #[tokio::test]
   async fn register_brand_usecase_should_not_save_when_validator_return_error() {
-    let mut brand_repository = MockBrandRepository::new();
-    brand_repository.expect_add().times(0);
-    let mut brand_register_input_validator = MockValidator::new();
-    brand_register_input_validator.expect_validate().times(1).returning(move |_| {
-      Box::pin(async { Err(validation_error!("foo", required())) })
+    let brand_repository = create_mock::<MockBrandRepository>(|mock| { do_not_call!(mock, expect_add); });
+    let validator = create_mock::<MockValidator<BrandRegisterInput, ValidatedBrandRegisterInput>>(|mock| {
+      once_returning!(mock, expect_validate, box_err!(validation_error!("foo", required())));
     });
-    let mut brand_factory = MockBrandFactory::new();
-    brand_factory.expect_create().times(0);
+    let brand_factory = create_mock::<MockBrandFactory>(|mock| { do_not_call!(mock, expect_create); });
 
     let usecase = RegisterBrandUsecase::new( 
       Arc::new(brand_repository),
-      Arc::new(brand_register_input_validator),
+      Arc::new(validator),
       Arc::new(brand_factory),
     );
 
-    let input = BrandRegisterInput {
-      name: "name".to_string(),
-      code: "code".to_string(),
-      sector_id: "sector_id".to_string(),
-    };
+    let input = BrandRegisterInput::new("name", "code", "sector_id"); 
     let result = usecase.execute(input).await;
 
     assert!(result.is_err());
