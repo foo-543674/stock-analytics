@@ -32,8 +32,6 @@ use crate::{
   }
 };
 
-//TODO: handle without clone
-#[derive(Clone)]
 pub struct BrandModule {}
 
 impl BrandModule {

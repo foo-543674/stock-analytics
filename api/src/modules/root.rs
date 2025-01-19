@@ -1,7 +1,5 @@
 use super::brand::BrandModule;
 
-//TODO: handle without clone
-#[derive(Clone)]
 pub struct RootModule {
   pub brand: BrandModule
 }
