@@ -29,5 +29,5 @@ impl PostBrandBody {
 pub async fn post_brands(Json(payload): Json<PostBrandBody>, usecase: RegisterBrandUsecase) -> Result<Json<BrandJson>, ApplicationError> {
   let input = payload.to_input();
   let result = usecase.execute(input).await?;
-  Ok(Json(BrandJson::from_brand(result)))
+  Ok(Json(BrandJson::from_brand(&result)))
 }

@@ -20,8 +20,8 @@ pub struct BrandJson {
 }
 
 impl BrandJson {
-  pub fn from_brand(brand: Brand) -> Self {
-    let sector = brand.sector;
+  pub fn from_brand(brand: &Brand) -> Self {
+    let sector = &brand.sector;
     BrandJson {
       id: brand.id.to_string(),
       name: brand.name.value().to_string(),
