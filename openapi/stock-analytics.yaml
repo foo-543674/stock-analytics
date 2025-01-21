@@ -1,0 +1,19 @@
+openapi: 3.0.3
+info:
+  title: "Stock Analytics API"
+  version: "1.0.0"
+  description: "API for stock analytics"
+tags: 
+  - name: "brands"
+    description: "Brands operation"
+  - name: "ir"
+    description: "IR analytics operation"
+  - name: "portfolio"
+    description: "Portfolio operation"
+paths:
+  /sectors:
+    $ref: "./paths/brands.yaml#/sectors"
+  /brands:
+    $ref: "./paths/brands.yaml#/brands"
+  /brands/{id}:
+    $ref: "./paths/brands.yaml#/brands_id"
