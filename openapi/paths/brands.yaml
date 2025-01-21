@@ -44,7 +44,7 @@ brands:
             type: "string"
             enum: ["id", "name", "code", "sector_code", "sector_group_code", "sector_categrory"]
           style: "form"
-          explode: false
+          explode: true
           example: name,code
       - name: "order"
         in: "query"
