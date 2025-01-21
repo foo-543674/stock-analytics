@@ -71,7 +71,10 @@
 				"ms-python.flake8",
 				"oderwat.indent-rainbow",
 				"GitHub.vscode-github-actions",
-				"tamasfe.even-better-toml"
+				"tamasfe.even-better-toml",
+				"42Crunch.vscode-openapi",
+				"mermade.openapi-lint",
+				"christian-kohler.path-intellisense"
 			]
 		}
 	}
