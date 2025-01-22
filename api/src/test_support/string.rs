@@ -1,5 +1,9 @@
 #[cfg(test)]
 use proptest::prelude::*;
+#[cfg(test)]
+use proptest::strategy::Strategy;
+#[cfg(test)]
+use super::generic::random_pick_values;
 
 #[cfg(test)]
 pub fn alphanumeric_string(length: usize) -> impl Strategy<Value = String> {
@@ -49,3 +53,57 @@ pub fn random_text_length_at_least(min_length: usize) -> impl Strategy<Value = S
   proptest::collection::vec(any::<char>(), min_length..=min_length + 10000)
     .prop_map(|chars| chars.into_iter().collect())
 }
+
+#[cfg(test)]
+pub fn randomize_case(input: &str) -> impl Strategy<Value = String> {
+  input.chars().map(|c| {
+    if c.is_ascii_alphanumeric() {
+      prop_oneof![
+        Just(c.to_ascii_uppercase()),
+        Just(c.to_ascii_lowercase())
+      ]
+      .boxed()
+    } else {
+      Just(c).boxed()
+    }
+  }).collect::<Vec<_>>().prop_map(|v| v.into_iter().collect())
+}
+
+#[cfg(test)]
+pub fn pick_values_with_random_case(values: Vec<String>) -> impl Strategy<Value = Vec<String>> {
+  let len = values.len();
+  random_pick_values(values, 1..=len)
+    .prop_flat_map(|values| {
+      values.into_iter().map(|v| randomize_case(&v))
+        .collect::<Vec<_>>()
+        .prop_map(|v| v.into_iter().collect::<Vec<String>>())
+    })
+}
+
+#[cfg(test)]
+macro_rules! pick_values_with_random_case_from {
+  ($($values:expr),+ $(,)?) => {{
+    let values = vec![$($values),+];
+    crate::test_support::string::pick_values_with_random_case(values.iter().map(|s| s.to_string()).collect())
+  }};
+}
+
+#[cfg(test)]
+pub(crate) use pick_values_with_random_case_from;
+
+#[cfg(test)]
+pub fn pick_one_with_random_case(values: Vec<String>) -> impl Strategy<Value = String> {
+  pick_values_with_random_case(values)
+    .prop_map(|v| v.into_iter().next().unwrap())
+}
+
+#[cfg(test)]
+macro_rules! pick_one_with_random_case_from {
+  ($($values:expr),+ $(,)?) => {{
+    let values = vec![$($values),+];
+    crate::test_support::string::pick_one_with_random_case(values.iter().map(|s| s.to_string()).collect())
+  }};
+}
+
+#[cfg(test)]
+pub(crate) use pick_one_with_random_case_from;
