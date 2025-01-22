@@ -28,7 +28,7 @@ brands:
           type: "integer"
           example: 1
           minimum: 1
-        default: 1
+          default: 1
       - name: "count"
         in: "query"
         description: "Items count per page"
@@ -38,18 +38,18 @@ brands:
           example: 10
           minimum: 1
           maximum: 100
-        default: 10
+          default: 10
       - name: "sort"
         in: "query"
         description: "Sort by field"
         required: false
+        style: "form"
+        explode: false
         schema:
           type: "array"
           items:
             type: "string"
             enum: ["id", "name", "code", "sector_code", "sector_group_code", "sector_categrory"]
-          style: "form"
-          explode: true
           example: name,code
       - name: "order"
         in: "query"
