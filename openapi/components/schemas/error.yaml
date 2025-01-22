@@ -21,6 +21,7 @@ validation_error:
               type: string
               description: "Validation error message"
               example: "validation.required"
+              pattern: "^validation\\..+"
 not_found_error:
   type: string
   description: "Error message"

@@ -90,10 +90,12 @@ post_brand:
       type: string
       description: "Brand name"
       example: "キリン"
+      maxLength: 100
     code:
       type: string
       description: "Brand code"
       example: "2503"
+      pattern: "\\d{4}"
     sector_id:
       type: string
       format: ulid
@@ -106,10 +108,12 @@ put_brand:
       type: string
       description: "Brand name"
       example: "キリン"
+      maxLength: 100
     code:
       type: string
       description: "Brand code"
       example: "2503"
+      pattern: "\\d{4}"
     sector_id:
       type: string
       format: ulid
