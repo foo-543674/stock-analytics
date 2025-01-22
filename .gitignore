@@ -330,3 +330,6 @@ proptest-regressions/
 # Ignore local database files
 *.sqlite
 *.sqlite3
+
+## customize by me
+dist/
