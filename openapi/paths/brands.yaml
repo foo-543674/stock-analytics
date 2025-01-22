@@ -66,6 +66,20 @@ brands:
           type: "string"
           format: "ulid"
           example: "01F4Z3ZQZJQZJZJZJZJZJZJZJZ"
+      - name: "name"
+        in: "query"
+        description: "Brand name"
+        required: false
+        schema:
+          type: "string"
+          example: "Brand name"
+      - name: "code"
+        in: "query"
+        description: "Brand code"
+        required: false
+        schema:
+          type: "string"
+          example: "BRAND_CODE"
     responses:
       '200':
         description: "List of brands"
