@@ -81,7 +81,7 @@ mod test {
     let result = usecase.execute(input).await;
 
     assert!(result.is_ok());
-    assert_eq!(result.unwrap(), brand);
+    assert_eq!(result.expect("must be success"), brand);
   }
 
   #[tokio::test]

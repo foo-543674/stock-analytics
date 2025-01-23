@@ -15,8 +15,10 @@ macro_rules! define_id {
         $name(id)
       }
       
-      pub fn from_string(value: &str) -> Self {
-        $name(ulid::Ulid::from_string(value).unwrap())
+      pub fn from_string(value: &str) -> Result<Self, crate::domains::errors::domain_error::DomainError> {
+        ulid::Ulid::from_string(value)
+          .map($name)
+          .map_err(|e| crate::domains::errors::domain_error::DomainError::InvalidData(e.to_string()))
       }
 
       pub fn value(&self) -> &Ulid {

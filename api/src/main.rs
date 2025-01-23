@@ -6,6 +6,6 @@ async fn main() {
 
   let module = RootModule::new();
 
-  let listener = tokio::net::TcpListener::bind("0.0.0.0:3000").await.unwrap();
-  axum::serve(listener, router(module)).await.unwrap();
+  let listener = tokio::net::TcpListener::bind("0.0.0.0:3000").await.expect("Failed to bind to port 3000");
+  axum::serve(listener, router(module)).await.expect("Failed to start server");
 }

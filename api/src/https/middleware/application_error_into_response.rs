@@ -23,15 +23,15 @@ impl IntoResponse for ApplicationError {
       ApplicationError::ConflictError(_) => Response::builder()
         .status(StatusCode::CONFLICT)
         .body(Body::empty())
-        .unwrap(),
+        .expect("Failed to build response"),
       ApplicationError::RepositoryError(_) => Response::builder()
         .status(StatusCode::INTERNAL_SERVER_ERROR)
         .body(Body::empty())
-        .unwrap(),
+        .expect("Failed to build response"),
       ApplicationError::UnexpectedError(_) => Response::builder()
         .status(StatusCode::INTERNAL_SERVER_ERROR)
         .body(Body::empty())
-        .unwrap(),
+        .expect("Failed to build response"),
     };
   }
 }

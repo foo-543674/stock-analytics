@@ -116,9 +116,10 @@ impl Validator<BrandRegisterInput, ValidatedBrandRegisterInput> for BrandRegiste
       .then(|result| async {
         // NOTE: If validation error for sector_id is already exists, SectorId cannot construct.
         if result.is_validation_error_and_has_field("sector_id") {
-          Err(result.unwrap_err())
+          Err(result.expect_err("Error must be exists in here"))
         } else {
-          let sector_option = self.sector_repository.find_by_id(&SectorId::from_string(&target.sector_id)).await?;
+          let sector_id = SectorId::from_string(&target.sector_id).expect("must be success in this block");
+          let sector_option = self.sector_repository.find_by_id(&sector_id).await?;
           match (result, sector_option) {
             (Ok(_), Some(sector)) => Ok(sector),
             (Ok(_), None) => Err(validation_error!("sector_id", resource_not_found())),
@@ -299,7 +300,7 @@ mod tests {
       let input = BrandRegisterInput::new(&name, &code, &sector_id);
       let result = futures::executor::block_on(sut.validate(&input));
       assert_result_is_ok!(result);
-      let success = result.unwrap();
+      let success = result.expect("must be success");
       assert_eq!(success.found_sector, Default::default());
     }
   }

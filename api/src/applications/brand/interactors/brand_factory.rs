@@ -88,7 +88,7 @@ mod tests {
       let id_generator = create_mock::<MockUlidGenerator>(|mock| { mock.expect_generate().returning(move || Ok(id_clone)); });
 
       let factory = BrandFactoryImpl::new(Arc::new(id_generator));
-      let brand = factory.create(&validated_input).unwrap();
+      let brand = factory.create(&validated_input).expect("Failed to create brand");
 
       assert_eq!(brand.id.value(), &id);
       assert_eq!(brand.name.value(), name);
