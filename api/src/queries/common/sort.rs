@@ -1,42 +1,72 @@
-pub trait SortKey: Sized + Copy + Clone + Eq + PartialEq {
-  fn to_string(&self) -> &'static str;
-  fn get_values() -> Vec<Self>;
-  fn from_string(value: &str) -> Option<Self> {
-    Self::get_values().iter().find(|&v| v.to_string().to_ascii_lowercase() == value.to_ascii_lowercase()).copied()
-  }
-  fn from_string_with_canma_separated(value: &str) -> Vec<Self> {
-    value
-      .split(',')
-      .map(Self::from_string)
-      .flatten()
-      .collect()
-  }
-}
+use once_cell::sync::Lazy;
 
+#[derive(Debug, PartialEq, Eq, Clone, Copy)]
 pub enum Order {
   Ascending,
   Descending,
 }
 
-const ASCENDING_KEY: &str = "asc";
-const DESCENDING_KEY: &str = "desc";
+pub trait SortKey
+  : Sized 
+  + Copy 
+  + Clone 
+  + Eq 
+  + PartialEq 
+  + strum::IntoEnumIterator
+  + std::str::FromStr<Err = strum::ParseError>
+  + std::fmt::Display
+{}
 
-impl Order {
-  fn to_string(&self) -> &'static str {
-    match self {
-      Order::Ascending => ASCENDING_KEY,
-      Order::Descending => DESCENDING_KEY,
+pub struct Sort<T: SortKey> {
+  pub key: T,
+  pub order: Order,
+}
+
+macro_rules! sort_key {
+  ($name: ident, $($var:ident),+ $(,)?) => {
+    #[derive(Debug, PartialEq, Eq, Clone, Copy, strum::EnumIter, strum::EnumString, strum::Display)]
+    #[strum(serialize_all = "snake_case", ascii_case_insensitive)]
+    pub enum $name {
+      $($var,)+
     }
+
+    impl SortKey for $name { }
+  };
+}
+
+pub(crate) use sort_key;
+
+const KEY_PATTERN: Lazy<regex::Regex> = Lazy::new(|| {
+  regex::Regex::new(r"^(?<desc>-?)(?<key>[a-zA-Z0-9_]+)$").expect("Invalid regex pattern")
+});
+
+impl<T: SortKey> Sort<T> {
+  pub fn new(key: T, order: Order) -> Self {
+    Sort { key, order }
   }
 
-  fn from_string(value: &str) -> Option<Self> {
-    [ASCENDING_KEY, DESCENDING_KEY].iter().find(|&v| v.to_ascii_lowercase() == value.to_ascii_lowercase()).map(|&v| {
-      match v {
-        ASCENDING_KEY => Order::Ascending,
-        DESCENDING_KEY => Order::Descending,
-        _ => unreachable!(),
-      }
-    })
+  pub fn from_string(value: &str) -> Option<Self> {
+    let Some(capture) = KEY_PATTERN.captures(value) else {
+      return None;
+    };
+
+    let key = match T::from_str(&capture["key"]) {
+      Ok(v) => v,
+      Err(_) => return None,
+    };
+    let order = match &capture["desc"] {
+      "" => Order::Ascending,
+      "-" => Order::Descending,
+      _ => return None,
+    };
+
+    Some(Sort::new(key, order))
+  }
+
+  pub fn from_string_with_canma_separated(value: &str) -> Vec<Self> {
+    value.split(",")
+      .filter_map(|v| Self::from_string(v))
+      .collect()
   }
 }
 
@@ -45,7 +75,6 @@ mod test {
   use crate::test_support::{
     generic::random_pick_values_from, 
     string::{
-      pick_one_with_random_case_from, 
       pick_values_with_random_case_from, 
       random_text
     }
@@ -54,56 +83,48 @@ mod test {
   use super::*;
   use proptest::prelude::*;
 
-  #[derive(Debug, PartialEq, Eq, Clone, Copy)]
-  enum SampleSortKey {
-    Id,
-    Name,
-    Code,
-  }
-
-  impl SortKey for SampleSortKey {
-    fn to_string(&self) -> &'static str {
-      match self {
-        SampleSortKey::Id => "id",
-        SampleSortKey::Name => "name",
-        SampleSortKey::Code => "code",
-      }
-    }
-
-    fn get_values() -> Vec<Self> {
-      vec![SampleSortKey::Id, SampleSortKey::Name, SampleSortKey::Code]
-    }
-  }
+  sort_key!(SampleSortKey, Id, Name, FooCode);
 
   proptest!(
     #[test]
-    fn sort_key_should_able_to_parse_canma_separated_string(input in random_pick_values_from!("id", "name", "code")) {
+    fn sort_should_able_to_parse_canma_separated_string(input in random_pick_values_from!("id", "name", "foo_code")) {
       let input_str = input.join(",");
-      let result = SampleSortKey::from_string_with_canma_separated(&input_str).iter().map(|v| SampleSortKey::to_string(&v).to_string()).collect::<Vec<_>>();
-      let expected = input.iter().map(|v| v.to_ascii_lowercase()).collect::<Vec<_>>();
-      prop_assert_eq!(result, expected);
+      let result = Sort::<SampleSortKey>::from_string_with_canma_separated(&input_str);
+      for (i, v) in input.iter().enumerate() {
+        prop_assert_eq!(&result[i].key.to_string(), v);
+        prop_assert_eq!(result[i].order, Order::Ascending);
+      }
     }
 
     #[test]
-    fn sort_key_should_parse_as_case_insensitive(input in pick_values_with_random_case_from!("id", "name", "code")) {
+    fn sort_should_parse_as_case_insensitive(input in pick_values_with_random_case_from!("id", "name", "foo_code")) {
       let input_str = input.join(",");
-      let result = SampleSortKey::from_string_with_canma_separated(&input_str).iter().map(|v| SampleSortKey::to_string(&v).to_string()).collect::<Vec<_>>();
-      let expected = input.iter().map(|v| v.to_ascii_lowercase()).collect::<Vec<_>>();
-      prop_assert_eq!(result, expected);
+      let result = Sort::<SampleSortKey>::from_string_with_canma_separated(&input_str);
+      for (i, v) in input.iter().enumerate() {
+        prop_assert_eq!(&result[i].key.to_string(), &v.to_ascii_lowercase());
+        prop_assert_eq!(result[i].order, Order::Ascending);
+      }
     }
 
     #[test]
-    fn sort_key_should_ignore_invalid_values(input in random_pick_values_from!("id", "name", "code"), invalid in random_text()) {
+    fn sort_should_ignore_invalid_values(input in random_pick_values_from!("id", "name", "foo_code"), invalid in random_text()) {
       let input_str = format!("{},{}", input.join(","), invalid);
-      let result = SampleSortKey::from_string_with_canma_separated(&input_str).iter().map(|v| SampleSortKey::to_string(&v).to_string()).collect::<Vec<_>>();
-      let expected = input.iter().map(|v| v.to_ascii_lowercase()).collect::<Vec<_>>();
-      prop_assert_eq!(result, expected);
+      let result = Sort::<SampleSortKey>::from_string_with_canma_separated(&input_str);
+      prop_assert_eq!(result.len(), input.len());
+      for (i, v) in input.iter().enumerate() {
+        prop_assert_eq!(&result[i].key.to_string(), v);
+        prop_assert_eq!(result[i].order, Order::Ascending);
+      }
     }
 
     #[test]
-    fn order_should_parse_as_case_insensitive(input in pick_one_with_random_case_from!("asc", "desc")) {
-      let result = Order::from_string(&input).map(|v| Order::to_string(&v).to_string());
-      prop_assert_eq!(result, Some(input.to_lowercase()));
+    fn sort_should_parse_has_hyphen_as_descending(input in random_pick_values_from!("id", "name", "foo_code")) {
+      let input_str = input.iter().map(|v| format!("-{}", v)).collect::<Vec<String>>().join(",");
+      let result = Sort::<SampleSortKey>::from_string_with_canma_separated(&input_str);
+      for (i, v) in input.iter().enumerate() {
+        prop_assert_eq!(&result[i].key.to_string(), v);
+        prop_assert_eq!(result[i].order, Order::Descending);
+      }
     }
   );
 }
