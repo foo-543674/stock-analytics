@@ -41,7 +41,9 @@ brands:
           default: 10
       - name: "sort"
         in: "query"
-        description: "Sort by field"
+        description: >
+          Sort by field. Use a minus sign (-) to sort in descending order.
+          Available fields: id, name, code, sector_code, sector_group_code, sector_category
         required: false
         style: "form"
         explode: false
@@ -49,8 +51,8 @@ brands:
           type: "array"
           items:
             type: "string"
-            enum: ["id", "name", "code", "sector_code", "sector_group_code", "sector_categrory"]
-          example: name,code
+            pattern: "^-?(id|name|code|sector_code|sector_group_code,sector_category)$"
+          example: -name,code
       - name: "order"
         in: "query"
         description: "Sort order"
