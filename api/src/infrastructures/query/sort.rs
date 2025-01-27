@@ -1,10 +1,5 @@
 use once_cell::sync::Lazy;
-
-#[derive(Debug, PartialEq, Eq, Clone, Copy)]
-pub enum Order {
-  Ascending,
-  Descending,
-}
+use sea_orm::Order;
 
 pub trait SortKey
   : Sized 
@@ -30,7 +25,7 @@ macro_rules! sort_key {
       $($var,)+
     }
 
-    impl SortKey for $name { }
+    impl crate::infrastructures::query::sort::SortKey for $name { }
   };
 }
 
@@ -55,8 +50,8 @@ impl<T: SortKey> Sort<T> {
       Err(_) => return None,
     };
     let order = match &capture["desc"] {
-      "" => Order::Ascending,
-      "-" => Order::Descending,
+      "" => Order::Asc,
+      "-" => Order::Desc,
       _ => return None,
     };
 
@@ -92,7 +87,7 @@ mod test {
       let result = Sort::<SampleSortKey>::from_string_with_canma_separated(&input_str);
       for (i, v) in input.iter().enumerate() {
         prop_assert_eq!(&result[i].key.to_string(), v);
-        prop_assert_eq!(result[i].order, Order::Ascending);
+        prop_assert_eq!(&result[i].order, &Order::Asc);
       }
     }
 
@@ -102,7 +97,7 @@ mod test {
       let result = Sort::<SampleSortKey>::from_string_with_canma_separated(&input_str);
       for (i, v) in input.iter().enumerate() {
         prop_assert_eq!(&result[i].key.to_string(), &v.to_ascii_lowercase());
-        prop_assert_eq!(result[i].order, Order::Ascending);
+        prop_assert_eq!(&result[i].order, &Order::Desc);
       }
     }
 
@@ -113,7 +108,7 @@ mod test {
       prop_assert_eq!(result.len(), input.len());
       for (i, v) in input.iter().enumerate() {
         prop_assert_eq!(&result[i].key.to_string(), v);
-        prop_assert_eq!(result[i].order, Order::Ascending);
+        prop_assert_eq!(&result[i].order, &Order::Asc);
       }
     }
 
@@ -123,7 +118,7 @@ mod test {
       let result = Sort::<SampleSortKey>::from_string_with_canma_separated(&input_str);
       for (i, v) in input.iter().enumerate() {
         prop_assert_eq!(&result[i].key.to_string(), v);
-        prop_assert_eq!(result[i].order, Order::Descending);
+        prop_assert_eq!(&result[i].order, &Order::Desc);
       }
     }
   );

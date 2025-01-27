@@ -3,7 +3,6 @@ pub mod domains;
 pub mod https;
 pub mod infrastructures;
 pub mod modules;
-pub mod queries;
 pub mod routes;
 pub mod test_support;
 pub mod util;
