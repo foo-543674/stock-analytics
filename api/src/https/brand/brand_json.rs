@@ -1,5 +1,5 @@
 use serde::Serialize;
-use crate::domains::brand::brand::Brand;
+use crate::{domains::brand::brand::Brand, infrastructures::brand::brand_dao::BrandRecord};
 
 #[derive(Clone, Debug, Serialize)]
 pub struct SectorJson {
@@ -33,6 +33,22 @@ impl BrandJson {
         group: sector.group.name.value().to_string(),
         group_code: sector.group.code.value(),
         category: sector.category.name.value().to_string()
+      }
+    }
+  }
+
+  pub fn from_brand_record(record: BrandRecord) -> Self {
+    BrandJson {
+      id: record.id,
+      name: record.name,
+      code: record.code,
+      sector: SectorJson {
+        id: record.sector_id,
+        name: record.sector_name,
+        code: record.sector_code,
+        group: record.sector_group_name,
+        group_code: record.sector_group_code,
+        category: record.category_name
       }
     }
   }

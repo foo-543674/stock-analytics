@@ -67,6 +67,15 @@ impl Pagination {
     }
   }
 
+  pub fn from_int_option(num: Option<i32>, size: Option<i32>) -> Self {
+    let num = num.unwrap_or(1);
+    let size = size.unwrap_or(DEFAULT_ITEMS_PER_PAGE as i32);
+    Pagination {
+      num: PageNumer::from_int(num),
+      size: ItemsPerPage::from_int(size),
+    }
+  }
+
   pub fn offset(&self) -> u32 {
     self.size.value() * (self.num.value() - 1)
   }
@@ -106,6 +115,27 @@ mod test {
     #[test]
     fn pagination_should_set_default_to_size_when_size_is_greater_than_100(num in 1..i32::MAX, size in 101..=i32::MAX) {
       let pagination = Pagination::from_int(num, size);
+      assert_eq!(pagination.num.value(), num as u32);
+      assert_eq!(pagination.size.value(), DEFAULT_ITEMS_PER_PAGE);
+    }
+
+    #[test]
+    fn pagination_should_create_from_int_option(num in 1..i32::MAX, size in 1..=100) {
+      let pagination = Pagination::from_int_option(Some(num), Some(size));
+      assert_eq!(pagination.num.value(), num as u32);
+      assert_eq!(pagination.size.value(), size as u32);
+    }
+
+    #[test]
+    fn pagination_should_set_default_to_num_when_num_is_none(size in 1..=100) {
+      let pagination = Pagination::from_int_option(None, Some(size));
+      assert_eq!(pagination.num.value(), 1);
+      assert_eq!(pagination.size.value(), size as u32);
+    }
+
+    #[test]
+    fn pagination_should_set_default_to_size_when_size_is_none(num in 1..i32::MAX) {
+      let pagination = Pagination::from_int_option(Some(num), None);
       assert_eq!(pagination.num.value(), num as u32);
       assert_eq!(pagination.size.value(), DEFAULT_ITEMS_PER_PAGE);
     }

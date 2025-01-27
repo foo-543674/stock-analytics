@@ -1,5 +1,7 @@
 use std::sync::Arc;
 
+use sea_orm::ConnectOptions;
+
 use crate::{
   applications::{
     brand::{
@@ -26,17 +28,20 @@ use crate::{
     }, 
     validation::validator::Validator
   }, 
-  infrastructures::brand::{
-    brand_repository::BrandRepositoryOnMemory, 
-    secrot_repository::SectorRepositoryOnMemory
-  }
+  infrastructures::{brand::{
+    brand_list_query::BrandListQuery, brand_repository::BrandRepositoryOnMemory, secrot_repository::SectorRepositoryOnMemory
+  }, support::connection::create_db_connection}
 };
 
-pub struct BrandModule {}
+use super::errors::ModuleError;
+
+pub struct BrandModule {
+  db_option: Arc<ConnectOptions>
+}
 
 impl BrandModule {
-  pub fn new() -> Self {
-    Self {}
+  pub fn new(db_option: Arc<ConnectOptions>) -> Self {
+    Self { db_option }
   }
 
   pub fn resolve_register_brand_usecase(&self) -> RegisterBrandUsecase {
@@ -51,5 +56,11 @@ impl BrandModule {
       validator,
       factory
     )
+  }
+
+  pub async fn resolve_brand_list_query(&self) -> Result<BrandListQuery, ModuleError> {
+    let db_connection = Arc::new(create_db_connection(&self.db_option).await?);
+
+    Ok(BrandListQuery::new(db_connection))
   }
 }

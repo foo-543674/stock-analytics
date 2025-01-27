@@ -10,6 +10,6 @@ pub fn create_db_options(url: impl Into<String>, max_connection: u32) -> Connect
   return opt;
 }
 
-pub async fn create_db_connection(opt: ConnectOptions) -> Result<DatabaseConnection, DbErr> {
-  return Database::connect(opt).await;
+pub async fn create_db_connection(opt: &ConnectOptions) -> Result<DatabaseConnection, DbErr> {
+  return Database::connect(opt.clone()).await;
 }
