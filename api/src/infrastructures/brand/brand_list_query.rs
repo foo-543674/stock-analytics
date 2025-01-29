@@ -1,18 +1,18 @@
 use std::sync::Arc;
-use sea_orm::DatabaseConnection;
-use crate::infrastructures::errors::query_error::QueryError;
+use crate::infrastructures::{errors::query_error::QueryError, support::connection::ConnectionProvider};
 use super::{brand_dao::{BrandDao, BrandRecord}, brand_query_request::BrandListQueryRequest};
 
 pub struct BrandListQuery {
-  connection: Arc<DatabaseConnection>,
+  connection_provider: Arc<dyn ConnectionProvider>,
 }
 
 impl BrandListQuery {
-  pub fn new(connection: Arc<DatabaseConnection>) -> Self {
-    Self { connection }
+  pub fn new(connection_provider: Arc<dyn ConnectionProvider>) -> Self {
+    Self { connection_provider }
   }
 
   pub async fn exec(&self, request: &BrandListQueryRequest) -> Result<Vec<BrandRecord>, QueryError> {
-    Ok(BrandDao::find_by_query(request, &self.connection).await?)
+    let connection = self.connection_provider.provide().await?;
+    Ok(BrandDao::find_by_query(request, &connection).await?)
   }
 }
