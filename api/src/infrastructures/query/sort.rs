@@ -97,7 +97,7 @@ mod test {
       let result = Sort::<SampleSortKey>::from_string_with_canma_separated(&input_str);
       for (i, v) in input.iter().enumerate() {
         prop_assert_eq!(&result[i].key.to_string(), &v.to_ascii_lowercase());
-        prop_assert_eq!(&result[i].order, &Order::Desc);
+        prop_assert_eq!(&result[i].order, &Order::Asc);
       }
     }
 
