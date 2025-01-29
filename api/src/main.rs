@@ -2,7 +2,10 @@ use stock_analytics::{modules::root::RootModule, routes::router::router};
 
 #[tokio::main]
 async fn main() {
-  tracing_subscriber::fmt::init();
+  //TODO: get from config
+  tracing_subscriber::fmt()
+    .with_max_level(tracing::Level::DEBUG)
+    .init();
 
   let module = RootModule::new();
 

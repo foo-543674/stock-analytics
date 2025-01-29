@@ -1,11 +1,8 @@
 use sea_orm::DbErr;
+use thiserror::Error;
 
+#[derive(Error, Debug)]
 pub enum QueryError {
-  DatabaseError(DbErr),
-}
-
-impl From<DbErr> for QueryError {
-  fn from(err: DbErr) -> Self {
-    QueryError::DatabaseError(err)
-  }
+  #[error("Database error: {0}")]
+  DatabaseError(#[from] DbErr),
 }

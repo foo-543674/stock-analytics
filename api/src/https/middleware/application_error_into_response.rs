@@ -7,6 +7,7 @@ use axum::{
   body::Body,
   http::StatusCode,
 };
+use tracing::error;
 
 use crate::applications::{
   errors::application_error::ApplicationError,
@@ -24,14 +25,20 @@ impl IntoResponse for ApplicationError {
         .status(StatusCode::CONFLICT)
         .body(Body::empty())
         .expect("Failed to build response"),
-      ApplicationError::RepositoryError(_) => Response::builder()
-        .status(StatusCode::INTERNAL_SERVER_ERROR)
-        .body(Body::empty())
-        .expect("Failed to build response"),
-      ApplicationError::UnexpectedError(_) => Response::builder()
-        .status(StatusCode::INTERNAL_SERVER_ERROR)
-        .body(Body::empty())
-        .expect("Failed to build response"),
+      ApplicationError::RepositoryError(err) => {
+        error!("{}", err);
+        Response::builder()
+          .status(StatusCode::INTERNAL_SERVER_ERROR)
+          .body(Body::empty())
+          .expect("Failed to build response")
+      }
+      ApplicationError::UnexpectedError(err) => {
+        error!("{}", err);
+        Response::builder()
+          .status(StatusCode::INTERNAL_SERVER_ERROR)
+          .body(Body::empty())
+          .expect("Failed to build response")
+      }
     };
   }
 }

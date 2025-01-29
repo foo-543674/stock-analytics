@@ -10,7 +10,7 @@ pub struct RootModule {
 impl RootModule {
   pub fn new() -> Self {
     //TODO: Get from config
-    let db_option = create_db_options(IN_MEMORY_SQLITE, 5);
+    let db_option = create_db_options("sqlite:./data/data.sqlite3", 5);
     let connection_provider = Arc::new(ConnectionProviderImpl::new(db_option));
 
     Self {
