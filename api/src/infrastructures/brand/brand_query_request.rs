@@ -1,6 +1,6 @@
 use sea_orm::sea_query::{ColumnRef, IntoColumnRef};
 use crate::infrastructures::query::{pagination::Pagination, sort::{sort_key, Sort}};
-use super::brand_dao::{Brands, Categories, SectorGroups, Sectors};
+use super::table_iden::{Brands, Categories, SectorGroups, Sectors};
 
 sort_key!(BrandSortKey, Id, Name, Code, SectorCode, SectorGroupCode, SectorCategory);
 

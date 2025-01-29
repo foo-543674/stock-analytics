@@ -5,50 +5,15 @@ use sea_orm::{
 
 use crate::infrastructures::support::select_statement_ext::SelectStatementExt;
 
-use super::brand_query_request::BrandListQueryRequest;
-
-
-#[derive(DeriveIden)]
-pub enum Brands {
-  Table,
-  Id,
-  Name,
-  Code,
-  SectorId,
-  Version,
-}
-
-#[derive(DeriveIden)]
-pub enum Sectors {
-  Table,
-  Id,
-  Name,
-  Code,
-  SectorGroupId,
-  CategoryId,
-}
-
-#[derive(DeriveIden)]
-pub enum SectorGroups {
-  Table,
-  Id,
-  Name,
-  Code,
-}
-
-#[derive(DeriveIden)]
-pub enum Categories {
-  Table,
-  Id,
-  Name,
-}
-
-#[derive(Clone, Copy, Debug, EnumIter)]
-pub enum BrandRelation {
-  Sector,
-  SectorGroup,
-  Category,
-}
+use super::{
+  brand_query_request::BrandListQueryRequest, 
+  table_iden::{
+    Brands, 
+    Categories, 
+    SectorGroups, 
+    Sectors
+  }
+};
 
 #[derive(Clone, Debug, PartialEq, FromQueryResult)]
 pub struct BrandRecord {
@@ -64,7 +29,7 @@ pub struct BrandRecord {
   pub category_name: String,
 }
 
-pub fn brands_query(request: &BrandListQueryRequest) -> SelectStatement{
+pub fn brands_query() -> SelectStatement{
   Query::select()
     .expr_as(Expr::col((Brands::Table, Brands::Id)), Alias::new("id"))
     .expr_as(Expr::col((Brands::Table, Brands::Name)), Alias::new("name"))
@@ -89,19 +54,6 @@ pub fn brands_query(request: &BrandListQueryRequest) -> SelectStatement{
       Categories::Table, 
       Expr::col((Sectors::Table, Sectors::CategoryId)).equals((Categories::Table, Categories::Id))
     )
-    .limit(request.pagination.limit() as u64)
-    .offset(request.pagination.offset() as u64)
-    .when(!request.sorts.is_empty(), |q| {
-      request
-        .sorts
-        .iter()
-        .fold(q, |q, sort| {
-          q.order_by(sort.key.get_column_from_sort_key(), sort.order.clone())
-        })
-    })
-    .when(request.sector_id.is_some(), |q| {
-      q.and_where(Expr::col((Brands::Table, Brands::SectorId)).eq(request.sector_id.as_ref().unwrap()))
-    })
     .to_owned()
 }
 
@@ -109,7 +61,21 @@ pub struct BrandDao;
 
 impl BrandDao {
   pub async fn find_by_query(request: &BrandListQueryRequest, db: &DatabaseConnection) -> Result<Vec<BrandRecord>, sea_orm::error::DbErr> {
-    let query = brands_query(request);
+    let query = brands_query()
+      .limit(request.pagination.limit() as u64)
+      .offset(request.pagination.offset() as u64)
+      .when(!request.sorts.is_empty(), |q| {
+        request
+          .sorts
+          .iter()
+          .fold(q, |q, sort| {
+            q.order_by(sort.key.get_column_from_sort_key(), sort.order.clone())
+          })
+      })
+      .when(request.sector_id.is_some(), |q| {
+        q.and_where(Expr::col((Brands::Table, Brands::SectorId)).eq(request.sector_id.as_ref().unwrap()))
+      })
+      .to_owned();
 
     let builder = db.get_database_backend();
     let stmt = builder.build(&query);

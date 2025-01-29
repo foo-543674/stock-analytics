@@ -29,8 +29,8 @@ use crate::{
   infrastructures::{
     brand::{
       brand_list_query::BrandListQuery, 
-      brand_repository::BrandRepositoryOnMemory, 
-      secrot_repository::SectorRepositoryOnMemory
+      brand_repository::BrandRepositoryOnRdbms, 
+      secrot_repository::SectorRepositoryOnRdbms
     }, 
     support::connection::ConnectionProvider
   }
@@ -47,8 +47,8 @@ impl BrandModule {
   }
 
   pub fn resolve_register_brand_usecase(&self) -> RegisterBrandUsecase {
-    let brand_repository: Arc<dyn BrandRepository> = Arc::new(BrandRepositoryOnMemory::new());
-    let sector_repository: Arc<dyn SectorRepository> = Arc::new(SectorRepositoryOnMemory::new());
+    let brand_repository: Arc<dyn BrandRepository> = Arc::new(BrandRepositoryOnRdbms::new(self.connection_provider.clone()));
+    let sector_repository: Arc<dyn SectorRepository> = Arc::new(SectorRepositoryOnRdbms::new(self.connection_provider.clone()));
     let validator: Arc<dyn Validator<BrandRegisterInput, ValidatedBrandRegisterInput>> = Arc::new(BrandRegisterInputValidator::new(Arc::clone(&brand_repository), sector_repository));
     let ulid_generator: Arc<dyn UlidGenerator> = Arc::new(UlidGeneratorImpl);
     let factory: Arc<dyn BrandFactory> = Arc::new(BrandFactoryImpl::new(ulid_generator));
