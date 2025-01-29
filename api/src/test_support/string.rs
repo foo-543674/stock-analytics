@@ -105,5 +105,3 @@ macro_rules! pick_one_with_random_case_from {
   }};
 }
 
-#[cfg(test)]
-pub(crate) use pick_one_with_random_case_from;
