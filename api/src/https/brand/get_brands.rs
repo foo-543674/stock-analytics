@@ -33,7 +33,7 @@ impl GetBrandListQueryParameter {
   }
 }
 
-pub async fn get_brands(param: Query<GetBrandListQueryParameter>, query: BrandListQuery) -> Result<Json<Vec<BrandJson>>, QueryError> {
+pub async fn get_brands(param: Query<GetBrandListQueryParameter>, query: &BrandListQuery) -> Result<Json<Vec<BrandJson>>, QueryError> {
   let request = param.to_query_request();
   let result = query.exec(&request).await?;
   Ok(Json(result.into_iter().map(BrandJson::from_brand_record).collect()))
