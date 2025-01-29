@@ -75,7 +75,8 @@
 				"42Crunch.vscode-openapi",
 				"mermade.openapi-lint",
 				"christian-kohler.path-intellisense",
-				"vadimcn.vscode-lldb"
+				"vadimcn.vscode-lldb",
+				"dbaeumer.vscode-eslint"
 			]
 		}
 	}
