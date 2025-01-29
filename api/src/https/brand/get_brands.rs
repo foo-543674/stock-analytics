@@ -17,7 +17,7 @@ use super::brand_json::BrandJson;
 pub struct GetBrandListQueryParameter {
   page: Option<i32>,
   count: Option<i32>,
-  sort: Vec<String>,
+  sort: Option<String>,
   sector: Option<String>,
   // name: Option<String>,
   // code: Option<String>
@@ -27,7 +27,7 @@ impl GetBrandListQueryParameter {
   fn to_query_request(&self) -> BrandListQueryRequest {
     BrandListQueryRequest {
       pagination: Pagination::from_int_option(self.page, self.count),
-      sorts: Sort::from_string_with_canma_separated(&self.sort.join(",")),
+      sorts: self.sort.as_ref().map(|v| Sort::from_string_with_canma_separated(&v)).unwrap_or(Default::default()),
       sector_id: self.sector.clone(),
     }
   }
