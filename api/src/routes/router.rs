@@ -1,4 +1,5 @@
 use std::sync::Arc;
+use tower_http::trace::TraceLayer;
 use axum::Router;
 use crate::modules::root::RootModule;
 
@@ -11,5 +12,6 @@ pub fn router(module: RootModule) -> Router {
     .merge(brand_router(module_shared.brand.clone()));
 
   return Router::new()
-    .nest("/api", api_routes);
+    .nest("/api", api_routes)
+    .layer(TraceLayer::new_for_http());
 }
