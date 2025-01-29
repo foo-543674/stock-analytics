@@ -74,7 +74,8 @@
 				"tamasfe.even-better-toml",
 				"42Crunch.vscode-openapi",
 				"mermade.openapi-lint",
-				"christian-kohler.path-intellisense"
+				"christian-kohler.path-intellisense",
+				"vadimcn.vscode-lldb"
 			]
 		}
 	}
