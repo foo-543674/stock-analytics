@@ -1,0 +1,121 @@
+sector:
+  type: object
+  required:
+    - id
+    - name
+    - code
+    - group
+    - group_code
+    - category
+  properties:
+    id:
+      type: string
+      format: ulid
+      description: "Sector ID"
+      example: "01F4Z3ZQZJQZJZJZJZJZJZJZJZ"
+    name:
+      type: string
+      description: "Sector name"
+      example: "水産・農林業"
+    code:
+      type: string
+      description: "Sector code"
+      example: "0050"
+    group:
+      type: string
+      description: "Sector group"
+      example: "食品"
+    group_code:
+      type: integer
+      description: "Sector group code"
+      example: "1"
+    category:
+      type: string
+      description: "Sector category"
+      example: "ディフェンシブ"
+list_sector:
+  type: array
+  items:
+    $ref: "#/sector"
+brand:
+  type: object
+  required:
+    - id
+    - name
+    - code
+    - sector
+  properties:
+    id:
+      type: string
+      format: ulid
+      description: "Brand ID"
+      example: "01F4Z3ZQZJQZJZJZJZJZJZJZJZ"
+    name:
+      type: string
+      description: "Brand name"
+      example: "キリン"
+    code:
+      type: string
+      description: "Brand code"
+      example: "2503"
+    sector:
+      $ref: "#/sector"
+list_brand:
+  type: object
+  required:
+    - page
+    - items
+    - max_page
+  properties:
+    page:
+      type: integer
+      description: "Page number"
+      example: 1
+    max_page:
+      type: integer
+      description: "Max page number"
+      example: 10
+    items:
+      type: array
+      items:
+        $ref: "#/brand"
+post_brand:
+  type: object
+  required:
+    - name
+    - code
+    - sector_id
+  properties:
+    name:
+      type: string
+      description: "Brand name"
+      example: "キリン"
+      maxLength: 100
+    code:
+      type: string
+      description: "Brand code"
+      example: "2503"
+      pattern: "\\d{4}"
+    sector_id:
+      type: string
+      format: ulid
+      description: "Sector ID"
+      example: "01F4Z3ZQZJQZJZJZJZJZJZJZJZ"
+put_brand:
+  type: object
+  properties:
+    name:
+      type: string
+      description: "Brand name"
+      example: "キリン"
+      maxLength: 100
+    code:
+      type: string
+      description: "Brand code"
+      example: "2503"
+      pattern: "\\d{4}"
+    sector_id:
+      type: string
+      format: ulid
+      description: "Sector ID"
+      example: "01F4Z3ZQZJQZJZJZJZJZJZJZJZ"

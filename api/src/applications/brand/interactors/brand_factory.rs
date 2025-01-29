@@ -9,18 +9,15 @@ use crate::{
     BrandCode, 
     BrandId
   }, 
-  util::unempty_string::UnemptyString
+  util::{unempty_string::UnemptyString, version::Version}
 };
-use super::{
-  brand_register_input::BrandRegisterInput, 
-  brand_register_input_validator::BrandRegisterInputValidationSuccess
-};
+use super::brand_register_input_validator::ValidatedBrandRegisterInput;
 #[cfg(test)]
 use mockall::automock;
 
 #[cfg_attr(test, automock)]
-pub trait BrandFactory {
-  fn create(&self, input: &BrandRegisterInput, validation_success: &BrandRegisterInputValidationSuccess) -> Result<Brand, ApplicationError>;
+pub trait BrandFactory: Sync + Send {
+  fn create(&self, validated_input: &ValidatedBrandRegisterInput) -> Result<Brand, ApplicationError>;
 }
 
 pub struct BrandFactoryImpl{
@@ -36,13 +33,15 @@ impl BrandFactoryImpl {
 }
 
 impl BrandFactory for BrandFactoryImpl {
-  fn create(&self, input: &BrandRegisterInput, validation_success: &BrandRegisterInputValidationSuccess) -> Result<Brand, ApplicationError> {
+  fn create(&self, validated_input: &ValidatedBrandRegisterInput) -> Result<Brand, ApplicationError> {
+    let input = &validated_input.input;
     let ulid = self.id_generator.generate()?;
     Ok(Brand{
       id: BrandId::new(ulid),
       name: UnemptyString::from_string(&input.name),
       code: BrandCode::from_string(&input.code),
-      sector: validation_success.found_sector.clone(),
+      sector: validated_input.found_sector.clone(),
+      version: Version::new(),
     })
   }
 }
@@ -57,7 +56,6 @@ mod tests {
       brand::interactors::{
         brand_factory::BrandFactory, 
         brand_register_input::BrandRegisterInput, 
-        brand_register_input_validator::BrandRegisterInputValidationSuccess
       },
       common::ulid_generator::MockUlidGenerator
     }, 
@@ -66,9 +64,8 @@ mod tests {
       sector::Sector
     }, 
     test_support::{
-      string::{
-        fixed_length_numeric_string, random_text
-      }, 
+      string::*,
+      mock::*,
       ulid::random_ulid
     }
   };
@@ -83,27 +80,21 @@ mod tests {
       code in fixed_length_numeric_string(BrandCode::BRAND_CODE_LENGTH),
       sector_id in random_ulid(),
     ) {
-      let input = BrandRegisterInput {
-        name: name.clone(),
-        code: code.clone(),
-        sector_id: sector_id.to_string(),
-      };
+      let input = BrandRegisterInput::new(&name, &code, &sector_id.to_string());
       let sector: Sector = Default::default();
-      let validation_success = BrandRegisterInputValidationSuccess {
-        found_sector: sector.clone(),
-      };
+      let validated_input = ValidatedBrandRegisterInput::new(&input, sector.clone());
 
-      let mut id_generator = MockUlidGenerator::new();
       let id_clone = id.clone();
-      id_generator.expect_generate().returning(move || Ok(id_clone));
+      let id_generator = create_mock::<MockUlidGenerator>(|mock| { mock.expect_generate().returning(move || Ok(id_clone)); });
 
       let factory = BrandFactoryImpl::new(Arc::new(id_generator));
-      let brand = factory.create(&input, &validation_success).unwrap();
+      let brand = factory.create(&validated_input).expect("Failed to create brand");
 
       assert_eq!(brand.id.value(), &id);
       assert_eq!(brand.name.value(), name);
       assert_eq!(brand.code.value(), code);
       assert_eq!(brand.sector, sector);
+      assert_eq!(brand.version.value(), 0);
     }
   }
 }

@@ -1,7 +1,7 @@
 use ulid::Ulid;
 
 pub fn default_ulid() -> Ulid {
-  Ulid::from_string("00000000000000000000000000").unwrap()
+  Ulid::from_string("00000000000000000000000000").expect("Failed to create default ulid")
 }
 
 pub trait StringExtForUlid {

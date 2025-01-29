@@ -42,10 +42,12 @@ pub struct Brand {
   pub name: UnemptyString,
   pub code: BrandCode,
   pub sector: Sector,
+  pub version: Version,
 }
 
 #[cfg(test)]
 use crate::util::ulid::default_ulid;
+use crate::util::version::Version;
 
 #[cfg(test)]
 impl Default for Brand {
@@ -55,6 +57,7 @@ impl Default for Brand {
       name: UnemptyString::from_string("company"),
       code: BrandCode::new("0000".to_string()),
       sector: Default::default(),
+      version: Version::new(),
     }
   }
 }
@@ -96,12 +99,14 @@ mod tests {
         name: UnemptyString::from_string("company"),
         code: BrandCode::from_string("0000"),
         sector: Default::default(),
+        version: Version::new(),
       };
       let brand2 = Brand {
         id: BrandId::new(id2),
         name: UnemptyString::from_string("company"),
         code: BrandCode::from_string("0000"),
         sector: Default::default(),
+        version: Version::new(),
       };
       assert_ne!(brand1, brand2);
     }

@@ -23,7 +23,7 @@ impl SectorGroupCode {
     }
   }
 
-  pub fn from_i32(value: &i32) -> Self {
+  pub fn from_i32(value: i32) -> Self {
     SectorGroupCode::new(value.clone())
   }
 }
@@ -95,12 +95,12 @@ mod tests {
       let sector_group1 = SectorGroup {
         id: SectorGroupId::new(id1),
         name: UnemptyString::from_string("sector group"),
-        code: SectorGroupCode::from_i32(&1),
+        code: SectorGroupCode::from_i32(1),
       };
       let sector_group2 = SectorGroup {
         id: SectorGroupId::new(id2),
         name: UnemptyString::from_string("sector group"),
-        code: SectorGroupCode::from_i32(&1),
+        code: SectorGroupCode::from_i32(1),
       };
       assert_ne!(sector_group1, sector_group2);
     }

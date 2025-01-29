@@ -83,13 +83,23 @@ impl BrandRegisterInputValidator {
 }
 
 #[derive(Debug, Clone)]
-pub struct BrandRegisterInputValidationSuccess {
+pub struct ValidatedBrandRegisterInput {
+  pub input: BrandRegisterInput,
   pub found_sector: Sector,
 }
 
+impl ValidatedBrandRegisterInput {
+  pub fn new(input: &BrandRegisterInput, found_sector: Sector) -> Self {
+    ValidatedBrandRegisterInput {
+      input: input.clone(),
+      found_sector,
+    }
+  }
+}
+
 #[async_trait]
-impl Validator<BrandRegisterInput, BrandRegisterInputValidationSuccess> for BrandRegisterInputValidator {
-  async fn validate(&self, target: &BrandRegisterInput) -> Result<BrandRegisterInputValidationSuccess, ApplicationError> {
+impl Validator<BrandRegisterInput, ValidatedBrandRegisterInput> for BrandRegisterInputValidator {
+  async fn validate(&self, target: &BrandRegisterInput) -> Result<ValidatedBrandRegisterInput, ApplicationError> {
     return self.base_validator.validate(target)
       .then(|result| async {
         // NOTE: If validation error for code is already exists, BrandCode cannot construct.
@@ -106,9 +116,10 @@ impl Validator<BrandRegisterInput, BrandRegisterInputValidationSuccess> for Bran
       .then(|result| async {
         // NOTE: If validation error for sector_id is already exists, SectorId cannot construct.
         if result.is_validation_error_and_has_field("sector_id") {
-          Err(result.unwrap_err())
+          Err(result.expect_err("Error must be exists in here"))
         } else {
-          let sector_option = self.sector_repository.find_by_id(&SectorId::from_string(&target.sector_id)).await?;
+          let sector_id = SectorId::from_string(&target.sector_id).expect("must be success in this block");
+          let sector_option = self.sector_repository.find_by_id(&sector_id).await?;
           match (result, sector_option) {
             (Ok(_), Some(sector)) => Ok(sector),
             (Ok(_), None) => Err(validation_error!("sector_id", resource_not_found())),
@@ -118,9 +129,7 @@ impl Validator<BrandRegisterInput, BrandRegisterInputValidationSuccess> for Bran
         }
       })
       .and_then(|sector| async {
-        Ok(BrandRegisterInputValidationSuccess {
-          found_sector: sector,
-        })
+        Ok(ValidatedBrandRegisterInput::new(target, sector))
       }).await;
   }
 }
@@ -135,21 +144,11 @@ mod tests {
       sector_repository::MockSectorRepository
     },
     test_support::{
-      assert_result::{
-        assert_result_is_err, 
-        assert_result_is_ok
-      },
-      string::{
-        alphanumeric_string,
-        empty,
-        fixed_length_numeric_string,
-        fixed_length_numeric_string_except,
-        random_text_length_at_least,
-        random_text_length_at_most,
-        random_text
-      },
-      ulid::random_ulid_string
-    }
+      assert_result::*,
+      string::*,
+      ulid::random_ulid_string,
+      mock::*
+    },
   };
 
   proptest! {
@@ -159,17 +158,11 @@ mod tests {
       code in fixed_length_numeric_string(BrandCode::BRAND_CODE_LENGTH),
       sector_id in random_ulid_string()
     ) {
-      let mut brand_repository = MockBrandRepository::new();
-      brand_repository.expect_find_by_code().times(1).returning(|_| Box::pin(async { Ok(None) }));
-      let mut sector_repository = MockSectorRepository::new();
-      sector_repository.expect_find_by_id().times(1).returning(|_| Box::pin(async { Ok(Default::default()) }));
+      let brand_repository = create_mock::<MockBrandRepository>(|mock| { once_returning!(mock, expect_find_by_code, box_ok!(None)); });
+      let sector_repository = create_mock::<MockSectorRepository>(|mock| { once_returning!(mock, expect_find_by_id, box_ok!(Some(Default::default()))); });
 
       let sut = BrandRegisterInputValidator::new(Arc::new(brand_repository), Arc::new(sector_repository));
-      let input = BrandRegisterInput {
-        name,
-        code,
-        sector_id,
-      };
+      let input = BrandRegisterInput::new(&name, &code, &sector_id);
       let result = futures::executor::block_on(sut.validate(&input));
       assert_result_is_err!(result);
     }
@@ -180,17 +173,11 @@ mod tests {
       code in fixed_length_numeric_string(BrandCode::BRAND_CODE_LENGTH),
       sector_id in random_ulid_string()
     ) {
-      let mut brand_repository = MockBrandRepository::new();
-      brand_repository.expect_find_by_code().times(1).returning(|_| Box::pin(async { Ok(None) }));
-      let mut sector_repository = MockSectorRepository::new();
-      sector_repository.expect_find_by_id().times(1).returning(|_| Box::pin(async { Ok(Default::default()) }));
+      let brand_repository = create_mock::<MockBrandRepository>(|mock| { once_returning!(mock, expect_find_by_code, box_ok!(None)); });
+      let sector_repository = create_mock::<MockSectorRepository>(|mock| { once_returning!(mock, expect_find_by_id, box_ok!(Some(Default::default()))); });
 
       let sut = BrandRegisterInputValidator::new(Arc::new(brand_repository), Arc::new(sector_repository));
-      let input = BrandRegisterInput {
-        name,
-        code,
-        sector_id,
-      };
+      let input = BrandRegisterInput::new(&name, &code, &sector_id);
       let result = futures::executor::block_on(sut.validate(&input));
       assert_result_is_err!(result);
     }
@@ -201,17 +188,11 @@ mod tests {
       code in empty(),
       sector_id in random_ulid_string()
     ) {
-      let mut brand_repository = MockBrandRepository::new();
-      brand_repository.expect_find_by_code().times(0);
-      let mut sector_repository = MockSectorRepository::new();
-      sector_repository.expect_find_by_id().times(1).returning(|_| Box::pin(async { Ok(Default::default()) }));
+      let brand_repository = create_mock::<MockBrandRepository>(|mock| { do_not_call!(mock, expect_find_by_code); });
+      let sector_repository = create_mock::<MockSectorRepository>(|mock| { once_returning!(mock, expect_find_by_id, box_ok!(Some(Default::default()))); });
 
       let sut = BrandRegisterInputValidator::new(Arc::new(brand_repository), Arc::new(sector_repository));
-      let input = BrandRegisterInput {
-        name,
-        code,
-        sector_id,
-      };
+      let input = BrandRegisterInput::new(&name, &code, &sector_id);
       let result = futures::executor::block_on(sut.validate(&input));
       assert_result_is_err!(result);
     }
@@ -222,17 +203,11 @@ mod tests {
       code in fixed_length_numeric_string_except(BrandCode::BRAND_CODE_LENGTH),
       sector_id in random_ulid_string()
     ) {
-      let mut brand_repository = MockBrandRepository::new();
-      brand_repository.expect_find_by_code().times(0);
-      let mut sector_repository = MockSectorRepository::new();
-      sector_repository.expect_find_by_id().times(1).returning(|_| Box::pin(async { Ok(Default::default()) }));
+      let brand_repository = create_mock::<MockBrandRepository>(|mock| { do_not_call!(mock, expect_find_by_code); });
+      let sector_repository = create_mock::<MockSectorRepository>(|mock| { once_returning!(mock, expect_find_by_id, box_ok!(Some(Default::default()))); });
 
       let sut = BrandRegisterInputValidator::new(Arc::new(brand_repository), Arc::new(sector_repository));
-      let input = BrandRegisterInput {
-        name,
-        code,
-        sector_id,
-      };
+      let input = BrandRegisterInput::new(&name, &code, &sector_id);
       let result = futures::executor::block_on(sut.validate(&input));
       assert_result_is_err!(result);
     }
@@ -243,17 +218,11 @@ mod tests {
       code in alphanumeric_string(BrandCode::BRAND_CODE_LENGTH),
       sector_id in random_ulid_string()
     ) {
-      let mut brand_repository = MockBrandRepository::new();
-      brand_repository.expect_find_by_code().times(0);
-      let mut sector_repository = MockSectorRepository::new();
-      sector_repository.expect_find_by_id().times(1).returning(|_| Box::pin(async { Ok(Some(Default::default())) }));
+      let brand_repository = create_mock::<MockBrandRepository>(|mock| { do_not_call!(mock, expect_find_by_code); });
+      let sector_repository = create_mock::<MockSectorRepository>(|mock| { once_returning!(mock, expect_find_by_id, box_ok!(Some(Default::default()))); });
 
       let sut = BrandRegisterInputValidator::new(Arc::new(brand_repository), Arc::new(sector_repository));
-      let input = BrandRegisterInput {
-        name,
-        code,
-        sector_id,
-      };
+      let input = BrandRegisterInput::new(&name, &code, &sector_id);
       let result = futures::executor::block_on(sut.validate(&input));
       assert_result_is_err!(result);
     }
@@ -264,17 +233,11 @@ mod tests {
       code in fixed_length_numeric_string(BrandCode::BRAND_CODE_LENGTH),
       sector_id in empty()
     ) {
-      let mut brand_repository = MockBrandRepository::new();
-      brand_repository.expect_find_by_code().times(1).returning(|_| Box::pin(async { Ok(None) }));
-      let mut sector_repository = MockSectorRepository::new();
-      sector_repository.expect_find_by_id().times(0);
+      let brand_repository = create_mock::<MockBrandRepository>(|mock| { once_returning!(mock, expect_find_by_code, box_ok!(None)); });
+      let sector_repository = create_mock::<MockSectorRepository>(|mock| { do_not_call!(mock, expect_find_by_id); });
 
       let sut = BrandRegisterInputValidator::new(Arc::new(brand_repository), Arc::new(sector_repository));
-      let input = BrandRegisterInput {
-        name,
-        code,
-        sector_id,
-      };
+      let input = BrandRegisterInput::new(&name, &code, &sector_id);
       let result = futures::executor::block_on(sut.validate(&input));
       assert_result_is_err!(result);
     }
@@ -285,17 +248,11 @@ mod tests {
       code in fixed_length_numeric_string(BrandCode::BRAND_CODE_LENGTH),
       sector_id in random_text()
     ) {
-      let mut brand_repository = MockBrandRepository::new();
-      brand_repository.expect_find_by_code().times(1).returning(|_| Box::pin(async { Ok(None) }));
-      let mut sector_repository = MockSectorRepository::new();
-      sector_repository.expect_find_by_id().times(0);
+      let brand_repository = create_mock::<MockBrandRepository>(|mock| { once_returning!(mock, expect_find_by_code, box_ok!(None)); });
+      let sector_repository = create_mock::<MockSectorRepository>(|mock| { do_not_call!(mock, expect_find_by_id); });
 
       let sut = BrandRegisterInputValidator::new(Arc::new(brand_repository), Arc::new(sector_repository));
-      let input = BrandRegisterInput {
-        name,
-        code,
-        sector_id,
-      };
+      let input = BrandRegisterInput::new(&name, &code, &sector_id);
       let result = futures::executor::block_on(sut.validate(&input));
       assert_result_is_err!(result);
     }
@@ -306,17 +263,11 @@ mod tests {
       code in fixed_length_numeric_string(BrandCode::BRAND_CODE_LENGTH),
       sector_id in random_ulid_string()
     ) {
-      let mut brand_repository = MockBrandRepository::new();
-      brand_repository.expect_find_by_code().times(1).returning(|_| Box::pin(async { Ok(Some(Default::default())) }));
-      let mut sector_repository = MockSectorRepository::new();
-      sector_repository.expect_find_by_id().times(1).returning(|_| Box::pin(async { Ok(Some(Default::default())) }));
+      let brand_repository = create_mock::<MockBrandRepository>(|mock| { once_returning!(mock, expect_find_by_code, box_ok!(Some(Default::default()))); });
+      let sector_repository = create_mock::<MockSectorRepository>(|mock| { once_returning!(mock, expect_find_by_id, box_ok!(Some(Default::default()))); });
 
       let sut = BrandRegisterInputValidator::new(Arc::new(brand_repository), Arc::new(sector_repository));
-      let input = BrandRegisterInput {
-        name,
-        code,
-        sector_id,
-      };
+      let input = BrandRegisterInput::new(&name, &code, &sector_id);
       let result = futures::executor::block_on(sut.validate(&input));
       assert_result_is_err!(result);
     }
@@ -327,17 +278,11 @@ mod tests {
       code in fixed_length_numeric_string(BrandCode::BRAND_CODE_LENGTH),
       sector_id in random_ulid_string()
     ) {
-      let mut brand_repository = MockBrandRepository::new();
-      brand_repository.expect_find_by_code().times(1).returning(|_| Box::pin(async { Ok(None) }));
-      let mut sector_repository = MockSectorRepository::new();
-      sector_repository.expect_find_by_id().times(1).returning(|_| Box::pin(async { Ok(None) }));
+      let brand_repository = create_mock::<MockBrandRepository>(|mock| { once_returning!(mock, expect_find_by_code, box_ok!(None)); });
+      let sector_repository = create_mock::<MockSectorRepository>(|mock| { once_returning!(mock, expect_find_by_id, box_ok!(None)); });
 
       let sut = BrandRegisterInputValidator::new(Arc::new(brand_repository), Arc::new(sector_repository));
-      let input = BrandRegisterInput {
-        name,
-        code,
-        sector_id,
-      };
+      let input = BrandRegisterInput::new(&name, &code, &sector_id);
       let result = futures::executor::block_on(sut.validate(&input));
       assert_result_is_err!(result);
     }
@@ -348,20 +293,14 @@ mod tests {
       code in fixed_length_numeric_string(BrandCode::BRAND_CODE_LENGTH),
       sector_id in random_ulid_string()
     ) {
-      let mut brand_repository = MockBrandRepository::new();
-      brand_repository.expect_find_by_code().times(1).returning(|_| Box::pin(async { Ok(None) }));
-      let mut sector_repository = MockSectorRepository::new();
-      sector_repository.expect_find_by_id().times(1).returning(|_| Box::pin(async { Ok(Some(Default::default())) }));
+      let brand_repository = create_mock::<MockBrandRepository>(|mock| { once_returning!(mock, expect_find_by_code, box_ok!(None)); });
+      let sector_repository = create_mock::<MockSectorRepository>(|mock| { once_returning!(mock, expect_find_by_id, box_ok!(Some(Default::default()))); });
 
       let sut = BrandRegisterInputValidator::new(Arc::new(brand_repository), Arc::new(sector_repository));
-      let input = BrandRegisterInput {
-        name: name.clone(),
-        code: code.clone(),
-        sector_id: sector_id.clone(),
-      };
+      let input = BrandRegisterInput::new(&name, &code, &sector_id);
       let result = futures::executor::block_on(sut.validate(&input));
       assert_result_is_ok!(result);
-      let success = result.unwrap();
+      let success = result.expect("must be success");
       assert_eq!(success.found_sector, Default::default());
     }
   }

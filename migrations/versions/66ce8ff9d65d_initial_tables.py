@@ -47,6 +47,7 @@ def upgrade():
         sa.Column("code", sa.String(4), nullable=False, unique=True),
         sa.Column("sector_id", sa.String(26), sa.ForeignKey(
             "sectors.id"), nullable=False),
+        sa.Column("version", sa.Integer, nullable=False),
     )
     op.create_table(
         "ir_reports",

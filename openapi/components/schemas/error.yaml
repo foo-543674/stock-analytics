@@ -1,0 +1,32 @@
+validation_error:
+  type: object
+  required:
+    - fields
+  properties:
+    fields:
+      type: array
+      items:
+        type: object
+        required:
+          - name
+          - keys
+        properties:
+          name:
+            type: string
+            description: "Field name"
+            example: "name"
+          keys:
+            type: array
+            items:
+              type: string
+              description: "Validation error message"
+              example: "validation.required"
+              pattern: "^validation\\..+"
+not_found_error:
+  type: string
+  description: "Error message"
+  example: "Not found"
+conflict_error:
+  type: string
+  description: "Error message"
+  example: "Conflict"

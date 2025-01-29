@@ -1,0 +1,206 @@
+sectors:
+  get:
+    summary: "List paginated sectors"
+    description: "List paginated sectors"
+    operationId: "listSectors"
+    tags:
+      - "brands"
+    responses:
+      '200':
+        description: "List of sectors"
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/brand.yaml#/list_sector"
+brands:
+  get:
+    summary: "List paginated brands"
+    description: "List paginated brands"
+    operationId: "listBrands"
+    tags:
+      - "brands"
+    parameters:
+      - name: "page"
+        in: "query"
+        description: "Page number"
+        required: false
+        schema:
+          type: "integer"
+          example: 1
+          minimum: 1
+          default: 1
+      - name: "count"
+        in: "query"
+        description: "Items count per page"
+        required: false
+        schema:
+          type: "integer"
+          example: 10
+          minimum: 1
+          maximum: 100
+          default: 10
+      - name: "sort"
+        in: "query"
+        description: >
+          Sort by field. Use a minus sign (-) to sort in descending order.
+          Available fields: id, name, code, sector_code, sector_group_code, sector_category
+        required: false
+        style: "form"
+        explode: false
+        schema:
+          type: "array"
+          items:
+            type: "string"
+            pattern: "^-?(id|name|code|sector_code|sector_group_code,sector_category)$"
+          example: -name,code
+      - name: "sector"
+        in: "query"
+        description: "Sector ID"
+        required: false
+        schema:
+          type: "string"
+          format: "ulid"
+          example: "01F4Z3ZQZJQZJZJZJZJZJZJZJZ"
+      - name: "name"
+        in: "query"
+        description: "Brand name"
+        required: false
+        schema:
+          type: "string"
+          example: "Brand name"
+      - name: "code"
+        in: "query"
+        description: "Brand code"
+        required: false
+        schema:
+          type: "string"
+          example: "BRAND_CODE"
+    responses:
+      '200':
+        description: "List of brands"
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/brand.yaml#/list_brand"
+  post:
+    summary: "Create a new brand"
+    description: "Create a new brand"
+    operationId: "createBrand"
+    tags:
+      - "brands"
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "../components/schemas/brand.yaml#/post_brand"
+    responses:
+      '200':
+        description: "Brand created"
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/brand.yaml#/brand"
+      '400':
+        description: "Validation error"
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/error.yaml#/validation_error"
+brands_id:
+  get:
+    summary: "Get a brand by ID"
+    description: "Get a brand by ID"
+    operationId: "getBrand"
+    tags:
+      - "brands"
+    parameters:
+      - name: "id"
+        in: "path"
+        description: "Brand ID"
+        required: true
+        schema:
+          type: "string"
+          format: "ulid"
+          example: "01F4Z3ZQZJQZJZJZJZJZJZJZJZ"
+    responses:
+      '200':
+        description: "Brand found"
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/brand.yaml#/brand"
+      '404':
+        description: "Brand not found"
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/error.yaml#/not_found_error"
+  put:
+    summary: "Update a brand by ID"
+    description: "Update a brand by ID"
+    operationId: "updateBrand"
+    tags:
+      - "brands"
+    parameters:
+      - name: "id"
+        in: "path"
+        description: "Brand ID"
+        required: true
+        schema:
+          type: "string"
+          format: "ulid"
+          example: "01F4Z3ZQZJQZJZJZJZJZJZJZJZ"
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "../components/schemas/brand.yaml#/put_brand"
+    responses:
+      '200':
+        description: "Brand updated"
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/brand.yaml#/brand"
+      '404':
+        description: "Brand not found"
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/error.yaml#/not_found_error"
+      '409':
+        description: "Conflict error"
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/error.yaml#/conflict_error"
+  delete:
+    summary: "Delete a brand by ID"
+    description: "Delete a brand by ID"
+    operationId: "deleteBrand"
+    tags:
+      - "brands"
+    parameters:
+      - name: "id"
+        in: "path"
+        description: "Brand ID"
+        required: true
+        schema:
+          type: "string"
+          format: "ulid"
+          example: "01F4Z3ZQZJQZJZJZJZJZJZJZJZ"
+    responses:
+      '200':
+        description: "Brand deleted"
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/brand.yaml#/brand"
+      '404':
+        description: "Brand not found"
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/error.yaml#/not_found_error"
