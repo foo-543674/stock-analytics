@@ -1,7 +1,7 @@
 use axum::{extract::Query, Json};
 use serde::Deserialize;
 use crate::infrastructures::{
-  brand::{
+  brand::query::{
     brand_list_query::BrandListQuery, 
     brand_query_request::BrandListQueryRequest
   }, 

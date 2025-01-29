@@ -1,5 +1,5 @@
 use serde::Serialize;
-use crate::{domains::brand::brand::Brand, infrastructures::brand::brand_dao::BrandRecord};
+use crate::{domains::brand::brand::Brand, infrastructures::brand::query::brand_dao::BrandRecord};
 
 #[derive(Clone, Debug, Serialize)]
 pub struct SectorJson {

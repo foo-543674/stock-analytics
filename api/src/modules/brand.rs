@@ -28,9 +28,11 @@ use crate::{
   }, 
   infrastructures::{
     brand::{
-      brand_list_query::BrandListQuery, 
-      brand_repository::BrandRepositoryOnRdbms, 
-      secrot_repository::SectorRepositoryOnRdbms
+      query::brand_list_query::BrandListQuery, 
+      command::{
+        brand_repository::BrandRepositoryOnRdbms, 
+        secrot_repository::SectorRepositoryOnRdbms,
+      }
     }, 
     support::connection::ConnectionProvider
   }
