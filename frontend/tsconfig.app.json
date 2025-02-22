@@ -20,13 +20,9 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
-    "noUncheckedSideEffectImports": true
+    "noUncheckedSideEffectImports": true,
+    "allowJs": false,
+    "noImplicitReturns": true,
   },
   "include": ["src"],
-  "allowJs": false,
-  "noImplicitReturns": true,
-  "baseUrl": "./",
-  "paths": {
-    "@/*": ["src/*"]
-  }
 }
