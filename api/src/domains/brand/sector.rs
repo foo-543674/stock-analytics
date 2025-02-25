@@ -1,7 +1,7 @@
-use crate::util::unempty_string::UnemptyString;
-use crate::domains::macros::entity_id::*;
-use crate::domains::brand::sector_group::SectorGroup;
 use crate::domains::brand::category::Category;
+use crate::domains::brand::sector_group::SectorGroup;
+use crate::domains::macros::entity_id::*;
+use crate::util::unempty_string::UnemptyString;
 
 define_id!(SectorId);
 

@@ -13,7 +13,7 @@ mod tests {
   use super::*;
   use proptest::prelude::*;
 
-  proptest!{
+  proptest! {
     #[test]
     fn string_is_numeric_should_return_true_when_numeric(value in "[0-9]+") {
       assert_eq!(value.is_numeric(), true, "value should be numeric: {}", value);

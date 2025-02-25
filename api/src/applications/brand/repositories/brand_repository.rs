@@ -3,12 +3,9 @@ use async_trait::async_trait;
 use mockall::automock;
 
 use crate::{
-  applications::errors::repository_error::RepositoryError, domains::brand::brand::{
-    Brand,
-    BrandCode,
-    BrandId
-  },
-  util::version::Version
+  applications::errors::repository_error::RepositoryError,
+  domains::brand::brand::{Brand, BrandCode, BrandId},
+  util::version::Version,
 };
 
 #[async_trait]

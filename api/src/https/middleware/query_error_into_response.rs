@@ -1,10 +1,7 @@
 use axum::{
-  response::{
-    IntoResponse,
-    Response,
-  },
   body::Body,
   http::StatusCode,
+  response::{IntoResponse, Response},
 };
 use tracing::error;
 

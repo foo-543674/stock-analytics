@@ -1,5 +1,5 @@
-use serde::Serialize;
 use crate::{domains::brand::brand::Brand, infrastructures::brand::query::brand_dao::BrandRecord};
+use serde::Serialize;
 
 #[derive(Clone, Debug, Serialize)]
 pub struct SectorJson {
@@ -8,7 +8,7 @@ pub struct SectorJson {
   code: String,
   group: String,
   group_code: i32,
-  category: String
+  category: String,
 }
 
 #[derive(Clone, Debug, Serialize)]
@@ -16,7 +16,7 @@ pub struct BrandJson {
   id: String,
   name: String,
   code: String,
-  sector: SectorJson
+  sector: SectorJson,
 }
 
 impl BrandJson {
@@ -32,8 +32,8 @@ impl BrandJson {
         code: sector.code.value().to_string(),
         group: sector.group.name.value().to_string(),
         group_code: sector.group.code.value(),
-        category: sector.category.name.value().to_string()
-      }
+        category: sector.category.name.value().to_string(),
+      },
     }
   }
 
@@ -48,8 +48,8 @@ impl BrandJson {
         code: record.sector_code,
         group: record.sector_group_name,
         group_code: record.sector_group_code,
-        category: record.category_name
-      }
+        category: record.category_name,
+      },
     }
   }
 }

@@ -1,32 +1,27 @@
-use std::sync::Arc;
 use async_trait::async_trait;
 use futures::{future::FutureExt, TryFutureExt};
+use std::sync::Arc;
 
 use crate::{
   applications::{
-    brand::repositories::{
-      brand_repository::BrandRepository,
-      sector_repository::SectorRepository
-    }, 
-    errors::application_error::ApplicationError, 
+    brand::repositories::{brand_repository::BrandRepository, sector_repository::SectorRepository},
+    errors::application_error::ApplicationError,
     validation::{
-      simple_validator::SimpleValidator, validation_error::{
-        validation_error, ResultExt
-      }, validation_failure::validation_failure, validation_message_keys::{
-        duplicate, length_equals, max_length, numeric_only, required, resource_not_found, ulid
+      simple_validator::SimpleValidator,
+      validation_error::{validation_error, ResultExt},
+      validation_failure::validation_failure,
+      validation_message_keys::{
+        duplicate, length_equals, max_length, numeric_only, required, resource_not_found, ulid,
       },
       validator::Validator,
-      validator_chain::ValidatorChain
-    }
-  }, 
+      validator_chain::ValidatorChain,
+    },
+  },
   domains::brand::{
     brand::BrandCode,
-    sector::{Sector, SectorId}
+    sector::{Sector, SectorId},
   },
-  util::{
-    str::StringExt, 
-    ulid::StringExtForUlid
-  }
+  util::{str::StringExt, ulid::StringExtForUlid},
 };
 
 use super::brand_register_input::BrandRegisterInput;
@@ -48,38 +43,37 @@ impl BrandRegisterInputValidator {
       base_validator: ValidatorChain::new(vec![
         Box::new(SimpleValidator::new(
           |target: &BrandRegisterInput| !target.name.is_empty(),
-          || validation_failure!("name", required()))
-        ),
+          || validation_failure!("name", required()),
+        )),
         Box::new(SimpleValidator::new(
           |target: &BrandRegisterInput| target.name.len() <= NAME_MAX_LENGTH,
-          || validation_failure!("name", max_length(NAME_MAX_LENGTH)))
-        ),
+          || validation_failure!("name", max_length(NAME_MAX_LENGTH)),
+        )),
         Box::new(SimpleValidator::new(
           |target: &BrandRegisterInput| !target.code.is_empty(),
-          || validation_failure!("code", required()))
-        ),
+          || validation_failure!("code", required()),
+        )),
         Box::new(SimpleValidator::new(
           |target: &BrandRegisterInput| target.code.len() == BrandCode::BRAND_CODE_LENGTH,
-          || validation_failure!("code", length_equals(BrandCode::BRAND_CODE_LENGTH)))
-        ),
+          || validation_failure!("code", length_equals(BrandCode::BRAND_CODE_LENGTH)),
+        )),
         Box::new(SimpleValidator::new(
           |target: &BrandRegisterInput| target.code.is_numeric(),
-          || validation_failure!("code", numeric_only()))
-        ),
+          || validation_failure!("code", numeric_only()),
+        )),
         Box::new(SimpleValidator::new(
           |target: &BrandRegisterInput| !target.sector_id.is_empty(),
-          || validation_failure!("sector_id", required()))
-        ),
+          || validation_failure!("sector_id", required()),
+        )),
         Box::new(SimpleValidator::new(
           |target: &BrandRegisterInput| target.sector_id.is_ulid(),
-          || validation_failure!("sector_id", ulid()))
-        ),
+          || validation_failure!("sector_id", ulid()),
+        )),
       ]),
       brand_repository,
       sector_repository,
     }
   }
-
 }
 
 #[derive(Debug, Clone)]
@@ -99,14 +93,22 @@ impl ValidatedBrandRegisterInput {
 
 #[async_trait]
 impl Validator<BrandRegisterInput, ValidatedBrandRegisterInput> for BrandRegisterInputValidator {
-  async fn validate(&self, target: &BrandRegisterInput) -> Result<ValidatedBrandRegisterInput, ApplicationError> {
-    return self.base_validator.validate(target)
+  async fn validate(
+    &self,
+    target: &BrandRegisterInput,
+  ) -> Result<ValidatedBrandRegisterInput, ApplicationError> {
+    return self
+      .base_validator
+      .validate(target)
       .then(|result| async {
         // NOTE: If validation error for code is already exists, BrandCode cannot construct.
         if result.is_validation_error_and_has_field("code") {
           result
         } else {
-          let brand = self.brand_repository.find_by_code(&BrandCode::from_string(&target.code)).await?;
+          let brand = self
+            .brand_repository
+            .find_by_code(&BrandCode::from_string(&target.code))
+            .await?;
           match brand {
             Some(_) => result.add_validation_failure(&validation_failure!("code", duplicate())),
             None => result,
@@ -118,38 +120,34 @@ impl Validator<BrandRegisterInput, ValidatedBrandRegisterInput> for BrandRegiste
         if result.is_validation_error_and_has_field("sector_id") {
           Err(result.expect_err("Error must be exists in here"))
         } else {
-          let sector_id = SectorId::from_string(&target.sector_id).expect("must be success in this block");
+          let sector_id =
+            SectorId::from_string(&target.sector_id).expect("must be success in this block");
           let sector_option = self.sector_repository.find_by_id(&sector_id).await?;
           match (result, sector_option) {
             (Ok(_), Some(sector)) => Ok(sector),
             (Ok(_), None) => Err(validation_error!("sector_id", resource_not_found())),
-            (Err(ApplicationError::ValidationError(failure)), None) => Err(validation_error!(failure.merge(&validation_failure!("sector_id", resource_not_found())))),
+            (Err(ApplicationError::ValidationError(failure)), None) => Err(validation_error!(
+              failure.merge(&validation_failure!("sector_id", resource_not_found()))
+            )),
             (Err(err), _) => Err(err),
           }
         }
       })
-      .and_then(|sector| async {
-        Ok(ValidatedBrandRegisterInput::new(target, sector))
-      }).await;
+      .and_then(|sector| async { Ok(ValidatedBrandRegisterInput::new(target, sector)) })
+      .await;
   }
 }
 
 #[cfg(test)]
 mod tests {
   use super::*;
-  use proptest::prelude::*;
   use crate::{
     applications::brand::repositories::{
-      brand_repository::MockBrandRepository, 
-      sector_repository::MockSectorRepository
+      brand_repository::MockBrandRepository, sector_repository::MockSectorRepository,
     },
-    test_support::{
-      assert_result::*,
-      string::*,
-      ulid::random_ulid_string,
-      mock::*
-    },
+    test_support::{assert_result::*, mock::*, string::*, ulid::random_ulid_string},
   };
+  use proptest::prelude::*;
 
   proptest! {
     #[test]

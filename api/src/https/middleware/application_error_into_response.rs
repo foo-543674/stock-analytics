@@ -1,17 +1,12 @@
 use axum::{
-  response::{
-    IntoResponse,
-    Response,
-    Json
-  },
   body::Body,
   http::StatusCode,
+  response::{IntoResponse, Json, Response},
 };
 use tracing::error;
 
 use crate::applications::{
-  errors::application_error::ApplicationError,
-  validation::validation_failure::ValidationFailure
+  errors::application_error::ApplicationError, validation::validation_failure::ValidationFailure,
 };
 
 impl IntoResponse for ApplicationError {
@@ -20,7 +15,7 @@ impl IntoResponse for ApplicationError {
       ApplicationError::ValidationError(failure) => {
         let body: Json<ValidationFailure> = Json(failure);
         (StatusCode::BAD_REQUEST, body).into_response()
-      },
+      }
       ApplicationError::ConflictError(_) => Response::builder()
         .status(StatusCode::CONFLICT)
         .body(Body::empty())

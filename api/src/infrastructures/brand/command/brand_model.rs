@@ -1,20 +1,9 @@
 use sea_orm::entity::prelude::*;
 
-use super::
-  sector_model::Entity as SectorModel
-;
+use super::sector_model::Entity as SectorModel;
 use crate::{
-  domains::brand::
-    brand::{
-      Brand, 
-      BrandCode, 
-      BrandId
-    }
-  , 
-  util::{
-    unempty_string::UnemptyString, 
-    version::Version
-  }
+  domains::brand::brand::{Brand, BrandCode, BrandId},
+  util::{unempty_string::UnemptyString, version::Version},
 };
 
 #[derive(Clone, Debug, PartialEq, Eq, DeriveEntityModel)]
@@ -47,8 +36,15 @@ impl Related<super::sector_model::Entity> for Entity {
 impl ActiveModelBehavior for ActiveModel {}
 
 impl Model {
-  pub async fn into_domain(&self, connection: &DatabaseConnection) -> Result<Brand, sea_orm::error::DbErr> {
-    let sector = self.find_related(SectorModel).one(connection).await?.unwrap();
+  pub async fn into_domain(
+    &self,
+    connection: &DatabaseConnection,
+  ) -> Result<Brand, sea_orm::error::DbErr> {
+    let sector = self
+      .find_related(SectorModel)
+      .one(connection)
+      .await?
+      .unwrap();
 
     Ok(Brand {
       id: BrandId::from_string(&self.id).unwrap(),

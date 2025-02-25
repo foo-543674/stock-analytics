@@ -1,19 +1,19 @@
-use axum::Json;
-use serde::Deserialize;
+use super::brand_json::BrandJson;
 use crate::applications::{
   brand::{
-    interactors::brand_register_input::BrandRegisterInput, 
-    usecases::register_brand_usecase::RegisterBrandUsecase
+    interactors::brand_register_input::BrandRegisterInput,
+    usecases::register_brand_usecase::RegisterBrandUsecase,
   },
-  errors::application_error::ApplicationError
+  errors::application_error::ApplicationError,
 };
-use super::brand_json::BrandJson;
+use axum::Json;
+use serde::Deserialize;
 
 #[derive(Deserialize)]
 pub struct PostBrandBody {
   name: String,
   code: String,
-  sector_id: String
+  sector_id: String,
 }
 
 impl PostBrandBody {
@@ -21,12 +21,15 @@ impl PostBrandBody {
     BrandRegisterInput {
       name: self.name.clone(),
       code: self.code.clone(),
-      sector_id: self.sector_id.clone()
+      sector_id: self.sector_id.clone(),
     }
   }
 }
 
-pub async fn post_brands(Json(payload): Json<PostBrandBody>, usecase: &RegisterBrandUsecase) -> Result<Json<BrandJson>, ApplicationError> {
+pub async fn post_brands(
+  Json(payload): Json<PostBrandBody>,
+  usecase: &RegisterBrandUsecase,
+) -> Result<Json<BrandJson>, ApplicationError> {
   let input = payload.to_input();
   let result = usecase.execute(input).await?;
   Ok(Json(BrandJson::from_brand(&result)))

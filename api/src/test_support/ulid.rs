@@ -1,11 +1,11 @@
 #[cfg(test)]
-use proptest::prelude::*;
+use super::datetime::datetime;
 #[cfg(test)]
-use ulid::Ulid;
+use proptest::prelude::*;
 #[cfg(test)]
 use rand::prelude::*;
 #[cfg(test)]
-use super::datetime::datetime;
+use ulid::Ulid;
 
 #[cfg(test)]
 pub fn random_ulid() -> impl Strategy<Value = Ulid> {

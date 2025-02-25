@@ -16,7 +16,8 @@ impl SectorGroupCode {
     if value < Self::MIN_SECTOR_GROUP_CODE || value > Self::MAX_SECTOR_GROUP_CODE {
       panic!(
         "SectorGroupCode must be between {} and {}",
-        Self::MIN_SECTOR_GROUP_CODE, Self::MAX_SECTOR_GROUP_CODE
+        Self::MIN_SECTOR_GROUP_CODE,
+        Self::MAX_SECTOR_GROUP_CODE
       );
     } else {
       SectorGroupCode(value)
@@ -60,9 +61,9 @@ impl Default for SectorGroup {
 #[cfg(test)]
 mod tests {
   use super::*;
-  use std::panic::*;
-  use proptest::prelude::*;
   use crate::test_support::ulid::random_ulid;
+  use proptest::prelude::*;
+  use std::panic::*;
 
   #[test]
   fn sector_group_code_should_panic_when_below_1() {
@@ -78,7 +79,6 @@ mod tests {
       SectorGroupCode::new(18);
     });
     assert!(result.is_err());
-
   }
   proptest! {
     #[test]

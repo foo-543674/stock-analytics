@@ -28,7 +28,10 @@ const DEFAULT_ITEMS_PER_PAGE: u32 = 10;
 impl ItemsPerPage {
   pub fn new(items_per_page: u32) -> Self {
     if items_per_page > MAX_ITEMS_PER_PAGE {
-      panic!("Items per page must be less than or equal to {}", MAX_ITEMS_PER_PAGE);
+      panic!(
+        "Items per page must be less than or equal to {}",
+        MAX_ITEMS_PER_PAGE
+      );
     }
 
     ItemsPerPage(items_per_page)
@@ -94,7 +97,7 @@ mod test {
   const MAX_INT: i32 = 10000;
   const MAX_SIZE_FOR_TEST: i32 = MAX_ITEMS_PER_PAGE as i32;
 
-  proptest!{
+  proptest! {
     #[test]
     fn pagination_should_create_from_int(num in 1..MAX_INT, size in 1..=MAX_SIZE_FOR_TEST) {
       let pagination = Pagination::from_int(num, size);

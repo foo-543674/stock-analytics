@@ -1,16 +1,17 @@
 use once_cell::sync::Lazy;
 use sea_orm::Order;
 
-pub trait SortKey
-  : Sized 
-  + Copy 
-  + Clone 
-  + Eq 
-  + PartialEq 
+pub trait SortKey:
+  Sized
+  + Copy
+  + Clone
+  + Eq
+  + PartialEq
   + strum::IntoEnumIterator
   + std::str::FromStr<Err = strum::ParseError>
   + std::fmt::Display
-{}
+{
+}
 
 pub struct Sort<T: SortKey> {
   pub key: T,
@@ -59,7 +60,8 @@ impl<T: SortKey> Sort<T> {
   }
 
   pub fn from_string_with_canma_separated(value: &str) -> Vec<Self> {
-    value.split(",")
+    value
+      .split(",")
       .filter_map(|v| Self::from_string(v))
       .collect()
   }
@@ -68,11 +70,8 @@ impl<T: SortKey> Sort<T> {
 #[cfg(test)]
 mod test {
   use crate::test_support::{
-    generic::random_pick_values_from, 
-    string::{
-      pick_values_with_random_case_from, 
-      random_text
-    }
+    generic::random_pick_values_from,
+    string::{pick_values_with_random_case_from, random_text},
   };
 
   use super::*;

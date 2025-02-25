@@ -1,5 +1,5 @@
-pub use ulid::Ulid;
 pub use std::fmt;
+pub use ulid::Ulid;
 
 pub trait Identitable {
   fn to_string(&self) -> String;
@@ -14,11 +14,13 @@ macro_rules! define_id {
       pub fn new(id: Ulid) -> Self {
         $name(id)
       }
-      
-      pub fn from_string(value: &str) -> Result<Self, crate::domains::errors::domain_error::DomainError> {
-        ulid::Ulid::from_string(value)
-          .map($name)
-          .map_err(|e| crate::domains::errors::domain_error::DomainError::InvalidData(e.to_string()))
+
+      pub fn from_string(
+        value: &str,
+      ) -> Result<Self, crate::domains::errors::domain_error::DomainError> {
+        ulid::Ulid::from_string(value).map($name).map_err(|e| {
+          crate::domains::errors::domain_error::DomainError::InvalidData(e.to_string())
+        })
       }
 
       pub fn value(&self) -> &Ulid {

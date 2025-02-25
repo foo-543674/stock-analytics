@@ -18,10 +18,10 @@ impl StringExtForUlid for str {
 mod tests {
   use crate::test_support::{string::random_text, ulid::random_ulid};
 
-use super::*;
+  use super::*;
   use proptest::prelude::*;
 
-  proptest!{
+  proptest! {
     #[test]
     fn string_is_ulid_should_return_true_when_valid_ulid(value in random_ulid()) {
       assert_eq!(value.to_string().is_ulid(), true, "value should be ulid: {}", value);

@@ -1,10 +1,13 @@
 #[cfg(test)]
-use std::ops::RangeInclusive;
-#[cfg(test)]
 use proptest::prelude::*;
+#[cfg(test)]
+use std::ops::RangeInclusive;
 
 #[cfg(test)]
-pub fn random_pick_values<T: Clone + 'static + std::fmt::Debug>(values: Vec<T>, count: RangeInclusive<usize>) -> impl Strategy<Value = Vec<T>> {
+pub fn random_pick_values<T: Clone + 'static + std::fmt::Debug>(
+  values: Vec<T>,
+  count: RangeInclusive<usize>,
+) -> impl Strategy<Value = Vec<T>> {
   proptest::collection::vec(proptest::sample::select(values), count)
 }
 

@@ -4,10 +4,7 @@ use mockall::automock;
 
 use crate::{
   applications::errors::repository_error::RepositoryError,
-  domains::brand::sector::{
-    Sector,
-    SectorId
-  }
+  domains::brand::sector::{Sector, SectorId},
 };
 
 #[async_trait]

@@ -28,8 +28,8 @@ impl From<UnemptyString> for String {
 mod tests {
   use super::*;
   use crate::test_support::string::random_text;
-  use std::panic::*;
   use proptest::prelude::*;
+  use std::panic::*;
 
   #[test]
   fn unempty_string_should_panic_when_empty() {

@@ -1,17 +1,15 @@
 use futures::StreamExt;
 
-use crate::applications::errors::application_error::ApplicationError;
 use super::{validation_error::validation_error, validator::Validator};
+use crate::applications::errors::application_error::ApplicationError;
 
 pub struct ValidatorChain<T, R> {
-  validators: Vec<Box<dyn Validator<T, R>>>
+  validators: Vec<Box<dyn Validator<T, R>>>,
 }
 
 impl<T: Send + Sync, R: Send + Sync> ValidatorChain<T, R> {
   pub fn new(validators: Vec<Box<dyn Validator<T, R>>>) -> Self {
-    ValidatorChain {
-      validators
-    }
+    ValidatorChain { validators }
   }
 
   pub async fn validate(&self, target: &T) -> Result<(), ApplicationError> {
@@ -24,41 +22,40 @@ impl<T: Send + Sync, R: Send + Sync> ValidatorChain<T, R> {
           (Ok(_), Err(ApplicationError::ValidationError(failures))) => {
             Err(validation_error!(failures))
           }
-          (Err(ApplicationError::ValidationError(prev_failures)), Err(ApplicationError::ValidationError(failures))) => {
-            Err(validation_error!(prev_failures.merge(&failures)))
-          }
+          (
+            Err(ApplicationError::ValidationError(prev_failures)),
+            Err(ApplicationError::ValidationError(failures)),
+          ) => Err(validation_error!(prev_failures.merge(&failures))),
           (_, Err(err)) => Err(err),
         }
-      }).await;
+      })
+      .await;
   }
 }
 
 #[cfg(test)]
 mod tests {
-    use std::iter;
-    use crate::{
-      applications::validation::{
-        validation_message_keys::required,
-        validator::MockValidator
-      }, 
-      test_support::assert_result::{
-        assert_result_is_err, 
-        assert_result_is_ok
-      }
-    };
+  use crate::{
+    applications::validation::{validation_message_keys::required, validator::MockValidator},
+    test_support::assert_result::{assert_result_is_err, assert_result_is_ok},
+  };
+  use std::iter;
 
   #[test]
   fn validator_chain_should_use_all_validators() {
     use super::*;
 
     let validators = iter::repeat_with(|| {
-        let mut mock = MockValidator::<_, &str>::new();
-        mock.expect_validate().times(1).returning(|_| Box::pin(async { Ok("Success") }));
-        mock
-      })
-      .take(3)
-      .map(|v| Box::new(v) as Box<dyn Validator<_, &str>>)
-      .collect::<Vec<_>>();
+      let mut mock = MockValidator::<_, &str>::new();
+      mock
+        .expect_validate()
+        .times(1)
+        .returning(|_| Box::pin(async { Ok("Success") }));
+      mock
+    })
+    .take(3)
+    .map(|v| Box::new(v) as Box<dyn Validator<_, &str>>)
+    .collect::<Vec<_>>();
     let chain = ValidatorChain::new(validators);
     let result = futures::executor::block_on(chain.validate(&"foo".to_string()));
     assert_result_is_ok!(result);
@@ -69,18 +66,24 @@ mod tests {
     use super::*;
 
     let validators = iter::repeat_with(|| {
-        let mut mock = MockValidator::new();
-        mock.expect_validate().times(1).returning(|_| Box::pin(async { Ok(()) }));
-        mock
-      })
-      .take(3)
-      .chain(iter::once({
-        let mut mock = MockValidator::new();
-        mock.expect_validate().times(1).returning(|_| Box::pin(async { Err(validation_error!("foo", required())) }));
-        mock
-      }))
-      .map(|v| Box::new(v) as Box<dyn Validator<_, _>>)
-      .collect::<Vec<_>>();
+      let mut mock = MockValidator::new();
+      mock
+        .expect_validate()
+        .times(1)
+        .returning(|_| Box::pin(async { Ok(()) }));
+      mock
+    })
+    .take(3)
+    .chain(iter::once({
+      let mut mock = MockValidator::new();
+      mock
+        .expect_validate()
+        .times(1)
+        .returning(|_| Box::pin(async { Err(validation_error!("foo", required())) }));
+      mock
+    }))
+    .map(|v| Box::new(v) as Box<dyn Validator<_, _>>)
+    .collect::<Vec<_>>();
     let chain = ValidatorChain::new(validators);
     let result = futures::executor::block_on(chain.validate(&"foo".to_string()));
     assert_result_is_err!(result);
@@ -90,12 +93,14 @@ mod tests {
   fn validator_chain_should_merge_failures() {
     use super::*;
 
-    let validators = ["key1", "key2", "key3"].into_iter()
+    let validators = ["key1", "key2", "key3"]
+      .into_iter()
       .map(|k| {
         let mut mock = MockValidator::<_, &str>::new();
-        mock.expect_validate().times(1).returning(|_| Box::pin(async { 
-          Err(validation_error!(k, required()))
-        }));
+        mock
+          .expect_validate()
+          .times(1)
+          .returning(|_| Box::pin(async { Err(validation_error!(k, required())) }));
         mock
       })
       .map(|v| Box::new(v) as Box<dyn Validator<_, _>>)
@@ -115,18 +120,23 @@ mod tests {
     use super::*;
 
     let validators = iter::repeat_with(|| {
-        let mut mock = MockValidator::<_, &str>::new();
-        mock.expect_validate().times(1).returning(|_| Box::pin(async { Err(validation_error!("foo", required())) }));
-        mock
-      })
-      .take(3)
-      .chain(iter::once({
-        let mut mock = MockValidator::new();
-        mock.expect_validate().times(1).returning(|_| Box::pin(async { Err(ApplicationError::UnexpectedError("foo".to_string())) }));
-        mock
-      }))
-      .map(|v| Box::new(v) as Box<dyn Validator<_, _>>)
-      .collect::<Vec<_>>();
+      let mut mock = MockValidator::<_, &str>::new();
+      mock
+        .expect_validate()
+        .times(1)
+        .returning(|_| Box::pin(async { Err(validation_error!("foo", required())) }));
+      mock
+    })
+    .take(3)
+    .chain(iter::once({
+      let mut mock = MockValidator::new();
+      mock.expect_validate().times(1).returning(|_| {
+        Box::pin(async { Err(ApplicationError::UnexpectedError("foo".to_string())) })
+      });
+      mock
+    }))
+    .map(|v| Box::new(v) as Box<dyn Validator<_, _>>)
+    .collect::<Vec<_>>();
     let chain = ValidatorChain::new(validators);
     let result = futures::executor::block_on(chain.validate(&"foo".to_string()));
     assert_result_is_err!(result);

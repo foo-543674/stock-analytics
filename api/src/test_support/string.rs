@@ -1,14 +1,15 @@
 #[cfg(test)]
+use super::generic::random_pick_values;
+#[cfg(test)]
 use proptest::prelude::*;
 #[cfg(test)]
 use proptest::strategy::Strategy;
-#[cfg(test)]
-use super::generic::random_pick_values;
 
 #[cfg(test)]
 pub fn alphanumeric_string(length: usize) -> impl Strategy<Value = String> {
   let pattern = format!("[a-zA-Z0-9]{{{}}}", length);
-  proptest::string::string_regex(&pattern).expect("Failed to create strategy")
+  proptest::string::string_regex(&pattern)
+    .expect("Failed to create strategy")
     .prop_map(|s: String| {
       let mut chars: Vec<char> = s.chars().collect();
       if chars.iter().all(|c| c.is_numeric()) {
@@ -45,7 +46,9 @@ pub fn random_text_length_at_most(max_length: usize) -> impl Strategy<Value = St
   proptest::collection::vec(any::<char>(), 1..=max_length)
     .prop_map(|chars| chars.into_iter().collect::<String>())
     //NOTE: Multibyte characters can exceed the byte limit
-    .prop_filter("Generated string exceeds max_bytes", move |s| s.len() <= max_length)
+    .prop_filter("Generated string exceeds max_bytes", move |s| {
+      s.len() <= max_length
+    })
 }
 
 #[cfg(test)]
@@ -56,28 +59,29 @@ pub fn random_text_length_at_least(min_length: usize) -> impl Strategy<Value = S
 
 #[cfg(test)]
 pub fn randomize_case(input: &str) -> impl Strategy<Value = String> {
-  input.chars().map(|c| {
-    if c.is_ascii_alphanumeric() {
-      prop_oneof![
-        Just(c.to_ascii_uppercase()),
-        Just(c.to_ascii_lowercase())
-      ]
-      .boxed()
-    } else {
-      Just(c).boxed()
-    }
-  }).collect::<Vec<_>>().prop_map(|v| v.into_iter().collect())
+  input
+    .chars()
+    .map(|c| {
+      if c.is_ascii_alphanumeric() {
+        prop_oneof![Just(c.to_ascii_uppercase()), Just(c.to_ascii_lowercase())].boxed()
+      } else {
+        Just(c).boxed()
+      }
+    })
+    .collect::<Vec<_>>()
+    .prop_map(|v| v.into_iter().collect())
 }
 
 #[cfg(test)]
 pub fn pick_values_with_random_case(values: Vec<String>) -> impl Strategy<Value = Vec<String>> {
   let len = values.len();
-  random_pick_values(values, 1..=len)
-    .prop_flat_map(|values| {
-      values.into_iter().map(|v| randomize_case(&v))
-        .collect::<Vec<_>>()
-        .prop_map(|v| v.into_iter().collect::<Vec<String>>())
-    })
+  random_pick_values(values, 1..=len).prop_flat_map(|values| {
+    values
+      .into_iter()
+      .map(|v| randomize_case(&v))
+      .collect::<Vec<_>>()
+      .prop_map(|v| v.into_iter().collect::<Vec<String>>())
+  })
 }
 
 #[cfg(test)]
@@ -104,4 +108,3 @@ macro_rules! pick_one_with_random_case_from {
     crate::test_support::string::pick_one_with_random_case(values.iter().map(|s| s.to_string()).collect())
   }};
 }
-

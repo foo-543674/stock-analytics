@@ -3,15 +3,15 @@ use std::sync::Arc;
 use async_trait::async_trait;
 use sea_orm::{DatabaseConnection, EntityTrait};
 
+use super::sector_model::Entity;
 use crate::{
   applications::{
-    brand::repositories::sector_repository::SectorRepository, 
-    errors::repository_error::RepositoryError
-  }, domains::brand::sector::{
-    Sector, SectorId
-  }, infrastructures::support::connection::ConnectionProvider
+    brand::repositories::sector_repository::SectorRepository,
+    errors::repository_error::RepositoryError,
+  },
+  domains::brand::sector::{Sector, SectorId},
+  infrastructures::support::connection::ConnectionProvider,
 };
-use super::sector_model::Entity;
 
 pub struct SectorRepositoryOnRdbms {
   connection_provider: Arc<dyn ConnectionProvider>,
@@ -19,7 +19,9 @@ pub struct SectorRepositoryOnRdbms {
 
 impl SectorRepositoryOnRdbms {
   pub fn new(connection_provider: Arc<dyn ConnectionProvider>) -> Self {
-    Self { connection_provider }
+    Self {
+      connection_provider,
+    }
   }
 }
 

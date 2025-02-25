@@ -1,26 +1,18 @@
-use std::sync::Arc;
-use async_trait::async_trait;
-use sea_orm::{
-  prelude::Expr,
-  ActiveModelTrait,
-  ColumnTrait,
-  DatabaseConnection,
-  EntityTrait, 
-  QueryFilter, 
-  Set
-};
+use super::brand_model::{ActiveModel, Column, Entity};
 use crate::{
   applications::{
-    brand::repositories::brand_repository::BrandRepository, 
-    errors::repository_error::RepositoryError
-  }, 
-  domains::brand::brand::{
-    Brand, BrandCode, BrandId
-  }, 
-  infrastructures::support::connection::ConnectionProvider, 
-  util::version::Version
+    brand::repositories::brand_repository::BrandRepository,
+    errors::repository_error::RepositoryError,
+  },
+  domains::brand::brand::{Brand, BrandCode, BrandId},
+  infrastructures::support::connection::ConnectionProvider,
+  util::version::Version,
 };
-use super::brand_model::{ActiveModel, Column, Entity};
+use async_trait::async_trait;
+use sea_orm::{
+  prelude::Expr, ActiveModelTrait, ColumnTrait, DatabaseConnection, EntityTrait, QueryFilter, Set,
+};
+use std::sync::Arc;
 
 pub struct BrandRepositoryOnRdbms {
   connection_provider: Arc<dyn ConnectionProvider>,
@@ -28,7 +20,9 @@ pub struct BrandRepositoryOnRdbms {
 
 impl BrandRepositoryOnRdbms {
   pub fn new(connection_provider: Arc<dyn ConnectionProvider>) -> Self {
-    Self { connection_provider }
+    Self {
+      connection_provider,
+    }
   }
 }
 
@@ -85,7 +79,10 @@ impl BrandRepository for BrandRepositoryOnRdbms {
     Entity::update_many()
       .col_expr(Column::Name, Expr::value(brand.name.value().to_string()))
       .col_expr(Column::Code, Expr::value(brand.code.value().to_string()))
-      .col_expr(Column::SectorId, Expr::value(brand.sector.id.value().to_string()))
+      .col_expr(
+        Column::SectorId,
+        Expr::value(brand.sector.id.value().to_string()),
+      )
       .col_expr(Column::Version, Expr::value(new_verison.value() as i32))
       .filter(Column::Id.eq(brand.id.value().to_string()))
       .filter(Column::Version.eq(brand.version.value() as i32))
