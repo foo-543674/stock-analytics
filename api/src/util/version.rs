@@ -2,9 +2,9 @@
 pub struct Version(u32);
 
 impl Default for Version {
-    fn default() -> Self {
-        Self::new()
-    }
+  fn default() -> Self {
+    Self::new()
+  }
 }
 
 impl Version {

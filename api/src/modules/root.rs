@@ -1,6 +1,4 @@
-use crate::infrastructures::support::connection::{
-  create_db_options, ConnectionProviderImpl,
-};
+use crate::infrastructures::support::connection::{create_db_options, ConnectionProviderImpl};
 use std::sync::Arc;
 
 use super::brand::BrandModule;
@@ -10,9 +8,9 @@ pub struct RootModule {
 }
 
 impl Default for RootModule {
-    fn default() -> Self {
-        Self::new()
-    }
+  fn default() -> Self {
+    Self::new()
+  }
 }
 
 impl RootModule {

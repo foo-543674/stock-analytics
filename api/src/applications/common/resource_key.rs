@@ -8,10 +8,7 @@ pub struct ResourceKey {
 
 impl ResourceKey {
   pub fn new(key: String, params: Vec<String>) -> Self {
-    Self {
-      key,
-      params,
-    }
+    Self { key, params }
   }
 }
 
