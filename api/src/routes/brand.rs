@@ -36,5 +36,5 @@ pub fn brand_router(module: Arc<BrandModule>) -> Router {
     .route("/", get(get_list_handler))
     .with_state(module);
 
-  return Router::new().nest("/brands", routes);
+  Router::new().nest("/brands", routes)
 }

@@ -74,16 +74,16 @@ impl ValidationFailure {
               .filter(|f| f.name == field.name)
               .collect();
             if same_name_fields.is_empty() {
-              return acc;
+              acc
             } else {
               let merged = same_name_fields
                 .iter()
                 .fold(field.clone(), |acc: ValidationFailedField, f| acc.merge(f));
-              return acc
+              acc
                 .into_iter()
-                .filter(|f| &f.name != &merged.name)
+                .filter(|f| f.name != merged.name)
                 .chain(vec![merged.clone()])
-                .collect();
+                .collect()
             }
           },
         )

@@ -10,11 +10,11 @@ pub fn create_db_options(url: impl Into<String>, max_connection: u32) -> Connect
     .max_connections(max_connection)
     .sqlx_logging(true)
     .sqlx_logging_level(log::LevelFilter::Debug);
-  return opt;
+  opt
 }
 
 pub async fn create_db_connection(opt: &ConnectOptions) -> Result<DatabaseConnection, DbErr> {
-  return Database::connect(opt.clone()).await;
+  Database::connect(opt.clone()).await
 }
 
 #[async_trait]

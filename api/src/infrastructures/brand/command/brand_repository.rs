@@ -36,7 +36,7 @@ impl BrandRepository for BrandRepositoryOnRdbms {
       .await?;
 
     if let Some(result) = result_opt {
-      Ok(Some(result.into_domain(&*connection).await?))
+      Ok(Some(result.into_domain(&connection).await?))
     } else {
       Ok(None)
     }
@@ -51,7 +51,7 @@ impl BrandRepository for BrandRepositoryOnRdbms {
       .await?;
 
     if let Some(result) = result_opt {
-      Ok(Some(result.into_domain(&*connection).await?))
+      Ok(Some(result.into_domain(&connection).await?))
     } else {
       Ok(None)
     }

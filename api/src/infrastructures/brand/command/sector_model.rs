@@ -65,12 +65,12 @@ impl Model {
   ) -> Result<Sector, sea_orm::error::DbErr> {
     let sector_group = self
       .find_related(SectorGroupModel)
-      .one(&*connection)
+      .one(connection)
       .await?
       .unwrap();
     let category = self
       .find_related(CategoryModel)
-      .one(&*connection)
+      .one(connection)
       .await?
       .unwrap();
     Ok(Sector {

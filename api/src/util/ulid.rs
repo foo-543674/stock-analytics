@@ -24,12 +24,12 @@ mod tests {
   proptest! {
     #[test]
     fn string_is_ulid_should_return_true_when_valid_ulid(value in random_ulid()) {
-      assert_eq!(value.to_string().is_ulid(), true, "value should be ulid: {}", value);
+      assert!(value.to_string().is_ulid(), "value should be ulid: {}", value);
     }
 
     #[test]
     fn string_is_ulid_should_return_false_when_invalid_ulid(value in random_text()) {
-      assert_eq!(value.is_ulid(), false, "value should not be ulid: {}", value);
+      assert!(!value.is_ulid(), "value should not be ulid: {}", value);
     }
   }
 }

@@ -1,5 +1,5 @@
 use crate::infrastructures::support::connection::{
-  create_db_options, ConnectionProviderImpl, IN_MEMORY_SQLITE,
+  create_db_options, ConnectionProviderImpl,
 };
 use std::sync::Arc;
 
@@ -7,6 +7,12 @@ use super::brand::BrandModule;
 
 pub struct RootModule {
   pub brand: Arc<BrandModule>,
+}
+
+impl Default for RootModule {
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 impl RootModule {

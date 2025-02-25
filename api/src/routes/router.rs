@@ -10,7 +10,7 @@ pub fn router(module: RootModule) -> Router {
 
   let api_routes = Router::new().merge(brand_router(module_shared.brand.clone()));
 
-  return Router::new()
+  Router::new()
     .nest("/api", api_routes)
-    .layer(TraceLayer::new_for_http());
+    .layer(TraceLayer::new_for_http())
 }

@@ -1,4 +1,3 @@
-use once_cell::sync::Lazy;
 use sea_orm::Order;
 
 pub trait SortKey:
@@ -32,9 +31,7 @@ macro_rules! sort_key {
 
 pub(crate) use sort_key;
 
-const KEY_PATTERN: Lazy<regex::Regex> = Lazy::new(|| {
-  regex::Regex::new(r"^(?<desc>-?)(?<key>[a-zA-Z0-9_]+)$").expect("Invalid regex pattern")
-});
+const KEY_PATTERN: &str = r"^(?<desc>-?)(?<key>[a-zA-Z0-9_]+)$";
 
 impl<T: SortKey> Sort<T> {
   pub fn new(key: T, order: Order) -> Self {
@@ -42,9 +39,8 @@ impl<T: SortKey> Sort<T> {
   }
 
   pub fn from_string(value: &str) -> Option<Self> {
-    let Some(capture) = KEY_PATTERN.captures(value) else {
-      return None;
-    };
+    let pattern = regex::Regex::new(KEY_PATTERN).expect("Invalid regex pattern");
+    let capture = pattern.captures(value)?;
 
     let key = match T::from_str(&capture["key"]) {
       Ok(v) => v,

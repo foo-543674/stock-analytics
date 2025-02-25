@@ -24,8 +24,8 @@ impl GetBrandListQueryParameter {
       sorts: self
         .sort
         .as_ref()
-        .map(|v| Sort::from_string_with_canma_separated(&v))
-        .unwrap_or(Default::default()),
+        .map(|v| Sort::from_string_with_canma_separated(v))
+        .unwrap_or_default(),
       sector_id: self.sector.clone(),
     }
   }

@@ -13,7 +13,7 @@ impl SectorGroupCode {
   const MIN_SECTOR_GROUP_CODE: i32 = 1;
   const MAX_SECTOR_GROUP_CODE: i32 = 17;
   pub fn new(value: i32) -> Self {
-    if value < Self::MIN_SECTOR_GROUP_CODE || value > Self::MAX_SECTOR_GROUP_CODE {
+    if !(Self::MIN_SECTOR_GROUP_CODE..=Self::MAX_SECTOR_GROUP_CODE).contains(&value) {
       panic!(
         "SectorGroupCode must be between {} and {}",
         Self::MIN_SECTOR_GROUP_CODE,
@@ -25,7 +25,7 @@ impl SectorGroupCode {
   }
 
   pub fn from_i32(value: i32) -> Self {
-    SectorGroupCode::new(value.clone())
+    SectorGroupCode::new(value)
   }
 }
 

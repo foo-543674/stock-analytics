@@ -73,7 +73,7 @@ mod tests {
       let sector: Sector = Default::default();
       let validated_input = ValidatedBrandRegisterInput::new(&input, sector.clone());
 
-      let id_clone = id.clone();
+      let id_clone = id;
       let id_generator = create_mock::<MockUlidGenerator>(|mock| { mock.expect_generate().returning(move || Ok(id_clone)); });
 
       let factory = BrandFactoryImpl::new(Arc::new(id_generator));

@@ -11,7 +11,7 @@ use crate::applications::{
 
 impl IntoResponse for ApplicationError {
   fn into_response(self) -> axum::http::Response<axum::body::Body> {
-    return match self {
+    match self {
       ApplicationError::ValidationError(failure) => {
         let body: Json<ValidationFailure> = Json(failure);
         (StatusCode::BAD_REQUEST, body).into_response()
@@ -34,6 +34,6 @@ impl IntoResponse for ApplicationError {
           .body(Body::empty())
           .expect("Failed to build response")
       }
-    };
+    }
   }
 }

@@ -16,12 +16,12 @@ mod tests {
   proptest! {
     #[test]
     fn string_is_numeric_should_return_true_when_numeric(value in "[0-9]+") {
-      assert_eq!(value.is_numeric(), true, "value should be numeric: {}", value);
+      assert!(value.is_numeric(), "value should be numeric: {}", value);
     }
 
     #[test]
     fn string_is_numeric_should_return_false_when_not_numeric(value in "[^0-9]*") {
-      assert_eq!(value.is_numeric(), false, "value should not be numeric: {}", value);
+      assert!(!value.is_numeric(), "value should not be numeric: {}", value);
     }
   }
 }
