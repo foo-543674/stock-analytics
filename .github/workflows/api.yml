@@ -2,30 +2,35 @@ name: api
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
   pull_request:
-    branches: [ "main" ]
+    branches: ["main"]
 
 env:
   CARGO_TERM_COLOR: always
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
-    - uses: actions/cache@v2
-      with:
-        path: |
-          ~/.cargo/registry
-          ~/.cargo/git
-          api/target
-        key: ${{ runner.os }}-cargo-${{ hashFiles('api/Cargo.lock') }}
-    - name: Build
-      run: cargo build --verbose
-      working-directory: api
-    - name: Run tests
-      run: cargo test --verbose
-      working-directory: api
+      - uses: actions/checkout@v4
+      - uses: actions/cache@v2
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            api/target
+          key: ${{ runner.os }}-cargo-${{ hashFiles('api/Cargo.lock') }}
+      - name: Build
+        run: cargo build --verbose
+        working-directory: api
+      - name: fmt
+        run: cargo fmt -- --check
+        working-directory: api
+      - name: lint
+        run: cargo clippy -- -D warnings
+        working-directory: api
+      - name: Run tests
+        run: cargo test --verbose
+        working-directory: api
