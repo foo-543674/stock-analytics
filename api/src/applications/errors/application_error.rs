@@ -1,7 +1,7 @@
 use thiserror::Error;
 
-use crate::applications::validation::validation_failure::ValidationFailure;
 use super::repository_error::RepositoryError;
+use crate::applications::validation::validation_failure::ValidationFailure;
 
 #[derive(Error, Debug)]
 pub enum ApplicationError {

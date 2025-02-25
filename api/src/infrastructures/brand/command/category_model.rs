@@ -1,6 +1,9 @@
 use sea_orm::entity::prelude::*;
 
-use crate::{domains::brand::category::{Category, CategoryId}, util::unempty_string::UnemptyString};
+use crate::{
+  domains::brand::category::{Category, CategoryId},
+  util::unempty_string::UnemptyString,
+};
 
 #[derive(Clone, Debug, PartialEq, Eq, DeriveEntityModel)]
 #[sea_orm(table_name = "categories")]

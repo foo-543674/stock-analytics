@@ -1,42 +1,41 @@
-use std::sync::Arc;
+use super::brand_register_input_validator::ValidatedBrandRegisterInput;
 use crate::{
   applications::{
-    common::ulid_generator::UlidGenerator, 
-    errors::application_error::ApplicationError
+    common::ulid_generator::UlidGenerator, errors::application_error::ApplicationError,
   },
-  domains::brand::brand::{
-    Brand, 
-    BrandCode, 
-    BrandId
-  }, 
-  util::{unempty_string::UnemptyString, version::Version}
+  domains::brand::brand::{Brand, BrandCode, BrandId},
+  util::{unempty_string::UnemptyString, version::Version},
 };
-use super::brand_register_input_validator::ValidatedBrandRegisterInput;
 #[cfg(test)]
 use mockall::automock;
+use std::sync::Arc;
 
 #[cfg_attr(test, automock)]
 pub trait BrandFactory: Sync + Send {
-  fn create(&self, validated_input: &ValidatedBrandRegisterInput) -> Result<Brand, ApplicationError>;
+  fn create(
+    &self,
+    validated_input: &ValidatedBrandRegisterInput,
+  ) -> Result<Brand, ApplicationError>;
 }
 
-pub struct BrandFactoryImpl{
+pub struct BrandFactoryImpl {
   id_generator: Arc<dyn UlidGenerator>,
 }
 
 impl BrandFactoryImpl {
   pub fn new(id_generator: Arc<dyn UlidGenerator>) -> Self {
-    Self {
-      id_generator,
-    }
+    Self { id_generator }
   }
 }
 
 impl BrandFactory for BrandFactoryImpl {
-  fn create(&self, validated_input: &ValidatedBrandRegisterInput) -> Result<Brand, ApplicationError> {
+  fn create(
+    &self,
+    validated_input: &ValidatedBrandRegisterInput,
+  ) -> Result<Brand, ApplicationError> {
     let input = &validated_input.input;
     let ulid = self.id_generator.generate()?;
-    Ok(Brand{
+    Ok(Brand {
       id: BrandId::new(ulid),
       name: UnemptyString::from_string(&input.name),
       code: BrandCode::from_string(&input.code),
@@ -53,26 +52,16 @@ mod tests {
 
   use crate::{
     applications::{
-      brand::interactors::{
-        brand_factory::BrandFactory, 
-        brand_register_input::BrandRegisterInput, 
-      },
-      common::ulid_generator::MockUlidGenerator
-    }, 
-    domains::brand::{
-      brand::BrandCode, 
-      sector::Sector
-    }, 
-    test_support::{
-      string::*,
-      mock::*,
-      ulid::random_ulid
-    }
+      brand::interactors::{brand_factory::BrandFactory, brand_register_input::BrandRegisterInput},
+      common::ulid_generator::MockUlidGenerator,
+    },
+    domains::brand::{brand::BrandCode, sector::Sector},
+    test_support::{mock::*, string::*, ulid::random_ulid},
   };
 
   use super::*;
 
-  proptest!{
+  proptest! {
     #[test]
     fn brand_factory_should_create_brand(
       id in random_ulid(),
@@ -84,7 +73,7 @@ mod tests {
       let sector: Sector = Default::default();
       let validated_input = ValidatedBrandRegisterInput::new(&input, sector.clone());
 
-      let id_clone = id.clone();
+      let id_clone = id;
       let id_generator = create_mock::<MockUlidGenerator>(|mock| { mock.expect_generate().returning(move || Ok(id_clone)); });
 
       let factory = BrandFactoryImpl::new(Arc::new(id_generator));

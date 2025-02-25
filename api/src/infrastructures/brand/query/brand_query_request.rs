@@ -1,8 +1,19 @@
-use sea_orm::sea_query::{ColumnRef, IntoColumnRef};
-use crate::infrastructures::query::{pagination::Pagination, sort::{sort_key, Sort}};
 use super::table_iden::{Brands, Categories, SectorGroups, Sectors};
+use crate::infrastructures::query::{
+  pagination::Pagination,
+  sort::{sort_key, Sort},
+};
+use sea_orm::sea_query::{ColumnRef, IntoColumnRef};
 
-sort_key!(BrandSortKey, Id, Name, Code, SectorCode, SectorGroupCode, SectorCategory);
+sort_key!(
+  BrandSortKey,
+  Id,
+  Name,
+  Code,
+  SectorCode,
+  SectorGroupCode,
+  SectorCategory
+);
 
 impl BrandSortKey {
   pub fn get_column_from_sort_key(&self) -> ColumnRef {

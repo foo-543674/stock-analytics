@@ -1,6 +1,6 @@
-use ulid::Ulid;
 #[cfg(test)]
 use mockall::automock;
+use ulid::Ulid;
 
 use crate::applications::errors::application_error::ApplicationError;
 

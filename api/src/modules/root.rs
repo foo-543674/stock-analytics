@@ -1,10 +1,16 @@
+use crate::infrastructures::support::connection::{create_db_options, ConnectionProviderImpl};
 use std::sync::Arc;
-use crate::infrastructures::support::connection::{create_db_options, ConnectionProviderImpl, IN_MEMORY_SQLITE};
 
 use super::brand::BrandModule;
 
 pub struct RootModule {
-  pub brand: Arc<BrandModule>
+  pub brand: Arc<BrandModule>,
+}
+
+impl Default for RootModule {
+  fn default() -> Self {
+    Self::new()
+  }
 }
 
 impl RootModule {
@@ -14,7 +20,7 @@ impl RootModule {
     let connection_provider = Arc::new(ConnectionProviderImpl::new(db_option));
 
     Self {
-      brand: Arc::new(BrandModule::new(connection_provider))
+      brand: Arc::new(BrandModule::new(connection_provider)),
     }
   }
 }

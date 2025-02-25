@@ -23,10 +23,18 @@ jobs:
           path: |
             ~/.npm
           key: ${{ runner.os }}-npm-${{ hashFiles('frontend/package-lock.json') }}
+      - name: Install dependencies
+        run: npm ci
+        working-directory: frontend
+      - name: eslint review
+        uses: reviewdog/action-eslint@v1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          reporter: github-pr-review
+          fail_level: error
+          workdir: frontend
       - name: Build
-        run: |
-          npm ci
-          npm run build
+        run: npm run build
         working-directory: frontend
       - name: test
         run: npm run test

@@ -1,16 +1,16 @@
-use once_cell::sync::Lazy;
 use sea_orm::Order;
 
-pub trait SortKey
-  : Sized 
-  + Copy 
-  + Clone 
-  + Eq 
-  + PartialEq 
+pub trait SortKey:
+  Sized
+  + Copy
+  + Clone
+  + Eq
+  + PartialEq
   + strum::IntoEnumIterator
   + std::str::FromStr<Err = strum::ParseError>
   + std::fmt::Display
-{}
+{
+}
 
 pub struct Sort<T: SortKey> {
   pub key: T,
@@ -31,9 +31,7 @@ macro_rules! sort_key {
 
 pub(crate) use sort_key;
 
-const KEY_PATTERN: Lazy<regex::Regex> = Lazy::new(|| {
-  regex::Regex::new(r"^(?<desc>-?)(?<key>[a-zA-Z0-9_]+)$").expect("Invalid regex pattern")
-});
+const KEY_PATTERN: &str = r"^(?<desc>-?)(?<key>[a-zA-Z0-9_]+)$";
 
 impl<T: SortKey> Sort<T> {
   pub fn new(key: T, order: Order) -> Self {
@@ -41,9 +39,8 @@ impl<T: SortKey> Sort<T> {
   }
 
   pub fn from_string(value: &str) -> Option<Self> {
-    let Some(capture) = KEY_PATTERN.captures(value) else {
-      return None;
-    };
+    let pattern = regex::Regex::new(KEY_PATTERN).expect("Invalid regex pattern");
+    let capture = pattern.captures(value)?;
 
     let key = match T::from_str(&capture["key"]) {
       Ok(v) => v,
@@ -59,7 +56,8 @@ impl<T: SortKey> Sort<T> {
   }
 
   pub fn from_string_with_canma_separated(value: &str) -> Vec<Self> {
-    value.split(",")
+    value
+      .split(",")
       .filter_map(|v| Self::from_string(v))
       .collect()
   }
@@ -68,11 +66,8 @@ impl<T: SortKey> Sort<T> {
 #[cfg(test)]
 mod test {
   use crate::test_support::{
-    generic::random_pick_values_from, 
-    string::{
-      pick_values_with_random_case_from, 
-      random_text
-    }
+    generic::random_pick_values_from,
+    string::{pick_values_with_random_case_from, random_text},
   };
 
   use super::*;

@@ -1,6 +1,12 @@
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub struct Version(u32);
 
+impl Default for Version {
+  fn default() -> Self {
+    Self::new()
+  }
+}
+
 impl Version {
   pub fn new() -> Self {
     Version(0)

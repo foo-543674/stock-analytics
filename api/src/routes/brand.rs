@@ -1,6 +1,18 @@
+use crate::{
+  https::brand::{
+    brand_json::BrandJson,
+    get_brands::{get_brands, GetBrandListQueryParameter},
+    post_brands::{post_brands, PostBrandBody},
+  },
+  modules::brand::BrandModule,
+};
+use axum::{
+  extract::{Query, State},
+  response::IntoResponse,
+  routing::{get, post},
+  Json, Router,
+};
 use std::sync::Arc;
-use axum::{extract::{Query, State}, response::IntoResponse, routing::{get, post}, Json, Router};
-use crate::{https::brand::{brand_json::BrandJson, get_brands::{get_brands, GetBrandListQueryParameter}, post_brands::{post_brands, PostBrandBody}}, modules::brand::BrandModule};
 
 async fn post_handler(
   State(module): State<Arc<BrandModule>>,
@@ -24,6 +36,5 @@ pub fn brand_router(module: Arc<BrandModule>) -> Router {
     .route("/", get(get_list_handler))
     .with_state(module);
 
-  return Router::new()
-    .nest("/brands", routes);
+  Router::new().nest("/brands", routes)
 }

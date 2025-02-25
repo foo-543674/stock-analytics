@@ -1,5 +1,5 @@
-use crate::domains::macros::entity_id::*;
 use crate::domains::brand::sector::Sector;
+use crate::domains::macros::entity_id::*;
 use crate::util::unempty_string::UnemptyString;
 
 define_id!(BrandId);
@@ -65,8 +65,8 @@ impl Default for Brand {
 #[cfg(test)]
 mod tests {
   use super::*;
-  use proptest::prelude::*;
   use crate::test_support::ulid::random_ulid;
+  use proptest::prelude::*;
 
   proptest! {
     #[test]
