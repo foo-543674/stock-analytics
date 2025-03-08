@@ -37,7 +37,8 @@
         "christian-kohler.path-intellisense",
         "vadimcn.vscode-lldb",
         "dbaeumer.vscode-eslint",
-        "bradlc.vscode-tailwindcss"
+        "bradlc.vscode-tailwindcss",
+        "clinyong.vscode-css-modules"
       ]
     }
   }
