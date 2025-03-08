@@ -8,11 +8,18 @@
     "noUncheckedSideEffectImports": true,
     "allowJs": false,
     "noImplicitReturns": true,
-    "jsx": "react-jsx",
+    "jsx": "preserve",
+    "jsxImportSource": "solid-js",
     "baseUrl": "./",
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": [
+        "src/*"
+      ]
     },
   },
-  "include": ["*.ts", "src/**/*.ts", "src/**/*.tsx"],
+  "include": [
+    "*.ts",
+    "src/**/*.ts",
+    "src/**/*.tsx"
+  ],
 }
