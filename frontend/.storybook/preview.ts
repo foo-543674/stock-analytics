@@ -1,14 +1,11 @@
-import type { Preview } from '@storybook/react';
+import { render } from 'solid-js/web';
 
-const preview: Preview = {
-  parameters: {
-    controls: {
-      matchers: {
-        color: /(background|color)$/i,
-        date: /Date$/i,
-      },
-    },
+export const decorators = [
+  Story => {
+    const solidRoot = document.createElement('div');
+
+    render(Story, solidRoot);
+
+    return solidRoot;
   },
-};
-
-export default preview;
+];
