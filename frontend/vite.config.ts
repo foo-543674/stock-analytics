@@ -2,10 +2,11 @@
 import { defineConfig } from 'vite';
 import solid from 'vite-plugin-solid';
 import tsconfigPaths from 'vite-tsconfig-paths';
+import tailwindcss from '@tailwindcss/vite';
 
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [solid(), tsconfigPaths()],
+  plugins: [solid(), tailwindcss(), tsconfigPaths()],
   test: {
     include: ['src/**/*.{test,spec}.{ts,tsx}'],
   },

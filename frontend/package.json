@@ -26,6 +26,7 @@
     "@storybook/builder-vite": "^8.6.4",
     "@storybook/html-vite": "^8.6.4",
     "@storybook/test": "^8.6.4",
+    "@tailwindcss/vite": "^4.0.12",
     "chromatic": "^11.25.2",
     "eslint": "^9.17.0",
     "eslint-config-prettier": "^10.0.1",
@@ -53,7 +54,7 @@
     "solid-icons": "^1.1.0",
     "solid-js": "^1.9.5",
     "solid-meta": "^0.28.1",
-    "solid-styled-components": "^0.28.5",
-    "solid-utils": "^0.8.1"
+    "solid-utils": "^0.8.1",
+    "tailwindcss": "^4.0.12"
   }
 }
