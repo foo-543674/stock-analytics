@@ -1,0 +1,8 @@
+@import "../styles/variables.css";
+
+.primary-button {
+  @apply px-4 py-2 rounded-full;
+  @apply bg-primary text-on-primary;
+  @apply hover:bg-primary-hover;
+  @apply active:bg-primary-active;
+}
