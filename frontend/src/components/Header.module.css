@@ -1,0 +1,39 @@
+@import "../styles/variables.css";
+
+.header {
+  @apply w-full;
+  @apply shadow-md;
+  @apply fixed;
+  @apply bg-primary text-on-primary;
+  @apply top-0 left-0 z-50;
+  height: 64px;
+}
+
+.container {
+  @apply container;
+  @apply flex items-center justify-start;
+  @apply px-4 py-3;
+}
+
+.logo {
+  @apply flex items-center;
+  @apply font-default;
+}
+
+.logo-icon {
+  @apply w-8 h-8 mr-2;
+}
+
+.logo-text {
+  @apply text-xl font-bold;
+}
+
+.mobile-menu-btn {
+  @apply mr-4;
+  @apply flex items-center justify-center;
+  @apply w-8 h-8;
+}
+
+.menu-icon {
+  @apply w-6 h-6;
+}
