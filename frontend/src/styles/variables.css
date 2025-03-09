@@ -1,0 +1,13 @@
+@import 'tailwindcss';
+
+@theme {
+  --color-primary: var(--color-blue-500);
+  --color-primary-hover: var(--color-blue-600);
+  --color-primary-active: var(--color-blue-700);
+  --color-on-primary: var(--color-white);
+
+  --color-secondary: var(--color-orange-500);
+  --color-on-secondary: var(--color-white);
+
+  --font-default: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
