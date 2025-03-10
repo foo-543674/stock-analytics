@@ -1,6 +1,10 @@
 {
   // For VSCode
   "compilerOptions": {
+    "lib": [
+      "esnext",
+      "dom"
+    ],
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
