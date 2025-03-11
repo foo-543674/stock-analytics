@@ -36,4 +36,10 @@
   "include": [
     "src"
   ],
+  "exclude": [
+    "**/*.stories.tsx",
+    "**/*.spec.ts",
+    "**/*.test.ts",
+    "node_modules"
+  ]
 }

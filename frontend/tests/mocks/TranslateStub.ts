@@ -1,15 +1,13 @@
 import { Replacement, Translate } from '@/primitives/createTranslate';
+import dict from '@/assets/locales/en.json';
 
-const dict: { [key: string]: string } = {
-  serviceName: 'Stock Analytics',
-  brandPageLink: 'Brands',
-};
+const hasInDict = (key: string): key is keyof typeof dict => key in dict;
 
 export const translateStub: Translate = (
   key: string,
   replacements?: Replacement,
 ) => {
-  if (dict[key]) {
+  if (hasInDict(key)) {
     const source = dict[key];
     const replaced = replacements
       ? Object.entries(replacements).reduce(
@@ -18,8 +16,8 @@ export const translateStub: Translate = (
         )
       : source;
 
-    return replaced;
+    return () => replaced;
   }
 
-  return key;
+  return () => key;
 };

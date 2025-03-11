@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from 'storybook-solidjs';
 import { Header } from './Header';
-import { translateStub } from 'mocks/TranslateStub';
+import { translateStub } from '@tests/mocks/TranslateStub';
 import { createSignal } from 'solid-js';
 import { fn, userEvent, within } from '@storybook/test';
 
