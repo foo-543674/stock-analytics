@@ -1,4 +1,4 @@
-import { Translate } from '@/i18n/useLocales';
+import { Translate } from '@/primitives/createTranslate';
 import styles from './Header.module.css';
 import {
   AiOutlineArrowLeft,

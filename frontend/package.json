@@ -27,6 +27,7 @@
     "@storybook/html-vite": "^8.6.4",
     "@storybook/test": "^8.6.4",
     "@tailwindcss/vite": "^4.0.12",
+    "@types/browser-lang": "^0.1.2",
     "chromatic": "^11.25.2",
     "eslint": "^9.17.0",
     "eslint-config-prettier": "^10.0.1",
@@ -52,6 +53,8 @@
   "dependencies": {
     "@solid-primitives/i18n": "^2.2.0",
     "@solidjs/router": "^0.15.3",
+    "axios": "^1.8.2",
+    "browser-lang": "^0.2.1",
     "solid-icons": "^1.1.0",
     "solid-js": "^1.9.5",
     "solid-meta": "^0.28.1",

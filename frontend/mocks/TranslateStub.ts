@@ -1,4 +1,4 @@
-import { Replacement, Translate } from '@/i18n/useLocales';
+import { Replacement, Translate } from '@/primitives/createTranslate';
 
 const dict: { [key: string]: string } = {
   serviceName: 'Stock Analytics',
