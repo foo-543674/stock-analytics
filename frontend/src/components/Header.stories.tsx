@@ -57,7 +57,7 @@ export const OpenAnimation: Story = {
         isMenuOpened={opened()}
         onMenuOpenChanged={setOpened}
         translate={translateStub}
-      ></Header>
+      />
     );
   },
   play: async ({ canvasElement, step }) => {
@@ -82,7 +82,7 @@ export const CloseAnimation: Story = {
         isMenuOpened={opened()}
         onMenuOpenChanged={setOpened}
         translate={translateStub}
-      ></Header>
+      />
     );
   },
   play: async ({ canvasElement, step }) => {

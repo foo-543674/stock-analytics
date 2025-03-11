@@ -55,7 +55,7 @@ export const Header = (props: HeaderProps) => {
           <div
             class={styles.overlay}
             onClick={() => props.onMenuOpenChanged?.(false)}
-          ></div>
+          />
         </Show>
       </div>
     </div>

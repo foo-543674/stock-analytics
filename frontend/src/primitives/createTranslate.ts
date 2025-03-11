@@ -11,15 +11,18 @@ export const createTranslate = (lang: Language): Translate => {
   const [locales] = createResource(lang, fetchLocales);
 
   return (key: string, replacements?: Replacement) => {
-    return createMemo(() => {
+    const memoized = createMemo(() => {
       if (locales.loading || locales.error) {
         return '';
       }
+
       const dict = locales() as Record<string, string>;
       const source = dict[key];
+
       if (!source) {
         return key;
       }
+
       const replaced = replacements
         ? Object.entries(replacements).reduce(
             (acc, [key, value]) => acc.replace(`{{ ${key} }}`, value),
@@ -29,5 +32,7 @@ export const createTranslate = (lang: Language): Translate => {
 
       return replaced;
     });
+
+    return memoized;
   };
 };
