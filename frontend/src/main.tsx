@@ -1,6 +1,9 @@
-import { createApp } from 'solid-utils';
-import { MetaProvider } from 'solid-meta';
-
+import { render } from 'solid-js/web';
 import { App } from './App';
 
-createApp(App).use(MetaProvider).mount('#root');
+const rootElement = document.getElementById('root');
+if (rootElement) {
+  render(() => <App />, rootElement);
+} else {
+  console.error('Root element not found');
+}
