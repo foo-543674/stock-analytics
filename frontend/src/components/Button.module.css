@@ -41,3 +41,21 @@
   @apply hover:bg-surface-hover;
   @apply active:bg-surface-active;
 }
+
+.contained-disabled {
+  @apply px-4 py-2 rounded-full;
+  @apply bg-gray-300 text-gray-500;
+  @apply cursor-not-allowed;
+}
+
+.text-disabled {
+  @apply px-4 py-2 rounded-full;
+  @apply bg-surface text-gray-500;
+  @apply cursor-not-allowed;
+}
+
+.outlined-disabled {
+  @apply px-4 py-2 rounded-full;
+  @apply bg-surface border border-gray-300 text-gray-500;
+  @apply cursor-not-allowed;
+}

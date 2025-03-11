@@ -26,6 +26,15 @@ export const ContainedSecondary: Story = {
   },
 };
 
+export const ContainedDisabled: Story = {
+  args: {
+    variant: 'contained',
+    color: 'primary',
+    children: 'Disabled Button',
+    disabled: true,
+  },
+};
+
 export const OutlinedPrimary: Story = {
   args: {
     variant: 'outlined',
@@ -44,6 +53,15 @@ export const OutlinedSecondary: Story = {
   },
 };
 
+export const OutlinedDisabled: Story = {
+  args: {
+    variant: 'outlined',
+    color: 'primary',
+    children: 'Disabled Button',
+    disabled: true,
+  },
+};
+
 export const TextPrimary: Story = {
   args: {
     variant: 'text',
@@ -59,5 +77,14 @@ export const TextSecondary: Story = {
     color: 'secondary',
     children: 'Secondary Button',
     onClick: fn(),
+  },
+};
+
+export const TextDisabled: Story = {
+  args: {
+    variant: 'text',
+    color: 'primary',
+    children: 'Disabled Button',
+    disabled: true,
   },
 };
