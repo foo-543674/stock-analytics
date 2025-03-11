@@ -12,6 +12,8 @@
     "noUncheckedSideEffectImports": true,
     "allowJs": false,
     "noImplicitReturns": true,
+    "module": "esnext",
+    "moduleResolution": "bundler",
     "jsx": "preserve",
     "jsxImportSource": "solid-js",
     "baseUrl": "./",
