@@ -1,18 +1,38 @@
 @import '../styles/variables.css';
 
 .header {
-  @apply w-full;
+  @apply w-full h-16;
   @apply shadow-md;
   @apply fixed;
+  @apply flex;
   @apply bg-primary text-on-primary;
   @apply top-0 left-0 z-50;
-  height: 64px;
 }
 
 .container {
   @apply container;
   @apply flex items-center justify-start;
-  @apply px-4 py-3;
+  @apply justify-self-stretch self-center;
+  @apply px-4;
+}
+
+.open-btn {
+  @apply w-10 h-10;
+  @apply flex items-center justify-center;
+  @apply mr-4;
+  @apply flex lg:hidden;
+}
+
+.close-btn {
+  @apply w-10 h-10;
+  @apply flex items-center justify-center;
+  @apply self-end;
+  @apply mr-4 mt-4;
+  @apply flex lg:hidden;
+}
+
+.btn-icon {
+  @apply w-7 h-7;
 }
 
 .logo {
@@ -25,15 +45,52 @@
 }
 
 .logo-text {
+  @apply text-xl font-bold text-nowrap;
+}
+
+.nav {
+  @apply bg-primary text-on-primary;
+  @apply flex;
+
+  @apply fixed w-64 h-full z-50;
+  @apply top-0 left-0;
+  @apply shadow-lg;
+  @apply transition-transform duration-300 ease-in-out;
+  @apply flex-col content-center;
+  @apply mx-0;
+  @apply overflow-y-auto;
+
+  @apply lg:static lg:w-auto lg:h-auto lg:z-auto;
+  @apply lg:top-auto lg:left-auto;
+  @apply lg:shadow-none;
+  @apply lg:transition-none;
+  @apply lg:items-center;
+  @apply lg:mx-5;
+  @apply lg:overflow-y-hidden;
+
+  &.opened {
+    @apply translate-x-0;
+  }
+  &.closed {
+    @apply -translate-x-full lg:translate-x-0;
+  }
+}
+
+.nav-item {
+  @apply px-5 py-3;
+  @apply flex justify-center;
   @apply text-xl font-bold;
+  @apply text-center;
+  @apply cursor-pointer;
+  &.clickable {
+    @apply hover:bg-primary-hover;
+    @apply active:bg-primary-active;
+  }
 }
 
-.mobile-menu-btn {
-  @apply mr-4;
-  @apply flex items-center justify-center;
-  @apply w-10 h-10;
-}
-
-.menu-icon {
-  @apply w-6 h-6;
+.overlay {
+  @apply fixed top-0 left-0 z-40;
+  @apply w-full h-full;
+  @apply bg-black opacity-50;
+  @apply lg:invisible visible;
 }

@@ -2,6 +2,7 @@ import { Replacement, Translate } from '@/i18n/useLocales';
 
 const dict: { [key: string]: string } = {
   serviceName: 'Stock Analytics',
+  brandPageLink: 'Brands',
 };
 
 export const translateStub: Translate = (

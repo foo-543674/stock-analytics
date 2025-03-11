@@ -1,6 +1,8 @@
 import type { Meta, StoryObj } from 'storybook-solidjs';
 import { Header } from './Header';
-import { fn } from '@storybook/test';
+import { translateStub } from 'mocks/TranslateStub';
+import { createSignal } from 'solid-js';
+import { fn, userEvent, waitFor, within } from '@storybook/test';
 
 const meta: Meta<typeof Header> = {
   component: Header,
@@ -11,6 +13,87 @@ type Story = StoryObj<typeof Header>;
 
 export const Default: Story = {
   args: {
-    onToggleMenu: fn(),
+    translate: translateStub,
+  },
+  parameters: {
+    viewport: {
+      defaultViewport: 'desktop',
+    },
+  },
+};
+
+export const MobileMenuOpened: Story = {
+  args: {
+    isMenuOpened: true,
+    translate: translateStub,
+    onMenuOpenChanged: fn(),
+  },
+  parameters: {
+    viewport: {
+      defaultViewport: 'mobile1',
+    },
+  },
+};
+
+export const MobileMenuClosed: Story = {
+  args: {
+    isMenuOpened: false,
+    translate: translateStub,
+    onMenuOpenChanged: fn(),
+  },
+  parameters: {
+    viewport: {
+      defaultViewport: 'mobile1',
+    },
+  },
+};
+
+export const OpenAnimation: Story = {
+  render: () => {
+    const [opened, setOpened] = createSignal(false);
+
+    return (
+      <Header
+        isMenuOpened={opened()}
+        onMenuOpenChanged={setOpened}
+        translate={translateStub}
+      ></Header>
+    );
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    await step('open menu', async () => {
+      await userEvent.click(canvas.getByTestId('openBtn'));
+    });
+  },
+  parameters: {
+    viewport: {
+      defaultViewport: 'mobile1',
+    },
+  },
+};
+
+export const CloseAnimation: Story = {
+  render: () => {
+    const [opened, setOpened] = createSignal(true);
+
+    return (
+      <Header
+        isMenuOpened={opened()}
+        onMenuOpenChanged={setOpened}
+        translate={translateStub}
+      ></Header>
+    );
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    await step('close menu', async () => {
+      await userEvent.click(canvas.getByTestId('closeBtn'));
+    });
+  },
+  parameters: {
+    viewport: {
+      defaultViewport: 'mobile1',
+    },
   },
 };
