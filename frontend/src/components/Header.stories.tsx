@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from 'storybook-solidjs';
 import { Header } from './Header';
 import { translateStub } from 'mocks/TranslateStub';
 import { createSignal } from 'solid-js';
-import { fn, userEvent, waitFor, within } from '@storybook/test';
+import { fn, userEvent, within } from '@storybook/test';
 
 const meta: Meta<typeof Header> = {
   component: Header,
