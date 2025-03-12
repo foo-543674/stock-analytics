@@ -43,4 +43,13 @@ describe('createTranslate', test => {
     const result = translate()('key');
     expect(result).toBe('');
   });
+
+  test('should replace the placeholders with the replacements', async () => {
+    vi.mocked(fetchLocales).mockResolvedValue({ key: 'Hello, {{ name }}!' });
+
+    const { result: translate } = renderHook(() => createTranslate('en'));
+    await waitMockResolved();
+    const result = translate()('key', { name: 'world' });
+    expect(result).toBe('Hello, world!');
+  });
 });
