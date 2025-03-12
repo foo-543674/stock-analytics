@@ -1,12 +1,12 @@
 import { beforeAll, describe, expect, vi } from 'vitest';
-import { createTranslate } from './createTranslate';
-import { fetchLocales } from '../data-access/fetchLocales';
+import { fetchLocales } from '@/data-access/fetchLocales';
 import { waitMockResolved } from 'tests/waitMockResolved';
 import { renderHook } from '@solidjs/testing-library';
+import { createTranslate } from './createTranslate';
 
 describe('createTranslate', test => {
   beforeAll(() => {
-    vi.mock('../data-access/fetchLocales');
+    vi.mock('@/data-access/fetchLocales');
   });
 
   test('should return a function that get text for key', async () => {
