@@ -14,7 +14,7 @@ describe('createTranslate', test => {
 
     const { result: translate } = renderHook(() => createTranslate('en'));
     await waitMockResolved();
-    const { result } = renderHook(() => translate('key')());
+    const { result } = renderHook(() => translate()('key'));
     expect(result).toBe('value');
   });
 
@@ -23,7 +23,7 @@ describe('createTranslate', test => {
 
     const { result: translate } = renderHook(() => createTranslate('en'));
     await waitMockResolved();
-    const { result } = renderHook(() => translate('key')());
+    const { result } = renderHook(() => translate()('key'));
     expect(result).toBe('key');
   });
 
@@ -31,7 +31,7 @@ describe('createTranslate', test => {
     vi.mocked(fetchLocales).mockImplementation(() => new Promise(() => {}));
 
     const { result: translate } = renderHook(() => createTranslate('en'));
-    const { result } = renderHook(() => translate('key')());
+    const { result } = renderHook(() => translate()('key'));
     expect(result).toBe('');
   });
 
@@ -40,7 +40,7 @@ describe('createTranslate', test => {
 
     const { result: translate } = renderHook(() => createTranslate('en'));
     await waitMockResolved();
-    const { result } = renderHook(() => translate('key')());
+    const { result } = renderHook(() => translate()('key'));
     expect(result).toBe('');
   });
 });

@@ -14,7 +14,7 @@ export const App = () => {
       <Header
         isMenuOpened={opened()}
         onMenuOpenChanged={setOpened}
-        translate={translate}
+        translate={translate()}
       />
       <div class="pt-16">
         <PageRouter />

@@ -30,7 +30,7 @@ export const Header = (props: HeaderProps) => {
         <a href="/" class={styles.logo}>
           <AiOutlineStock class={styles.logoIcon} />
           <span class={styles.logoText}>
-            {props.translate?.('serviceName')()}
+            {props.translate?.('serviceName')}
           </span>
         </a>
         <div
@@ -48,7 +48,7 @@ export const Header = (props: HeaderProps) => {
             href={routes.brands}
             class={`${styles.navItem} ${styles.clickable}`}
           >
-            {props.translate?.('brandPageLink')()}
+            {props.translate?.('brandPageLink')}
           </a>
         </div>
         <Show when={props.isMenuOpened}>

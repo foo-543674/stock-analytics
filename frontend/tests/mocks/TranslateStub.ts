@@ -16,8 +16,8 @@ export const translateStub: Translate = (
         )
       : source;
 
-    return () => replaced;
+    return replaced;
   }
 
-  return () => key;
+  return key;
 };

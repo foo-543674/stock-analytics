@@ -2,23 +2,18 @@ import { fetchLocales, Language } from '@/data-access/fetchLocales';
 import { createMemo, createResource } from 'solid-js';
 
 export type Replacement = Record<string, string>;
-export type Translate = (
-  key: string,
-  replacements?: Replacement,
-) => () => string;
+export type Translate = (key: string, replacements?: Replacement) => string;
 
-export const createTranslate = (lang: Language): Translate => {
+export const createTranslate = (lang: Language): (() => Translate) => {
   const [locales] = createResource(lang, fetchLocales);
+  const memoized = createMemo(() => {
+    if (locales.loading || locales.error) {
+      return () => '';
+    }
 
-  return (key: string, replacements?: Replacement) => {
-    const memoized = createMemo(() => {
-      if (locales.loading || locales.error) {
-        return '';
-      }
-
-      const dict = locales() as Record<string, string>;
+    const dict = locales() as Record<string, string>;
+    return (key: string, replacements?: Replacement) => {
       const source = dict[key];
-
       if (!source) {
         return key;
       }
@@ -31,8 +26,8 @@ export const createTranslate = (lang: Language): Translate => {
         : source;
 
       return replaced;
-    });
+    };
+  });
 
-    return memoized;
-  };
+  return memoized;
 };
