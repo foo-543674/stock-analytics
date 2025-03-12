@@ -1,0 +1,61 @@
+@import '../styles/variables.css';
+
+.contained-primary {
+  @apply px-4 py-2 rounded-full;
+  @apply bg-primary text-on-primary;
+  @apply hover:bg-primary-hover;
+  @apply active:bg-primary-active;
+}
+
+.text-primary {
+  @apply px-4 py-2 rounded-full;
+  @apply bg-surface text-primary;
+  @apply hover:bg-surface-hover;
+  @apply active:bg-surface-active;
+}
+
+.outlined-primary {
+  @apply px-4 py-2 rounded-full;
+  @apply bg-surface border border-primary text-primary;
+  @apply hover:bg-surface-hover;
+  @apply active:bg-surface-active;
+}
+
+.contained-secondary {
+  @apply px-4 py-2 rounded-full;
+  @apply bg-secondary text-on-secondary;
+  @apply hover:bg-secondary-hover;
+  @apply active:bg-secondary-active;
+}
+
+.text-secondary {
+  @apply px-4 py-2 rounded-full;
+  @apply bg-surface text-secondary;
+  @apply hover:bg-surface-hover;
+  @apply active:bg-surface-active;
+}
+
+.outlined-secondary {
+  @apply px-4 py-2 rounded-full;
+  @apply bg-surface border border-secondary text-secondary;
+  @apply hover:bg-surface-hover;
+  @apply active:bg-surface-active;
+}
+
+.contained-disabled {
+  @apply px-4 py-2 rounded-full;
+  @apply bg-gray-300 text-gray-500;
+  @apply cursor-not-allowed;
+}
+
+.text-disabled {
+  @apply px-4 py-2 rounded-full;
+  @apply bg-surface text-gray-500;
+  @apply cursor-not-allowed;
+}
+
+.outlined-disabled {
+  @apply px-4 py-2 rounded-full;
+  @apply bg-surface border border-gray-300 text-gray-500;
+  @apply cursor-not-allowed;
+}

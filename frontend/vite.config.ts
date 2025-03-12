@@ -1,11 +1,19 @@
 /// <reference types="vitest" />
 import { defineConfig } from 'vite';
-import react from '@vitejs/plugin-react';
+import solid from 'vite-plugin-solid';
 import tsconfigPaths from 'vite-tsconfig-paths';
+import tailwindcss from '@tailwindcss/vite';
+import { viteStaticCopy } from 'vite-plugin-static-copy';
+import { resolve } from 'path';
 
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [react(), tsconfigPaths()],
+  plugins: [
+    solid(),
+    tailwindcss(),
+    tsconfigPaths(),
+    viteStaticCopy({ targets: [{ src: 'src/assets', dest: '.' }] }),
+  ],
   test: {
     include: ['src/**/*.{test,spec}.{ts,tsx}'],
   },
@@ -14,6 +22,17 @@ export default defineConfig({
       usePolling: true,
       interval: 1000,
     },
-    host: '127.0.0.1',
+    host: '0.0.0.0',
+  },
+  css: {
+    modules: {
+      localsConvention: 'dashes',
+    },
+  },
+  resolve: {
+    alias: {
+      '@tests': resolve(__dirname, './tests'),
+      '@': resolve(__dirname, './src'),
+    },
   },
 });

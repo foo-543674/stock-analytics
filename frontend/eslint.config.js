@@ -1,13 +1,13 @@
 import js from '@eslint/js'
 import globals from 'globals'
-import reactHooks from 'eslint-plugin-react-hooks'
-import reactRefresh from 'eslint-plugin-react-refresh'
 import prettierPlugin from "eslint-plugin-prettier"
+import solidPlugin from "eslint-plugin-solid";
 import tseslint from 'typescript-eslint'
 
 export default tseslint.config(
   { ignores: ['dist'] },
   {
+    "plugins": ["solid"],
     extends: [js.configs.recommended, ...tseslint.configs.recommended],
     files: ['**/*.{ts,tsx}'],
     languageOptions: {
@@ -15,17 +15,12 @@ export default tseslint.config(
       globals: globals.browser,
     },
     plugins: {
-      'react-hooks': reactHooks,
-      'react-refresh': reactRefresh,
       prettier: prettierPlugin,
+      solid: solidPlugin,
     },
     rules: {
-      ...reactHooks.configs.recommended.rules,
       ...prettierPlugin.configs.recommended.rules,
-      'react-refresh/only-export-components': [
-        'warn',
-        { allowConstantExport: true },
-      ],
+      ...solidPlugin.configs.recommended.rules,
     },
   },
 )

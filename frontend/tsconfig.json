@@ -1,6 +1,10 @@
 {
   // For VSCode
   "compilerOptions": {
+    "lib": [
+      "esnext",
+      "dom"
+    ],
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
@@ -8,11 +12,23 @@
     "noUncheckedSideEffectImports": true,
     "allowJs": false,
     "noImplicitReturns": true,
-    "jsx": "react-jsx",
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "jsx": "preserve",
+    "jsxImportSource": "solid-js",
     "baseUrl": "./",
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": [
+        "src/*"
+      ],
+      "@tests/*": [
+        "tests/*"
+      ],
     },
   },
-  "include": ["*.ts", "src/**/*.ts", "src/**/*.tsx"],
+  "include": [
+    "*.ts",
+    "src/**/*.ts",
+    "src/**/*.tsx"
+  ],
 }

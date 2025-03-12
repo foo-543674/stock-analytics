@@ -36,7 +36,9 @@
         "mermade.openapi-lint",
         "christian-kohler.path-intellisense",
         "vadimcn.vscode-lldb",
-        "dbaeumer.vscode-eslint"
+        "dbaeumer.vscode-eslint",
+        "bradlc.vscode-tailwindcss",
+        "clinyong.vscode-css-modules"
       ]
     }
   }
