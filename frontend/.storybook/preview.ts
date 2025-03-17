@@ -4,6 +4,7 @@ import '../src/index.css';
 export const decorators = [
   Story => {
     const solidRoot = document.createElement('div');
+    solidRoot.setAttribute('data-theme', 'light');
 
     render(Story, solidRoot);
 
