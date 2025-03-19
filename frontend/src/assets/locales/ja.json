@@ -1,4 +1,10 @@
 {
   "serviceName": "Stock Analytics",
-  "brandPageLink": "銘柄"
+  "brandPageLink": "銘柄",
+  "loading": "読み込み中...",
+  "optionAll": "全て",
+  "selectSectorLabel": "セクター",
+  "inputCodeLabel": "コード",
+  "inputBrandNameLabel": "銘柄名",
+  "searchButtonLabel": "検索"
 }
