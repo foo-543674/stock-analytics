@@ -64,6 +64,7 @@
     "@types/humps": "^2.0.6",
     "axios": "^1.8.2",
     "browser-lang": "^0.2.1",
+    "clsx": "^2.1.1",
     "daisyui": "^5.0.4",
     "humps": "^2.0.1",
     "solid-icons": "^1.1.0",
