@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { camelizeKeys, isObject } from '@/utils/ObjectHelper';
 
-export const sectionSchema = z
+export const sectorSchema = z
   .object({
     id: z.string().ulid(),
     name: z.string(),
@@ -12,12 +12,12 @@ export const sectionSchema = z
   })
   .strip();
 
-export type Section = z.infer<typeof sectionSchema>;
+export type Sector = z.infer<typeof sectorSchema>;
 
-export const parseSection = (source: unknown): Section => {
+export const parseSector = (source: unknown): Sector => {
   if (!isObject(source)) {
     throw new Error(`Source is not parsable. source:${source}`);
   }
 
-  return sectionSchema.parse(camelizeKeys(source));
+  return sectorSchema.parse(camelizeKeys(source));
 };
