@@ -10,7 +10,7 @@ export const sectors: Sector[] = [
     category: 'ディフェンシブ',
   },
   {
-    id: '01F8ZQ2N9BZ5QZK5FVZQ4QZK5F',
+    id: '01JPQXDMPYCDWBTY0N39VX25X3',
     name: '鉱業',
     code: '1050',
     group: 'エネルギー資源',
@@ -18,7 +18,7 @@ export const sectors: Sector[] = [
     category: 'シクリカル',
   },
   {
-    id: '01F8ZQ2N9BZ5QZK5FVZQ4QZK5F',
+    id: '01JPQXE4EXD965A1MMFGP4BN53',
     name: '建設業',
     code: '2050',
     group: '建設・資材',
@@ -26,7 +26,7 @@ export const sectors: Sector[] = [
     category: 'シクリカル',
   },
   {
-    id: '01F8ZQ2N9BZ5QZK5FVZQ4QZK5F',
+    id: '01JPQXG3TQ0XJXG1Y1X6YQ5X7K',
     name: '食料品',
     code: '3050',
     group: '食品',
@@ -34,7 +34,7 @@ export const sectors: Sector[] = [
     category: 'ディフェンシブ',
   },
   {
-    id: '01F8ZQ2N9BZ5QZK5FVZQ4QZK5F',
+    id: '01JPQXJ3E4WYQJZ1Y1X6YQ5X7K',
     name: '繊維製品',
     code: '3100',
     group: '素材・化学',
@@ -42,7 +42,7 @@ export const sectors: Sector[] = [
     category: 'シクリカル',
   },
   {
-    id: '01F8ZQ2N9BZ5QZK5FVZQ4QZK5F',
+    id: '01JPQXFN5P0R35D60AMV5WNHBH',
     name: 'パルプ・紙',
     code: '3150',
     group: '素材・化学',
@@ -50,7 +50,7 @@ export const sectors: Sector[] = [
     category: 'シクリカル',
   },
   {
-    id: '01F8ZQ2N9BZ5QZK5FVZQ4QZK5F',
+    id: '01JPQXFY7ZW76H4EK8ZRPMRK31',
     name: '化学',
     code: '3200',
     group: '素材・化学',
@@ -58,7 +58,7 @@ export const sectors: Sector[] = [
     category: 'シクリカル',
   },
   {
-    id: '01F8ZQ2N9BZ5QZK5FVZQ4QZK5F',
+    id: '01JPQXG3ANY3865VA5TXDA69TK',
     name: '医薬品',
     code: '3250',
     group: '医薬品',
@@ -66,7 +66,7 @@ export const sectors: Sector[] = [
     category: 'ディフェンシブ',
   },
   {
-    id: '01F8ZQ2N9BZ5QZK5FVZQ4QZK5F',
+    id: '01JPQXG9BYPVWSAP3N3RA2K3EW',
     name: '石油･石炭製品',
     code: '3300',
     group: 'エネルギー資源',
@@ -74,7 +74,7 @@ export const sectors: Sector[] = [
     category: 'シクリカル',
   },
   {
-    id: '01F8ZQ2N9BZ5QZK5FVZQ4QZK5F',
+    id: '01JPQXGEK21JEM3DN91XFX6R9X',
     name: 'ゴム製品',
     code: '3350',
     group: '自動車・輸送機',
@@ -82,7 +82,7 @@ export const sectors: Sector[] = [
     category: 'シクリカル',
   },
   {
-    id: '01F8ZQ2N9BZ5QZK5FVZQ4QZK5F',
+    id: '01JPQXGKQ2EFYK7XQKTY3NEQ0E',
     name: 'ガラス･土石製品',
     code: '3400',
     group: '建設・資材',
@@ -90,7 +90,7 @@ export const sectors: Sector[] = [
     category: 'シクリカル',
   },
   {
-    id: '01F8ZQ2N9BZ5QZK5FVZQ4QZK5F',
+    id: '01JPQXGSM1Z014PRYC1Y0KAKA0',
     name: '鉄鋼',
     code: '3450',
     group: '鉄鋼・非鉄',
@@ -98,7 +98,7 @@ export const sectors: Sector[] = [
     category: 'シクリカル',
   },
   {
-    id: '01F8ZQ2N9BZ5QZK5FVZQ4QZK5F',
+    id: '01JPQXGYKHRJGHDJGQNKETMCFV',
     name: '非鉄金属',
     code: '3500',
     group: '鉄鋼・非鉄',
@@ -106,7 +106,7 @@ export const sectors: Sector[] = [
     category: 'シクリカル',
   },
   {
-    id: '01F8ZQ2N9BZ5QZK5FVZQ4QZK5F',
+    id: '01JPQXH2RXZZ99D9S8J1K8P9AV',
     name: '金属製品',
     code: '3550',
     group: '建設・資材',
@@ -114,7 +114,7 @@ export const sectors: Sector[] = [
     category: 'シクリカル',
   },
   {
-    id: '01F8ZQ2N9BZ5QZK5FVZQ4QZK5F',
+    id: '01JPQXH8RQK6CXAG1N0GYJZPBB',
     name: '機械',
     code: '3600',
     group: '機械',
@@ -122,7 +122,7 @@ export const sectors: Sector[] = [
     category: 'シクリカル',
   },
   {
-    id: '01F8ZQ2N9BZ5QZK5FVZQ4QZK5F',
+    id: '01JPQXHDNMSPESMDGDKG9DP2PK',
     name: '電気機器',
     code: '3650',
     group: '電機・精密',

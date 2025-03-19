@@ -1,4 +1,10 @@
 {
   "serviceName": "Stock Analytics",
-  "brandPageLink": "Brands"
+  "brandPageLink": "Brands",
+  "loading": "Loading...",
+  "optionAll": "All",
+  "selectSectorLabel": "Sector",
+  "inputCodeLabel": "Code",
+  "inputBrandNameLabel": "Brand Name",
+  "searchButtonLabel": "Search"
 }
