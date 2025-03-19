@@ -21,11 +21,13 @@ export const Drawer = (props: DrawerProps) => {
       <div class="drawer-content flex">{props.children}</div>
       <div class="drawer-side top-0 z-50 lg:z-20">
         <label
+          data-testid="drawer-overlay"
           class="drawer-overlay"
           onClick={() => props.onMenuOpenChanged?.(false)}
         />
         <ul class="menu menu-md bg-base-200 min-h-full w-64 text-base-content">
           <button
+            data-testid="drawer-close-button"
             class="btn btn-circle btn-ghost drawer-button lg:hidden"
             onClick={() => props.onMenuOpenChanged?.(false)}
           >

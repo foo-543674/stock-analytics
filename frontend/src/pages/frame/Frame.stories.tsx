@@ -1,6 +1,6 @@
 import { Meta, StoryObj } from 'storybook-solidjs';
 import { Frame } from './Frame';
-import { fn } from '@storybook/test';
+import { fn, userEvent, within } from '@storybook/test';
 import { translateStub } from '@tests/mocks/TranslateStub';
 import { createSignal } from 'solid-js';
 
@@ -82,5 +82,14 @@ export const Animation: Story = {
         <button class="btn btn-primary">Button</button>
       </Frame>
     );
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const openButton = await canvas.findByTestId('navbar-menu-button');
+    await userEvent.click(openButton);
+    await new Promise(resolve => setTimeout(resolve, 3000));
+    const closeButton = await canvas.findByTestId('drawer-close-button');
+    await userEvent.click(closeButton);
+    await new Promise(resolve => setTimeout(resolve, 3000));
   },
 };

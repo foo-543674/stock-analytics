@@ -18,6 +18,7 @@ export const Navbar = (props: NavbarProps) => {
     <header class="navbar sticky top-0 z-50 bg-primary shadow-lg">
       <div class="navbar-start">
         <button
+          data-testid="navbar-menu-button"
           class="btn btn-circle btn-primary drawer-button lg:hidden"
           onClick={() => props.onMenuOpenChanged?.(!props.isMenuOpened)}
         >
