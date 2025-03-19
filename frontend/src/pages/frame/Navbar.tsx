@@ -30,6 +30,7 @@ export const Navbar = (props: NavbarProps) => {
       </div>
       <div class="navbar-end">
         <button
+          data-testid="navbar-theme-button"
           class="btn btn-primary btn-circle w-10 h-10 swap swap-rotate"
           data-toggle-theme="dark,light"
           data-act-class="ACTIVECLASS"

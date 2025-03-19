@@ -3,6 +3,7 @@ import { Frame } from './Frame';
 import { fn, userEvent, within } from '@storybook/test';
 import { translateStub } from '@tests/mocks/TranslateStub';
 import { createSignal } from 'solid-js';
+import { delay } from '@tests/waitMockResolved';
 
 const meta: Meta<typeof Frame> = {
   component: Frame,
@@ -86,10 +87,11 @@ export const Animation: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const openButton = await canvas.findByTestId('navbar-menu-button');
+    await delay(3000);
     await userEvent.click(openButton);
-    await new Promise(resolve => setTimeout(resolve, 3000));
+    await delay(3000);
     const closeButton = await canvas.findByTestId('drawer-close-button');
     await userEvent.click(closeButton);
-    await new Promise(resolve => setTimeout(resolve, 3000));
+    await delay(3000);
   },
 };

@@ -1,9 +1,10 @@
 import { Meta, StoryObj } from 'storybook-solidjs';
 import { Navbar } from './Navbar';
 import { translateStub } from '@tests/mocks/TranslateStub';
-import { fn } from '@storybook/test';
+import { fn, userEvent, within } from '@storybook/test';
 import { createSignal } from 'solid-js';
 import { Theme } from '@/primitives/createTheme';
+import { delay } from '@tests/waitMockResolved';
 
 const meta: Meta<typeof Navbar> = {
   component: Navbar,
@@ -39,6 +40,14 @@ export const ThemeSwapAnimation: Story = {
         }}
       />
     );
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const button = await canvas.findByTestId('navbar-theme-button');
+    await delay(3000);
+    await userEvent.click(button);
+    await delay(3000);
+    await userEvent.click(button);
   },
 };
 
