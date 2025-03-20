@@ -12,15 +12,5 @@ export const isObject = (value: unknown): value is Record<string, unknown> => {
 export const camelizeKeys = (
   source: Record<string, unknown>,
 ): Record<string, unknown> => {
-  return Object.assign(
-    {},
-    ...Object.keys(source).map(key => {
-      const value = isObject(source[key])
-        ? camelizeKeys(source[key])
-        : source[key];
-
-      const camelCaseKey = humps.camelize(key);
-      return { [camelCaseKey]: value };
-    }),
-  );
+  return humps.camelizeKeys(source) as Record<string, unknown>;
 };
