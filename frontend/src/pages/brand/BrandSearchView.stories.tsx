@@ -3,6 +3,7 @@ import { BrandSearchView } from './BrandSearchView';
 import { brands } from '@tests/mocks/brands';
 import { translateStub } from '@tests/mocks/TranslateStub';
 import { fn } from '@storybook/test';
+import { sectors } from '@tests/mocks/sectors';
 
 const meta: Meta<typeof BrandSearchView> = {
   component: BrandSearchView,
@@ -13,6 +14,7 @@ type Story = StoryObj<typeof BrandSearchView>;
 export const Default: Story = {
   args: {
     brands,
+    sectors,
     translate: translateStub,
     page: 1,
     maxPage: 5,
