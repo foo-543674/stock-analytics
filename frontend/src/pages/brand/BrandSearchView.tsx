@@ -14,6 +14,7 @@ export type BrandSearchViewProps = {
   selectedSectorId: string;
   code: string;
   brandName: string;
+  isLoading: boolean;
   translate: Translate;
   onSearchSubmit: (condition: BrandSearchCondition) => void;
   onConditionChanged: (condition: BrandSearchCondition) => void;
@@ -25,6 +26,7 @@ export const BrandSearchView = (props: BrandSearchViewProps) => {
   return (
     <div class="flex flex-col">
       <SearchForm
+        disabled={props.isLoading}
         sectors={props.sectors}
         selectedSectorId={props.selectedSectorId}
         code={props.code}
@@ -33,8 +35,13 @@ export const BrandSearchView = (props: BrandSearchViewProps) => {
         onSubmit={props.onSearchSubmit}
         onInputChanged={props.onConditionChanged}
       />
-      <BrandList brands={props.brands} onClick={props.onBrandClick} />
+      <BrandList
+        brands={props.brands}
+        onClick={props.onBrandClick}
+        isLoading={props.isLoading}
+      />
       <Pagination
+        disabled={props.isLoading}
         class="justify-center"
         page={props.page}
         maxPage={props.maxPage}

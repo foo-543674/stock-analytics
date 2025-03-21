@@ -5,6 +5,7 @@ import { For, Show } from 'solid-js';
 
 export type PaginationProps = { page: number; maxPage: number } & Partial<{
   class: string;
+  disabled: boolean;
   onChanged: (page: number) => void;
 }>;
 
@@ -51,6 +52,7 @@ export const Pagination = (props: PaginationProps) => {
   return (
     <div class={rootClass()}>
       <button
+        disabled={props.disabled}
         data-testid="to-first-button"
         class={arrotButtonClass('left')}
         onClick={() => handleClick(1)}
@@ -59,6 +61,7 @@ export const Pagination = (props: PaginationProps) => {
       </button>
       <Show when={deviceType() !== 'mobile'}>
         <button
+          disabled={props.disabled}
           data-testid="to-prev-button"
           class={arrotButtonClass('left')}
           onClick={() => handleClick(props.page - 1)}
@@ -69,6 +72,7 @@ export const Pagination = (props: PaginationProps) => {
       <For each={pagesNumbers()}>
         {num => (
           <button
+            disabled={props.disabled}
             data-testid={`${num === '...' ? 'ommitted-button' : `to-${num}-button`}`}
             class={pageNumberClass(num)}
             onClick={() => handleClick(num)}
@@ -79,6 +83,7 @@ export const Pagination = (props: PaginationProps) => {
       </For>
       <Show when={deviceType() !== 'mobile'}>
         <button
+          disabled={props.disabled}
           data-testid="to-next-button"
           class={arrotButtonClass('right')}
           onClick={() => handleClick(props.page + 1)}
@@ -87,6 +92,7 @@ export const Pagination = (props: PaginationProps) => {
         </button>
       </Show>
       <button
+        disabled={props.disabled}
         data-testid="to-last-button"
         class={arrotButtonClass('right')}
         onClick={() => handleClick(props.maxPage)}

@@ -17,6 +17,15 @@ export const Default: Story = {
   },
 };
 
+export const Disabled: Story = {
+  args: {
+    page: 3,
+    maxPage: 5,
+    disabled: true,
+    onChanged: fn(),
+  },
+};
+
 export const HasOmmited: Story = {
   args: {
     page: 7,
