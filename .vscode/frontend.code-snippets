@@ -1,0 +1,55 @@
+{
+  "test file template": {
+    "prefix": "testfile",
+    "body": [
+      "import { describe, it, expect } from 'vitest';",
+      "",
+      "describe('$0', () => {",
+      "  it('should $1', () => {",
+      "    expect(true).toBe(true);",
+      "  });",
+      "});"
+    ]
+  },
+
+  "test group template": {
+    "prefix": "testg",
+    "body": ["describe('$0', () => {", "});"]
+  },
+
+  "test template": {
+    "prefix": "test",
+    "body": ["it('should $0', () => {", "});"]
+  },
+
+  "component template": {
+    "prefix": "component",
+    "body": [
+      "export type $0Props = Partial<{}>;",
+      "",
+      "export const $0 = (props: $0Props) => {",
+      "  return (",
+      "    <div />",
+      "  );",
+      "};"
+    ]
+  },
+
+  "storybook template": {
+    "prefix": "story",
+    "body": [
+      "import { Meta, StoryObj } from 'storybook-solidjs';",
+      "import { $0 } from './$0';",
+      "",
+      "const meta: Meta<typeof $0> = {",
+      "  component: $0,",
+      "};",
+      "export default meta;",
+      "type Story = StoryObj<typeof $0>;",
+      "",
+      "export const Default: Story = {",
+      "  args: {},",
+      "};"
+    ]
+  }
+}
