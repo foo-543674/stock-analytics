@@ -1,5 +1,10 @@
 import { describe, it, expect } from 'vitest';
-import { camelizeKeys, isObject } from './ObjectHelper';
+import {
+  camelizeKeys,
+  filterProperties,
+  filterUndefinedProperties,
+  isObject,
+} from './ObjectHelper';
 
 describe('ObjectHelper', () => {
   describe('isObject', () => {
@@ -112,6 +117,84 @@ describe('ObjectHelper', () => {
         code: '0000',
         testKey: 'test value',
         testKeyFoo: 'test value 2',
+      });
+    });
+  });
+
+  describe('filterProperties', () => {
+    it('should filter properties by filter function', () => {
+      const source = {
+        id: '01F8ZQ2N9BZ5QZK5FVZQ4QZK5F',
+        name: 'some name',
+        code: '0000',
+        testKey: 'test value',
+        testKeyFoo: 'test value 2',
+      };
+      const result = filterProperties(
+        source,
+        (key, _value) => key === 'id' || _value === 'test value',
+      );
+      expect(result).toEqual({
+        id: '01F8ZQ2N9BZ5QZK5FVZQ4QZK5F',
+        testKey: 'test value',
+      });
+    });
+
+    it('should not change source object', () => {
+      const source = {
+        id: '01F8ZQ2N9BZ5QZK5FVZQ4QZK5F',
+        name: 'some name',
+        code: '0000',
+        testKey: 'test value',
+        testKeyFoo: 'test value 2',
+      };
+      filterProperties(
+        source,
+        (key, _value) => key === 'id' || _value === 'test value',
+      );
+      expect(source).toEqual({
+        id: '01F8ZQ2N9BZ5QZK5FVZQ4QZK5F',
+        name: 'some name',
+        code: '0000',
+        testKey: 'test value',
+        testKeyFoo: 'test value 2',
+      });
+    });
+  });
+
+  describe('filterUndefinedProperties', () => {
+    it('should filter undefined properties', () => {
+      const source = {
+        id: '01F8ZQ2N9BZ5QZK5FVZQ4QZK5F',
+        name: 'some name',
+        code: '0000',
+        testKey: 'test value',
+        testKeyFoo: undefined,
+      };
+      const result = filterUndefinedProperties(source);
+      expect(result).toEqual({
+        id: '01F8ZQ2N9BZ5QZK5FVZQ4QZK5F',
+        name: 'some name',
+        code: '0000',
+        testKey: 'test value',
+      });
+    });
+
+    it('should not change source object', () => {
+      const source = {
+        id: '01F8ZQ2N9BZ5QZK5FVZQ4QZK5F',
+        name: 'some name',
+        code: '0000',
+        testKey: 'test value',
+        testKeyFoo: undefined,
+      };
+      filterUndefinedProperties(source);
+      expect(source).toEqual({
+        id: '01F8ZQ2N9BZ5QZK5FVZQ4QZK5F',
+        name: 'some name',
+        code: '0000',
+        testKey: 'test value',
+        testKeyFoo: undefined,
       });
     });
   });
