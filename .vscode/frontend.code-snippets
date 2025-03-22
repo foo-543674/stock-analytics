@@ -4,9 +4,9 @@
     "body": [
       "import { describe, it, expect } from 'vitest';",
       "",
-      "describe('$0', () => {",
-      "  it('should $1', () => {",
-      "    expect(true).toBe(true);",
+      "describe('$1', () => {",
+      "  it('should $2', () => {",
+      "    expect(true).toBe(true);$0",
       "  });",
       "});"
     ]
