@@ -9,7 +9,7 @@ describe('PageinatedList', () => {
       max_page: 2,
       items: ['foo', 'bar', 'baz'],
     };
-    const result = parsePaginatedList(z.string(), source);
+    const result = parsePaginatedList(z.string())(source);
     expect(result).toEqual({
       page: 1,
       maxPage: 2,
