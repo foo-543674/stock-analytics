@@ -21,27 +21,28 @@ import {
 } from '@/utils/HttpHelper';
 import { isValidationError } from '@/schemas/ValidationError';
 
-export type Response<T> = Either<ApiError, T>;
+export type ApiResponse<T> = Either<ApiError, T>;
 
 export interface ApiClient {
   get: <T>(
     path: string,
+    query: Record<string, string>,
     parseResponse: (source: unknown) => T,
-  ) => Promise<Response<T>>;
+  ) => Promise<ApiResponse<T>>;
   post: <T>(
     path: string,
     body: T,
     parseResponse: (source: unknown) => T,
-  ) => Promise<Response<T>>;
+  ) => Promise<ApiResponse<T>>;
   put: <T>(
     path: string,
     body: T,
     parseResponse: (source: unknown) => T,
-  ) => Promise<Response<T>>;
+  ) => Promise<ApiResponse<T>>;
   delete: <T>(
     path: string,
     parseResponse: (source: unknown) => T,
-  ) => Promise<Response<T>>;
+  ) => Promise<ApiResponse<T>>;
 }
 
 const handleError = (error: unknown) => {
@@ -79,10 +80,11 @@ const handleError = (error: unknown) => {
 const sendGetRequest = async <T>(
   base: AxiosInstance,
   path: string,
+  query: Record<string, string>,
   parseResponse: (source: unknown) => T,
-): Promise<Response<T>> => {
+): Promise<ApiResponse<T>> => {
   try {
-    const response = await base.get(path);
+    const response = await base.get(path, { params: query });
     return right(parseResponse(response.data));
   } catch (error) {
     return left(handleError(error));
@@ -94,7 +96,7 @@ const sendPostRequest = async <T, D>(
   path: string,
   body: D,
   parseResponse: (source: unknown) => T,
-): Promise<Response<T>> => {
+): Promise<ApiResponse<T>> => {
   try {
     const response = await base.post(path, body);
     return right(parseResponse(response.data));
@@ -108,7 +110,7 @@ const sendPutRequest = async <T, D>(
   path: string,
   body: D,
   parseResponse: (source: unknown) => T,
-): Promise<Response<T>> => {
+): Promise<ApiResponse<T>> => {
   try {
     const response = await base.put(path, body);
     return right(parseResponse(response.data));
@@ -121,7 +123,7 @@ const sendDeleteRequest = async <T>(
   base: AxiosInstance,
   path: string,
   parseResponse: (source: unknown) => T,
-): Promise<Response<T>> => {
+): Promise<ApiResponse<T>> => {
   try {
     const response = await base.delete(path);
     return right(parseResponse(response.data));
@@ -137,8 +139,11 @@ export const createApiClient = (baseUrl: string): ApiClient => {
   });
 
   return {
-    get: <T>(path: string, parseResponse: (source: unknown) => T) =>
-      sendGetRequest<T>(base, path, parseResponse),
+    get: <T>(
+      path: string,
+      query: Record<string, string>,
+      parseResponse: (source: unknown) => T,
+    ) => sendGetRequest<T>(base, path, query, parseResponse),
     post: <T>(path: string, body: T, parseResponse: (source: unknown) => T) =>
       sendPostRequest(base, path, body, parseResponse),
     put: <T>(path: string, body: T, parseResponse: (source: unknown) => T) =>
