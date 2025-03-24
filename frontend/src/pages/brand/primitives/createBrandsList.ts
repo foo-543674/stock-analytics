@@ -1,10 +1,10 @@
-import { ApiClient } from '@/api/ApiClient';
-import { fetchBrands } from '@/api/brands/fetchBrands';
+import { ApiClient } from '@/data-access/api/ApiClient';
+import { fetchBrands } from '@/data-access/api/brands/fetchBrands';
 import { BrandSearchCondition } from '@/features/brands/BrandSearchCondition';
 import { createMemo, createResource, createSignal } from 'solid-js';
 import * as Either from '@/utils/Either';
 import { Brand } from '@/schemas/Brand';
-import { ApiError } from '@/api/ApiError';
+import { ApiError } from '@/data-access/api/ApiError';
 
 export const createBrandsList = (client: ApiClient) => {
   const [page, setPage] = createSignal(1);

@@ -1,4 +1,4 @@
-import { ApiClient } from '@/api/ApiClient';
+import { ApiClient } from '@/data-access/api/ApiClient';
 import { Mock, vi } from 'vitest';
 
 export const createApiClientMock = <

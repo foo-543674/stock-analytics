@@ -1,4 +1,4 @@
-import { ApiResponse } from '@/api/ApiClient';
+import { ApiResponse } from '@/data-access/api/ApiClient';
 import { describe, it, expect, vi, afterEach } from 'vitest';
 import { createBrandsList } from './createBrandsList';
 import { brands } from '@tests/mocks/brands';
