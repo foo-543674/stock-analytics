@@ -7,22 +7,22 @@ export const notFound = (): NotFound => ({ _tag: 'NotFound' });
 
 export type ValidationFailed = {
   _tag: 'ValidationFailed';
-  description: ValidationError;
+  details: ValidationError;
 };
 export const validationFailed = (
-  description: ValidationError,
+  details: ValidationError,
 ): ValidationFailed => ({
   _tag: 'ValidationFailed',
-  description,
+  details,
 });
 
 export type BadRequest = {
   _tag: 'BadRequest';
-  message: string;
+  details: unknown;
 };
-export const badRequest = (message: string): BadRequest => ({
+export const badRequest = (details: unknown): BadRequest => ({
   _tag: 'BadRequest',
-  message,
+  details,
 });
 
 export type Conflict = {
