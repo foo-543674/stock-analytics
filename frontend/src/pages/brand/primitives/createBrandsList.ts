@@ -22,24 +22,18 @@ export const createBrandsList = (client: ApiClient) => {
     maxPage,
     error,
   });
-  const [res, { refetch }] = createResource(
-    () => {
-      return fetchBrands(client, filter(), page()).then(res =>
-        Either.fold(
-          res,
-          error => createApiResult({ error }),
-          data =>
-            createApiResult({ brands: data.items, maxPage: data.maxPage }),
-        ),
-      );
-    },
-    {
-      initialValue: createApiResult({}),
-    },
-  );
+  const [res, { refetch }] = createResource(() => {
+    return fetchBrands(client, filter(), page()).then(res =>
+      Either.fold(
+        res,
+        error => createApiResult({ error }),
+        data => createApiResult({ brands: data.items, maxPage: data.maxPage }),
+      ),
+    );
+  });
 
   const memoized = createMemo(() => {
-    const response = res();
+    const response = res.state === 'ready' ? res() : createApiResult({});
     return {
       brands: response.brands,
       page: page(),
