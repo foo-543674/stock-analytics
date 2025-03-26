@@ -64,11 +64,12 @@
   "dependencies": {
     "@solid-primitives/i18n": "^2.2.0",
     "@solidjs/router": "^0.15.3",
-    "axios": "^1.8.2",
     "browser-lang": "^0.2.1",
     "clsx": "^2.1.1",
     "daisyui": "^5.0.4",
     "humps": "^2.0.1",
+    "ky": "^1.7.5",
+    "neverthrow": "^8.2.0",
     "solid-icons": "^1.1.0",
     "solid-js": "^1.9.5",
     "solid-meta": "^0.28.1",
