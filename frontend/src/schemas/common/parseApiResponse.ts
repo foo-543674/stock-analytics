@@ -1,11 +1,10 @@
 import { z } from 'zod';
-import { ParseResult } from '../ParseResult';
+import { parseError, ParseFn, ParseResult } from '../ParseResult';
 import { camelizeKeys, isObject } from '@/utils/ObjectHelper';
-import { parseError } from '../ParseError';
 import { ok } from '@/utils/Result';
 
 export const parseApiResponse =
-  <T>(schema: z.ZodType<T>) =>
+  <T>(schema: z.ZodType<T>): ParseFn<T> =>
   (source: unknown): ParseResult<T> => {
     if (!isObject(source)) {
       return parseError(source, 'source was not object');
