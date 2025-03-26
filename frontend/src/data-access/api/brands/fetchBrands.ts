@@ -1,16 +1,16 @@
-import { brandSchema } from '@/schemas/Brand';
-import { ApiClient, ApiResponse } from '../ApiClient';
-import { PaginatedList, parsePaginatedList } from '@/schemas/PaginatedList';
+import { BrandsPage, parseBrandPage } from '@/schemas/brands/Brand';
 import { BrandSearchCondition } from '@/features/brands/BrandSearchCondition';
 import { filterUndefinedProperties } from '@/utils/ObjectHelper';
+import { ApiClient } from '@/data-access/ApiClient';
+import { HttpResult } from '@/data-access/http';
 
 const BRAND_LIST_COUNT = 10;
 
-export const fetchBrands = async (
+export const fetchBrands = (
   client: ApiClient,
   condition: BrandSearchCondition,
   page?: number,
-): Promise<ApiResponse<PaginatedList<typeof brandSchema>>> => {
+): HttpResult<BrandsPage> => {
   const query = filterUndefinedProperties({
     page: page?.toString() ?? '1',
     count: `${BRAND_LIST_COUNT}`,
@@ -19,5 +19,5 @@ export const fetchBrands = async (
     code: condition.code,
   });
 
-  return await client.get('/brands', query, parsePaginatedList(brandSchema));
+  return client.get('/brands', query, parseBrandPage);
 };

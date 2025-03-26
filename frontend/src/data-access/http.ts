@@ -3,13 +3,15 @@ import { HttpError, toHttpError } from './HttpError';
 import { fromPromise, ResultAsync } from '@/utils/Result';
 import { isParseError, ParseError, ParseFn } from '@/schemas/ParseResult';
 
+export type HttpResult<T> = ResultAsync<T, HttpError | ParseError>;
+
 export const getRequest =
   (client: KyInstance) =>
   <T>(
     path: string,
     params: Record<string, string> = {},
     parse: ParseFn<T>,
-  ): ResultAsync<T, HttpError | ParseError> =>
+  ): HttpResult<T> =>
     fromPromise(
       client
         .get(path, {

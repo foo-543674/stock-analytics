@@ -1,19 +1,17 @@
-import { ParseError, ParseFn } from '@/schemas/ParseResult';
-import { ResultAsync } from '@/utils/Result';
-import { HttpError } from './HttpError';
+import { ParseFn } from '@/schemas/ParseResult';
 import ky from 'ky';
-import { getRequest } from './http';
+import { getRequest, HttpResult } from './http';
 
 export interface ApiClient {
   get: <T>(
     path: string,
     query: Record<string, string>,
     parse: ParseFn<T>,
-  ) => ResultAsync<T, HttpError | ParseError>;
+  ) => HttpResult<T>;
 }
 
-export const createApiClient = (): ApiClient => {
-  const client = ky.create({ prefixUrl: '/api', retry: 5 });
+export const createApiClient = (baseUrl: string): ApiClient => {
+  const client = ky.create({ prefixUrl: `${baseUrl}/api`, retry: 5 });
 
   return {
     get: getRequest(client),
