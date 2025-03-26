@@ -17,7 +17,8 @@ describe('Brand', () => {
       },
     };
     const result = parseBrand(source);
-    expect(result).toEqual({
+    expect(result.isOk()).toBe(true);
+    expect(result._unsafeUnwrap()).toEqual({
       id: '01F8ZQ2N9BZ5QZK5FVZQ4QZK5F',
       name: 'Brand 1',
       code: 'B1',

@@ -10,7 +10,8 @@ describe('PageinatedList', () => {
       items: ['foo', 'bar', 'baz'],
     };
     const result = parsePaginatedList(z.string())(source);
-    expect(result).toEqual({
+    expect(result.isOk()).toBe(true);
+    expect(result._unsafeUnwrap()).toEqual({
       page: 1,
       maxPage: 2,
       items: ['foo', 'bar', 'baz'],

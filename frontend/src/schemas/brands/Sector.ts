@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { camelizeKeys, isObject } from '@/utils/ObjectHelper';
+import { parseApiResponse } from '../common/parseApiResponse';
 
 export const sectorSchema = z
   .object({
@@ -14,10 +14,5 @@ export const sectorSchema = z
 
 export type Sector = z.infer<typeof sectorSchema>;
 
-export const parseSector = (source: unknown): Sector => {
-  if (!isObject(source)) {
-    throw new Error(`Source is not parsable. source:${source}`);
-  }
-
-  return sectorSchema.parse(camelizeKeys(source));
-};
+export const parseSector = parseApiResponse(sectorSchema);
+export const parseSectorList = parseApiResponse(z.array(sectorSchema));

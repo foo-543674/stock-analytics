@@ -1,8 +1,8 @@
 import { Pagination } from '@/components/Pagination';
 import { BrandList } from './BrandList';
 import { SearchForm } from './SearchForm';
-import { Brand } from '@/schemas/Brand';
-import { Sector } from '@/schemas/Sector';
+import { Brand } from '@/schemas/brands/Brand';
+import { Sector } from '@/schemas/brands/Sector';
 import { Translate } from '@/primitives/createTranslate';
 import { BrandSearchCondition } from '@/features/brands/BrandSearchCondition';
 

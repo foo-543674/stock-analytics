@@ -1,4 +1,4 @@
-import { Brand } from '@/schemas/Brand';
+import { Brand } from '@/schemas/brands/Brand';
 import { For, Show } from 'solid-js';
 import { BrandBlock } from './BrandBlock';
 import clsx from 'clsx';

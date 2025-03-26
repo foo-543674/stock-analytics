@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { parseApiResponse } from './parseApiResponse';
 
 export const validationErrorSchema = z.object({
   fields: z.array(
@@ -20,8 +21,4 @@ export const validationErrorSchema = z.object({
 });
 export type ValidationError = z.infer<typeof validationErrorSchema>;
 
-export const isValidationError = (
-  source: unknown,
-): source is ValidationError => {
-  return validationErrorSchema.safeParse(source).success;
-};
+export const parseValidationError = parseApiResponse(validationErrorSchema);

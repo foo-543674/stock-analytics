@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { isValidationError } from './ValidationError';
+import { parseValidationError } from './ValidationError';
 
 describe('ValidationError', () => {
   it('should convert object as ValidationError', () => {
@@ -11,8 +11,9 @@ describe('ValidationError', () => {
         },
       ],
     };
-    const result = isValidationError(source);
-    expect(result).toEqual({
+    const result = parseValidationError(source);
+    expect(result.isOk()).toBe(true);
+    expect(result._unsafeUnwrap()).toEqual({
       fields: [
         {
           name: 'name',
