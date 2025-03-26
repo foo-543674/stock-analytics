@@ -6,6 +6,9 @@ export type ParseError = {
   message: string;
 };
 
+export const isParseError = (error: unknown): error is ParseError =>
+  (error as ParseError)?._tag === 'ParseError';
+
 export const parseError = <T>(
   source: unknown,
   message: string = '',
