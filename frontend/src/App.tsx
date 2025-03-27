@@ -5,12 +5,16 @@ import { createBrowserConfig } from '@/primitives/createBrowserConfig';
 import { Frame } from '@/pages/frame/Frame';
 import './index.css';
 import { createTheme, themeNames } from '@/primitives/createTheme';
+import { TranslateProvider } from './contexts/TranslateContext';
+import { createApiClient } from './data-access/ApiClient';
+import { ApiClientProvider } from './contexts/ApiClientContext';
 
 export const App = () => {
   const [opened, setOpened] = createSignal(false);
   const browserConfig = createBrowserConfig();
   const translate = createTranslate(browserConfig.lang);
   const [theme, toggleTheme] = createTheme();
+  const apiClient = createApiClient('https://api.example.com');
 
   const actualTheme = () => themeNames[theme()];
 
@@ -23,7 +27,11 @@ export const App = () => {
         toggleTheme={toggleTheme}
         translate={translate()}
       >
-        <PageRouter />
+        <ApiClientProvider value={apiClient}>
+          <TranslateProvider value={translate()}>
+            <PageRouter />
+          </TranslateProvider>
+        </ApiClientProvider>
       </Frame>
     </div>
   );
