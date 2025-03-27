@@ -2,6 +2,7 @@ import { Brand } from '@/schemas/brands/Brand';
 import { For, Show } from 'solid-js';
 import { BrandBlock } from './BrandBlock';
 import clsx from 'clsx';
+import { Loading } from '@/components/Loading';
 
 export type BrandListProps = Partial<{
   class: string;
@@ -23,12 +24,7 @@ export const BrandList = (props: BrandListProps) => {
 
   return (
     <div class={rootClass()}>
-      <Show
-        when={!props.isLoading}
-        fallback={
-          <span class="loading loading-spinner loading-xl self-center justify-self-center" />
-        }
-      >
+      <Show when={!props.isLoading} fallback={<Loading />}>
         <ul class="list bg-base-100 shaddow-md">
           <For each={props.brands}>
             {brand => (
