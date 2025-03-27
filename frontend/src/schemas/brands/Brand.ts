@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { sectorSchema } from './Sector';
-import { PaginatedList, parsePaginatedList } from '../common/PaginatedList';
+import { PaginatedListType, parsePaginatedList } from '../common/PaginatedList';
 import { parseApiResponse } from '../common/parseApiResponse';
 
 export const brandSchema = z
@@ -16,6 +16,6 @@ export type Brand = z.infer<typeof brandSchema>;
 
 export const parseBrand = parseApiResponse(brandSchema);
 
-export type BrandsPage = PaginatedList<typeof brandSchema>;
+export type BrandsPage = PaginatedListType<typeof brandSchema>;
 
 export const parseBrandPage = parsePaginatedList(brandSchema);
