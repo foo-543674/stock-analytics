@@ -1,5 +1,5 @@
 import { BrandsPage, parseBrandPage } from '@/schemas/brands/Brand';
-import { BrandSearchCondition } from '@/features/brands/BrandSearchCondition';
+import { BrandSearchCondition } from '@/features/brands/types/BrandSearchCondition';
 import { filterUndefinedProperties } from '@/utils/ObjectHelper';
 import { ApiClient } from '@/data-access/ApiClient';
 import { HttpResult } from '@/data-access/http';

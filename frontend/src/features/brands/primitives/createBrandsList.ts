@@ -1,5 +1,5 @@
-import { fetchBrands } from '@/data-access/api/brands/fetchBrands';
-import { BrandSearchCondition } from '@/features/brands/BrandSearchCondition';
+import { fetchBrands } from '@/features/brands/api/fetchBrands';
+import { BrandSearchCondition } from '@/features/brands/types/BrandSearchCondition';
 import { createMemo, createResource, createSignal } from 'solid-js';
 import { Brand } from '@/schemas/brands/Brand';
 import { createOptionalParameterFunc } from '@/utils/createOptionalParameterFunc';

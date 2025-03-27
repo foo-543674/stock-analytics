@@ -4,7 +4,7 @@ import { brands } from '@tests/mocks/brands';
 import { renderHook } from '@solidjs/testing-library';
 import { waitMockResolved } from '@tests/waitMockResolved';
 import { createApiClientMock } from '@tests/mocks/ApiClientMock';
-import { fetchBrands } from '@/data-access/api/brands/fetchBrands';
+import { fetchBrands } from '@/features/brands/api/fetchBrands';
 import { ok } from '@/utils/Result';
 import { pageStub } from '@tests/mocks/pageStub';
 import {

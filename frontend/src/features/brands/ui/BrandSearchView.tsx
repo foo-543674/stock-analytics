@@ -4,7 +4,7 @@ import { SearchForm } from './SearchForm';
 import { Brand } from '@/schemas/brands/Brand';
 import { Sector } from '@/schemas/brands/Sector';
 import { Translate } from '@/primitives/createTranslate';
-import { BrandSearchCondition } from '@/features/brands/BrandSearchCondition';
+import { BrandSearchCondition } from '@/features/brands/types/BrandSearchCondition';
 
 export type BrandSearchViewProps = {
   sectors: Sector[];
