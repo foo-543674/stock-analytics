@@ -8,6 +8,7 @@ import {
   errorResponseStub,
   neverReturningResponseImpl,
 } from '@tests/mockHttpResult';
+import { fetchAssetsMock } from '@tests/mocks/fetchAssetsMock';
 
 describe('createTranslate', test => {
   beforeAll(() => {
@@ -17,7 +18,9 @@ describe('createTranslate', test => {
   test('should return a function that get text for key', async () => {
     vi.mocked(fetchLocales).mockResolvedValue(ok({ key: 'value' }));
 
-    const { result: translate } = renderHook(() => createTranslate('en'));
+    const { result: translate } = renderHook(() =>
+      createTranslate(fetchAssetsMock, 'en'),
+    );
     await waitMockResolved();
     const result = translate()('key');
     expect(result).toBe('value');
@@ -26,7 +29,9 @@ describe('createTranslate', test => {
   test('should return the key if the key is not found', async () => {
     vi.mocked(fetchLocales).mockResolvedValue(ok({}));
 
-    const { result: translate } = renderHook(() => createTranslate('en'));
+    const { result: translate } = renderHook(() =>
+      createTranslate(fetchAssetsMock, 'en'),
+    );
     await waitMockResolved();
     const result = translate()('key');
     expect(result).toBe('key');
@@ -35,7 +40,9 @@ describe('createTranslate', test => {
   test('should return empty string if locales is loading', async () => {
     vi.mocked(fetchLocales).mockImplementation(neverReturningResponseImpl);
 
-    const { result: translate } = renderHook(() => createTranslate('en'));
+    const { result: translate } = renderHook(() =>
+      createTranslate(fetchAssetsMock, 'en'),
+    );
     const result = translate()('key');
     expect(result).toBe('');
   });
@@ -43,7 +50,9 @@ describe('createTranslate', test => {
   test('should return empty string if locales is error', async () => {
     vi.mocked(fetchLocales).mockResolvedValue(errorResponseStub);
 
-    const { result: translate } = renderHook(() => createTranslate('en'));
+    const { result: translate } = renderHook(() =>
+      createTranslate(fetchAssetsMock, 'en'),
+    );
     await waitMockResolved();
     const result = translate()('key');
     expect(result).toBe('');
@@ -54,7 +63,9 @@ describe('createTranslate', test => {
       ok({ key: 'Hello, {{ name }}!' }),
     );
 
-    const { result: translate } = renderHook(() => createTranslate('en'));
+    const { result: translate } = renderHook(() =>
+      createTranslate(fetchAssetsMock, 'en'),
+    );
     await waitMockResolved();
     const result = translate()('key', { name: 'world' });
     expect(result).toBe('Hello, world!');

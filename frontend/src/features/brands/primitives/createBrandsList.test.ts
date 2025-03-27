@@ -15,7 +15,7 @@ import {
 describe('createBrandsList', () => {
   const [apiClientMock] = createApiClientMock();
   beforeAll(() => {
-    vi.mock('@/data-access/api/brands/fetchBrands');
+    vi.mock('@/features/brands/api/fetchBrands');
   });
   afterEach(() => {
     vi.clearAllMocks();
