@@ -1,5 +1,9 @@
 name: Auto Approve
 on:
+  workflow_run:
+    workflows: ["frontend", "api"]
+    types:
+      - completed
   pull_request:
     types:
       - opened
@@ -11,6 +15,7 @@ jobs:
     if: |
       github.event.pull_request.user.login == github.repository_owner
       && ! github.event.pull_request.draft
+      && github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
     permissions:
       pull-requests: write
