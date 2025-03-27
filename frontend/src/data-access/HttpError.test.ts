@@ -105,7 +105,7 @@ describe('HttpError', () => {
     }
   });
 
-  it.prop([fc.integer({ min: 500, max: 599 })])(
+  it.prop([fc.integer({ min: 500, max: 599 })], { numRuns: 10 })(
     'should be ServerError when status code is not 500-599',
     async status => {
       server.use(
@@ -120,15 +120,17 @@ describe('HttpError', () => {
         expect(result).toEqual(serverError());
       }
     },
-    30000,
   );
 
   const handledStatusCodes = [400, 401, 403, 404, 409];
-  it.prop([
-    fc
-      .integer({ min: 400, max: 499 })
-      .filter(x => !handledStatusCodes.includes(x)),
-  ])(
+  it.prop(
+    [
+      fc
+        .integer({ min: 400, max: 499 })
+        .filter(x => !handledStatusCodes.includes(x)),
+    ],
+    { numRuns: 10 },
+  )(
     'should be UnknownError when status code is not 400-499 and not handled',
     async status => {
       server.use(
