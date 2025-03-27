@@ -1,38 +1,25 @@
-import { createSignal } from 'solid-js';
 import { PageRouter } from '@/routes/PageRouter';
-import { createTranslate } from '@/primitives/createTranslate';
-import { createBrowserConfig } from '@/primitives/createBrowserConfig';
-import { Frame } from '@/pages/frame/Frame';
 import './index.css';
 import { createTheme, themeNames } from '@/primitives/createTheme';
 import { TranslateProvider } from './contexts/TranslateContext';
-import { createApiClient } from './data-access/ApiClient';
 import { ApiClientProvider } from './contexts/ApiClientContext';
+import { PageFrame } from './pages/frame/PageFrame';
+
+const baseUrl = 'http://localhost:5173';
 
 export const App = () => {
-  const [opened, setOpened] = createSignal(false);
-  const browserConfig = createBrowserConfig();
-  const translate = createTranslate(browserConfig.lang);
   const [theme, toggleTheme] = createTheme();
-  const apiClient = createApiClient('https://api.example.com');
-
   const actualTheme = () => themeNames[theme()];
 
   return (
     <div data-theme={actualTheme()}>
-      <Frame
-        isMenuOpened={opened()}
-        theme={theme()}
-        onMenuOpenChanged={setOpened}
-        toggleTheme={toggleTheme}
-        translate={translate()}
-      >
-        <ApiClientProvider value={apiClient}>
-          <TranslateProvider value={translate()}>
+      <ApiClientProvider baseUrl={baseUrl}>
+        <TranslateProvider baseUrl={baseUrl}>
+          <PageFrame theme={theme()} toggleTheme={toggleTheme}>
             <PageRouter />
-          </TranslateProvider>
-        </ApiClientProvider>
-      </Frame>
+          </PageFrame>
+        </TranslateProvider>
+      </ApiClientProvider>
     </div>
   );
 };

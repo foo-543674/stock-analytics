@@ -6,11 +6,8 @@ export const BrandSearchPage = () => {
 
   return (
     <PageBase>
-      {({ initialApiClient, translate }) => (
-        <BrandSearchContainer
-          initialApiClient={initialApiClient}
-          translate={translate}
-        />
+      {({ apiClient, translate }) => (
+        <BrandSearchContainer apiClient={apiClient()} translate={translate()} />
       )}
     </PageBase>
   );

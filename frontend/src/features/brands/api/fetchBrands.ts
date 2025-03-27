@@ -19,5 +19,5 @@ export const fetchBrands = (
     code: condition.code,
   });
 
-  return client.get('/brands', query, parseBrandPage);
+  return client.get('brands', query, parseBrandPage);
 };

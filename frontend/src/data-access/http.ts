@@ -1,4 +1,4 @@
-import ky, { KyInstance } from 'ky';
+import { KyInstance } from 'ky';
 import { HttpError, toHttpError } from './HttpError';
 import { fromPromise, ResultAsync } from '@/utils/Result';
 import { isParseError, ParseError, ParseFn } from '@/schemas/ParseResult';
@@ -27,7 +27,3 @@ export const getRequest =
         }
         return await toHttpError(e);
       });
-
-export const fetchAssets = getRequest(
-  ky.create({ prefixUrl: '/assets', retry: 5 }),
-);

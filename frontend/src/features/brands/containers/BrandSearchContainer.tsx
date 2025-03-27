@@ -4,12 +4,13 @@ import { createBrandsList } from '../primitives/createBrandsList';
 import { BrandSearchView } from '../ui/BrandSearchView';
 
 export type BrandSearchContainerProps = {
-  initialApiClient: ApiClient;
+  apiClient: ApiClient;
   translate: Translate;
 };
 
 export const BrandSearchContainer = (props: BrandSearchContainerProps) => {
-  const brands = createBrandsList(props.initialApiClient);
+  const apiClient = () => props.apiClient;
+  const brands = createBrandsList(apiClient());
 
   return (
     <BrandSearchView
