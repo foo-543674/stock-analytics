@@ -1,15 +1,18 @@
-import axios from 'axios';
+import { ok } from '@/utils/Result';
+import { HttpResult } from './http';
+import { isObject } from '@/utils/ObjectHelper';
+import { parseError } from '@/schemas/ParseResult';
+import { FetchAssets } from './FetchAssets';
 
 export type Language = 'en' | 'ja';
 
-export const fetchLocales = async (
+export const fetchLocales = (
+  fetchAssets: FetchAssets,
   lang: Language,
-): Promise<Record<string, string>> => {
-  const response = await axios.get(`assets/locales/${lang}.json`);
-
-  if (response.status !== 200) {
-    throw new Error('Failed to fetch locales');
-  }
-
-  return response.data as Record<string, string>;
+): HttpResult<Record<string, string>> => {
+  return fetchAssets(`locales/${lang}.json`, {}, data =>
+    isObject(data)
+      ? ok(data as Record<string, string>)
+      : parseError(data, 'Invalid locales'),
+  );
 };

@@ -12,7 +12,8 @@ describe('Sector', () => {
       category: 'Category 1',
     };
     const result = parseSector(source);
-    expect(result).toEqual({
+    expect(result.isOk()).toBe(true);
+    expect(result._unsafeUnwrap()).toEqual({
       id: '01F8ZQ2N9BZ5QZK5FVZQ4QZK5F',
       name: 'Sector 1',
       code: 'S1',

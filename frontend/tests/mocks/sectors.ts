@@ -1,4 +1,4 @@
-import { Sector } from '@/schemas/Sector';
+import { Sector } from '@/schemas/brands/Sector';
 
 export const sectors: Sector[] = [
   {

@@ -1,14 +1,9 @@
 import { FieldSet } from '@/components/FieldSet';
+import { BrandSearchCondition } from '@/features/brands/types/BrandSearchCondition';
 import { Translate } from '@/primitives/createTranslate';
-import { Sector } from '@/schemas/Sector';
+import { Sector } from '@/schemas/brands/Sector';
 import { FiSearch } from 'solid-icons/fi';
 import { For, Show } from 'solid-js';
-
-type BrandSearchCondition = Partial<{
-  sectorId: string;
-  code: string;
-  brandName: string;
-}>;
 
 export type SearchFormProps = Partial<{
   sectors: Sector[];
