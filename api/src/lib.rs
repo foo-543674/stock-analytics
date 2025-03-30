@@ -1,4 +1,5 @@
 pub mod applications;
+pub mod config;
 pub mod domains;
 pub mod https;
 pub mod infrastructures;
