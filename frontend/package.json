@@ -5,8 +5,9 @@
   "type": "module",
   "scripts": {
     "check-types": "tsc -p tsconfig.app.json --noEmit && tsc -p tsconfig.node.json --noEmit",
-    "dev": "vite",
-    "build": "npm run check-types && vite build",
+    "dev": "vite --mode development",
+    "build": "npm run check-types && vite build --mode production",
+    "build:dev": "npm run check-types && vite build --mode development",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
     "preview": "vite preview",

@@ -9,9 +9,11 @@ import serveStatic from 'vite-plugin-serve-static';
 
 // https://vite.dev/config/
 export default ({ mode }: { mode: string }) => {
-  const env = { ...process.env, ...loadEnv(mode, process.cwd()) };
+  const envDir = resolve(__dirname, '../');
+  const env = { ...process.env, ...loadEnv(mode, envDir) };
 
   return defineConfig({
+    envDir: envDir,
     plugins: [
       solid(),
       tailwindcss(),
