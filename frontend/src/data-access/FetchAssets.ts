@@ -8,5 +8,5 @@ export type FetchAssets = <T>(
   parse: ParseFn<T>,
 ) => HttpResult<T>;
 
-export const createFetchAssets = (baseUrl: string): FetchAssets =>
-  getRequest(ky.create({ prefixUrl: `${baseUrl}/assets`, retry: 5 }));
+export const createFetchAssets = (): FetchAssets =>
+  getRequest(ky.create({ prefixUrl: `/assets`, retry: 5 }));

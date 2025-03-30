@@ -5,16 +5,20 @@ import { TranslateProvider } from './contexts/TranslateContext';
 import { ApiClientProvider } from './contexts/ApiClientContext';
 import { PageFrame } from './pages/frame/PageFrame';
 
-const baseUrl = 'http://localhost:5173';
+export type AppProps = Partial<{
+  apiUrl?: string;
+}>;
 
-export const App = () => {
+export const App = (props: AppProps) => {
   const [theme, toggleTheme] = createTheme();
   const actualTheme = () => themeNames[theme()];
 
+  const apiUrl = () => props.apiUrl || '/api';
+
   return (
     <div data-theme={actualTheme()}>
-      <ApiClientProvider baseUrl={baseUrl}>
-        <TranslateProvider baseUrl={baseUrl}>
+      <ApiClientProvider baseUrl={apiUrl()}>
+        <TranslateProvider>
           <PageFrame theme={theme()} toggleTheme={toggleTheme}>
             <PageRouter />
           </PageFrame>
