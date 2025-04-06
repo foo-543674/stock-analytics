@@ -11,7 +11,7 @@ export interface ApiClient {
 }
 
 export const createApiClient = (baseUrl: string): ApiClient => {
-  const client = ky.create({ prefixUrl: `${baseUrl}/api`, retry: 5 });
+  const client = ky.create({ prefixUrl: `${baseUrl}`, retry: 5 });
 
   return {
     get: getRequest(client),

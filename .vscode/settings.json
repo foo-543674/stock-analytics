@@ -11,25 +11,18 @@
     "testing": {
       "pytestEnabled": true,
       "unittestEnabled": false,
-      "pytestArgs": [
-        "scripts"
-      ]
+      "pytestArgs": ["scripts"]
     },
     "linting": {
       "enabled": true,
       "pylintEnabled": false,
       "pep8Enabled": false,
       "flake8Enabled": true,
-      "flake8Args": [
-        "--ignore=E111, E114, E402, E501"
-      ]
+      "flake8Args": ["--ignore=E111, E114, E402, E501"]
     },
     "formatting": {
       "provider": "autopep8",
-      "autopep8Args": [
-        "--indent-size=2",
-        "--ignore=E111, E114, E402, E501"
-      ]
+      "autopep8Args": ["--indent-size=2", "--ignore=E111, E114, E402, E501"]
     }
   },
   "[python]": {
@@ -47,10 +40,10 @@
   "rust-analyzer": {
     "testExplorer": true,
     "rustfmt": {
-      "extraArgs": [
-        "--tab-spaces=2"
-      ]
-    }
+      "extraArgs": ["--tab-spaces=2"]
+    },
+    "check.extraArgs": ["--target-dir", "${workspaceFolder}/api"],
+    "workspace.exclude": ["**/target", "**/Cargo.lock", "**/Cargo.toml"]
   },
   "[typescript]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
