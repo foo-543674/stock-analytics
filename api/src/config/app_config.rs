@@ -27,6 +27,6 @@ impl AppConfig {
       .add_source(Environment::with_prefix("APP").separator("__"))
       .build()?;
 
-    return s.try_deserialize();
+    s.try_deserialize()
   }
 }
