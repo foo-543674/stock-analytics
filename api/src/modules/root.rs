@@ -1,4 +1,7 @@
-use crate::{config::app_config::AppConfig, infrastructures::support::connection::{create_db_options, ConnectionProviderImpl}};
+use crate::{
+  config::app_config::AppConfig,
+  infrastructures::support::connection::{create_db_options, ConnectionProviderImpl},
+};
 use std::sync::Arc;
 
 use super::brand::BrandModule;
