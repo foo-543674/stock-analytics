@@ -3,8 +3,24 @@
   "brandPageLink": "Brands",
   "loading": "Loading...",
   "optionAll": "All",
+  "searchButtonLabel": "Search",
+  "registerButtonLabel": "Register",
+
+  "validationRequired": "{field} is required",
+  "validationDuplicate": "{value} already exists",
+  "validationMaxLength": "{field} must be at most {max} characters",
+  "validationLengthEqual": "{field} must be exactly {length} characters",
+  "validationNumericOnly": "{field} must be a number",
+  "validationResourceNotFound": "{value} not found",
+  "validationUlid": "{field} must be a valid ULID",
+
   "selectSectorLabel": "Sector",
   "inputCodeLabel": "Code",
   "inputBrandNameLabel": "Brand Name",
-  "searchButtonLabel": "Search"
+  "brandRegisterFormInputCodeLabel": "Code",
+  "brandRegisterFormInputCodePlaceholder": "0000",
+  "brandRegisterFormInputNameLabel": "Brand Name",
+  "brandRegisterFormInputNamePlaceholder": "Enter brand name",
+  "brandRegisterFormInputSectorLabel": "Sector",
+  "brandRegisterFormInputSectorPlaceholder": "Select sector"
 }
