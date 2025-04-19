@@ -21,3 +21,33 @@ export const Default: Story = {
     onBlur: fn(),
   },
 };
+
+export const Error: Story = {
+  args: {
+    label: 'Label',
+    items: [
+      { label: 'Item 1', value: 'item1' },
+      { label: 'Item 2', value: 'item2' },
+      { label: 'Item 3', value: 'item3' },
+    ],
+    error: true,
+    onChange: fn(),
+    onInput: fn(),
+    onBlur: fn(),
+  },
+};
+
+export const Disabled: Story = {
+  args: {
+    label: 'Label',
+    items: [
+      { label: 'Item 1', value: 'item1' },
+      { label: 'Item 2', value: 'item2' },
+      { label: 'Item 3', value: 'item3' },
+    ],
+    disabled: true,
+    onChange: fn(),
+    onInput: fn(),
+    onBlur: fn(),
+  },
+};
