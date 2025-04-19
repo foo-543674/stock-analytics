@@ -5,6 +5,7 @@ import { JSX, splitProps } from 'solid-js';
 export type FloatingLabelInputProps = JSX.IntrinsicElements['input'] &
   Partial<{
     label: string;
+    error: boolean;
   }> &
   Size;
 
@@ -15,6 +16,7 @@ export const FloatingLabelInput = (props: FloatingLabelInputProps) => {
     'large',
     'class',
     'label',
+    'error',
   ]);
   const inputClass = () =>
     clsx(
@@ -25,6 +27,9 @@ export const FloatingLabelInput = (props: FloatingLabelInputProps) => {
         'input-lg': local.large,
       },
       local.class,
+      {
+        'input-error': local.error,
+      },
     );
 
   const label = () => {
