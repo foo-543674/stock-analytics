@@ -33,3 +33,17 @@ export const WithMessage: Story = {
     );
   },
 };
+
+export const Disabled: Story = {
+  args: {
+    label: 'field',
+    disabled: true,
+  },
+  render: props => {
+    return (
+      <FieldSet {...props}>
+        <input class="input" type="text" placeholder="input" />
+      </FieldSet>
+    );
+  },
+};

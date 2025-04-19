@@ -40,3 +40,27 @@ export const Medium: Story = {
 export const Large: Story = {
   render: () => <FloatingLabelInput large placeholder="large" />,
 };
+
+export const Error: Story = {
+  args: {
+    placeholder: 'placeholder',
+    label: 'Label',
+    value: 'Value',
+    error: true,
+    onInput: fn(),
+    onChange: fn(),
+    onBlur: fn(),
+  },
+};
+
+export const Disabled: Story = {
+  args: {
+    placeholder: 'placeholder',
+    label: 'Label',
+    value: 'Value',
+    disabled: true,
+    onInput: fn(),
+    onChange: fn(),
+    onBlur: fn(),
+  },
+};
