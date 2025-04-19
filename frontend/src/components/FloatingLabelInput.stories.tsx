@@ -13,6 +13,8 @@ export const Default: Story = {
     placeholder: 'placeholder',
     label: 'Label',
     onInput: fn(),
+    onChange: fn(),
+    onBlur: fn(),
   },
 };
 
@@ -22,6 +24,8 @@ export const HasValue: Story = {
     label: 'Label',
     value: 'Value',
     onInput: fn(),
+    onChange: fn(),
+    onBlur: fn(),
   },
 };
 
