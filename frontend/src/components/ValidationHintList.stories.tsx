@@ -10,7 +10,25 @@ type Story = StoryObj<typeof ValidationHintList>;
 
 export const Default: Story = {
   args: {
-    keys: ['validation.required', 'validation.max_length'],
+    fieldName: 'fieldName',
+    constraints: [
+      {
+        rule: 'validation.required',
+        args: [],
+      },
+      {
+        rule: 'validation.duplicate',
+        args: ['foo'],
+      },
+      {
+        rule: 'validation.max_length',
+        args: ['10'],
+      },
+      {
+        rule: 'validation.length_equals',
+        args: ['5'],
+      },
+    ],
     translate: translateStub,
   },
 };

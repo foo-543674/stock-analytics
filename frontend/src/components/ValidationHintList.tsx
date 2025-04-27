@@ -1,15 +1,18 @@
 import { Translate } from '@/primitives/createTranslate';
-import { ValidationError } from '@/schemas/common/ValidationError';
+import {
+  ValidationConstraint,
+  ValidationRule,
+} from '@/schemas/common/ValidationError';
+import { format } from '@/utils/StringHelper';
 import { For } from 'solid-js';
 
-type ValidationHintKey = ValidationError['fields'][number]['keys'][number];
-
 export type ValidationHintListProps = Partial<{
-  keys: ValidationHintKey[];
+  fieldName: string;
+  constraints: ValidationConstraint[];
   translate: Translate;
 }>;
 
-const translateKeys: Record<ValidationHintKey, string> = {
+const translateKeys: Record<ValidationRule, string> = {
   'validation.required': 'validationRequired',
   'validation.duplicate': 'validationDuplicate',
   'validation.max_length': 'validationMaxLength',
@@ -20,12 +23,23 @@ const translateKeys: Record<ValidationHintKey, string> = {
 };
 
 export const ValidationHintList = (props: ValidationHintListProps) => {
+  const formatMessage = (constraint: ValidationConstraint) => {
+    const message = props.translate?.(translateKeys[constraint.rule]) ?? '';
+    return format(
+      message,
+      {
+        field: props.fieldName ?? 'field',
+      },
+      ...(constraint.args ?? []),
+    );
+  };
+
   return (
     <div>
-      <For each={props.keys}>
-        {key => (
+      <For each={props.constraints}>
+        {constraint => (
           <div role="alert" class="alert alert-error alert-soft py-1 px-4 m-1">
-            <span class="text-sm">{props.translate?.(translateKeys[key])}</span>
+            <span class="text-sm">{formatMessage(constraint)}</span>
           </div>
         )}
       </For>
