@@ -3,7 +3,11 @@ import { Translate } from '@/primitives/createTranslate';
 import { BrandRegisterFormInput } from '../types/BrandRegisterFormInput';
 import { Sector } from '@/schemas/brands/Sector';
 import { FloatingLabelInput } from '@/components/FloatingLabelInput';
-import { ValidationError } from '@/schemas/common/ValidationError';
+import {
+  getConstraints,
+  hasError,
+  ValidationError,
+} from '@/schemas/common/ValidationError';
 import { ValidationHintList } from '@/components/ValidationHintList';
 
 export type BrandRegisterFormProps = {
@@ -34,22 +38,19 @@ export const BrandRegisterForm = (props: BrandRegisterFormProps) => {
     });
   };
 
-  const hasError = (fieldName: string) => {
-    return (
-      props.validationError?.fields.some(f => f.name === fieldName) ?? false
-    );
-  };
-  const validationMessages = (fieldName: string) => {
-    const field = props.validationError?.fields.find(f => f.name === fieldName);
-    return field?.keys ?? [];
-  };
+  const hasValidationError = (fieldName: string) =>
+    props.validationError ? hasError(fieldName, props.validationError) : false;
+  const validationMessages = (fieldName: string) =>
+    props.validationError
+      ? getConstraints(fieldName, props.validationError)
+      : [];
 
   return (
     <div class="flex flex-col gap-4 items-stretch">
       <div class="w-full">
         <SelectBox
           class="w-64"
-          error={hasError('sector')}
+          error={hasValidationError('sector')}
           disabled={props.disabled}
           label={props.translate('brandRegisterFormInputSectorLabel')}
           value={props.input.sector?.id}
@@ -64,14 +65,15 @@ export const BrandRegisterForm = (props: BrandRegisterFormProps) => {
           }}
         />
         <ValidationHintList
-          keys={validationMessages('sector')}
+          fieldName="sector"
+          constraints={validationMessages('sector')}
           translate={props.translate}
         />
       </div>
       <div class="w-full">
         <FloatingLabelInput
           class="w-24"
-          error={hasError('code')}
+          error={hasValidationError('code')}
           disabled={props.disabled}
           minLength={4}
           maxLength={4}
@@ -87,13 +89,14 @@ export const BrandRegisterForm = (props: BrandRegisterFormProps) => {
           }}
         />
         <ValidationHintList
-          keys={validationMessages('code')}
+          fieldName="code"
+          constraints={validationMessages('code')}
           translate={props.translate}
         />
       </div>
       <div class="w-full">
         <FloatingLabelInput
-          error={hasError('name')}
+          error={hasValidationError('name')}
           disabled={props.disabled}
           class="w-full"
           medium
@@ -108,7 +111,8 @@ export const BrandRegisterForm = (props: BrandRegisterFormProps) => {
           }}
         />
         <ValidationHintList
-          keys={validationMessages('name')}
+          fieldName="name"
+          constraints={validationMessages('name')}
           translate={props.translate}
         />
       </div>

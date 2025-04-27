@@ -7,11 +7,11 @@
   "registerButtonLabel": "Register",
 
   "validationRequired": "{field} is required",
-  "validationDuplicate": "{value} already exists",
-  "validationMaxLength": "{field} must be at most {max} characters",
-  "validationLengthEqual": "{field} must be exactly {length} characters",
+  "validationDuplicate": "'{0}' already exists",
+  "validationMaxLength": "{field} must be at most {0} characters",
+  "validationLengthEquals": "{field} must be exactly {0} characters",
   "validationNumericOnly": "{field} must be a number",
-  "validationResourceNotFound": "{value} not found",
+  "validationResourceNotFound": "'{0}' not found",
   "validationUlid": "{field} must be a valid ULID",
 
   "selectSectorLabel": "Sector",

@@ -7,11 +7,11 @@
   "registerButtonLabel": "登録",
 
   "validationRequired": "{field}は必須です",
-  "validationDuplicate": "{value}は既に存在します",
+  "validationDuplicate": "「{value}」は既に存在します",
   "validationMaxLength": "{field}は最大{max}文字までです",
-  "validationLengthEqual": "{field}は{length}文字でなければなりません",
+  "validationLengthEquals": "{field}は{length}文字でなければなりません",
   "validationNumericOnly": "{field}は数字でなければなりません",
-  "validationResourceNotFound": "{value}が見つかりません",
+  "validationResourceNotFound": "「{value}」が見つかりません",
   "validationUlid": "{field}は有効なULIDでなければなりません",
 
   "selectSectorLabel": "セクター",

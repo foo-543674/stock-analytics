@@ -49,15 +49,38 @@ export const HasError: Story = {
       fields: [
         {
           name: 'sector',
-          keys: ['validation.required'],
+          constraints: [
+            {
+              rule: 'validation.required',
+              args: [],
+            },
+          ],
         },
         {
           name: 'code',
-          keys: ['validation.required', 'validation.max_length'],
+          constraints: [
+            {
+              rule: 'validation.required',
+              args: [],
+            },
+            {
+              rule: 'validation.length_equals',
+              args: ['4'],
+            },
+          ],
         },
         {
           name: 'name',
-          keys: ['validation.required'],
+          constraints: [
+            {
+              rule: 'validation.required',
+              args: [],
+            },
+            {
+              rule: 'validation.max_length',
+              args: ['100'],
+            },
+          ],
         },
       ],
     },
