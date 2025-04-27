@@ -5,6 +5,7 @@
   "optionAll": "All",
   "searchButtonLabel": "Search",
   "registerButtonLabel": "Register",
+  "cancelButtonLabel": "Cancel",
 
   "validationRequired": "{field} is required",
   "validationDuplicate": "'{0}' already exists",

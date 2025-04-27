@@ -16,8 +16,9 @@ export type BrandRegisterFormProps = {
   validationError: ValidationError | null;
   disabled?: boolean;
   translate: Translate;
-  onChange: (input: BrandRegisterFormInput) => void;
+  onChange?: (input: BrandRegisterFormInput) => void;
   onSubmit?: (input: BrandRegisterFormInput) => void;
+  onCancel?: () => void;
 };
 
 export const BrandRegisterForm = (props: BrandRegisterFormProps) => {
@@ -32,7 +33,7 @@ export const BrandRegisterForm = (props: BrandRegisterFormProps) => {
   ];
 
   const handleChange = (updated: Partial<BrandRegisterFormInput>) => {
-    props.onChange({
+    props.onChange?.({
       ...props.input,
       ...updated,
     });
@@ -116,13 +117,20 @@ export const BrandRegisterForm = (props: BrandRegisterFormProps) => {
           translate={props.translate}
         />
       </div>
-      <div class="self-center">
+      <div class="self-center space-x-2">
         <button
           class="btn btn-primary"
           disabled={props.disabled}
           onClick={() => props.onSubmit?.(props.input)}
         >
           {props.translate?.('registerButtonLabel')}
+        </button>
+        <button
+          class="btn btn-secondary"
+          disabled={props.disabled}
+          onClick={() => props.onCancel?.()}
+        >
+          {props.translate?.('cancelButtonLabel')}
         </button>
       </div>
     </div>

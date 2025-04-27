@@ -21,6 +21,7 @@ export const Default: Story = {
     translate: translateStub,
     onChange: fn(),
     onSubmit: fn(),
+    onCancel: fn(),
   },
 };
 
@@ -35,6 +36,7 @@ export const HasValue: Story = {
     translate: translateStub,
     onChange: fn(),
     onSubmit: fn(),
+    onCancel: fn(),
   },
 };
 
@@ -88,6 +90,7 @@ export const HasError: Story = {
     translate: translateStub,
     onChange: fn(),
     onSubmit: fn(),
+    onCancel: fn(),
   },
 };
 
@@ -103,5 +106,6 @@ export const Disabled: Story = {
     translate: translateStub,
     onChange: fn(),
     onSubmit: fn(),
+    onCancel: fn(),
   },
 };

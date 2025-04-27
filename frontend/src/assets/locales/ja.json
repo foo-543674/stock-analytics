@@ -5,6 +5,7 @@
   "optionAll": "全て",
   "searchButtonLabel": "検索",
   "registerButtonLabel": "登録",
+  "cancelButtonLabel": "キャンセル",
 
   "validationRequired": "{field}は必須です",
   "validationDuplicate": "「{value}」は既に存在します",
