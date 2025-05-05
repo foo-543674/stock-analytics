@@ -1,0 +1,49 @@
+services:
+  api:
+    image: rust:1.85.1-slim-bullseye
+    deploy:
+      resources:
+        limits:
+          cpus: "1"
+          memory: 1024M
+    working_dir: /usr/src/app
+    volumes:
+      - ${WORK_DIR}/api:/usr/src/app
+    env_file:
+      - ./api.env
+    ports:
+      - "8000"
+    command: >
+      cargo run
+
+  frontend:
+    image: node:22.14.0-bullseye-slim
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: 512M
+    working_dir: /usr/src/app
+    volumes:
+      - ${WORK_DIR}/frontend:/usr/src/app
+    env_file:
+      - ./frontend.env
+    ports:
+      - "5173"
+    command: >
+      npm run dev
+
+  nginx:
+    image: nginx:alpine
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: 512M
+    ports:
+      - "${FRONT_PORT:-8080}:8080"
+    volumes:
+      - ${WORK_DIR}/localexec/nginx:/etc/nginx/conf.d:ro
+    depends_on:
+      - api
+      - frontend

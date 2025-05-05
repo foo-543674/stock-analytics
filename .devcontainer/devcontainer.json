@@ -38,7 +38,8 @@
         "vadimcn.vscode-lldb",
         "dbaeumer.vscode-eslint",
         "bradlc.vscode-tailwindcss",
-        "clinyong.vscode-css-modules"
+        "clinyong.vscode-css-modules",
+        "william-voyek.vscode-nginx"
       ]
     }
   }

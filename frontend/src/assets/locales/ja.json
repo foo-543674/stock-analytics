@@ -3,8 +3,25 @@
   "brandPageLink": "銘柄",
   "loading": "読み込み中...",
   "optionAll": "全て",
+  "searchButtonLabel": "検索",
+  "registerButtonLabel": "登録",
+  "cancelButtonLabel": "キャンセル",
+
+  "validationRequired": "{field}は必須です",
+  "validationDuplicate": "「{value}」は既に存在します",
+  "validationMaxLength": "{field}は最大{max}文字までです",
+  "validationLengthEquals": "{field}は{length}文字でなければなりません",
+  "validationNumericOnly": "{field}は数字でなければなりません",
+  "validationResourceNotFound": "「{value}」が見つかりません",
+  "validationUlid": "{field}は有効なULIDでなければなりません",
+
   "selectSectorLabel": "セクター",
   "inputCodeLabel": "コード",
   "inputBrandNameLabel": "銘柄名",
-  "searchButtonLabel": "検索"
+  "brandRegisterFormInputCodeLabel": "コード",
+  "brandRegisterFormInputCodePlaceholder": "0000",
+  "brandRegisterFormInputNameLabel": "銘柄名",
+  "brandRegisterFormInputNamePlaceholder": "銘柄名を入力してください",
+  "brandRegisterFormInputSectorLabel": "セクター",
+  "brandRegisterFormInputSectorPlaceholder": "セクターを選択してください"
 }

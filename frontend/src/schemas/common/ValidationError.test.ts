@@ -7,7 +7,20 @@ describe('ValidationError', () => {
       fields: [
         {
           name: 'name',
-          keys: ['validation.required'],
+          constraints: [
+            {
+              rule: 'validation.required',
+              args: [],
+            },
+            {
+              rule: 'validation.duplicate',
+              args: [],
+            },
+            {
+              rule: 'validation.length_equals',
+              args: ['10'],
+            },
+          ],
         },
       ],
     };
@@ -17,7 +30,20 @@ describe('ValidationError', () => {
       fields: [
         {
           name: 'name',
-          keys: ['validation.required'],
+          constraints: [
+            {
+              rule: 'validation.required',
+              args: [],
+            },
+            {
+              rule: 'validation.duplicate',
+              args: [],
+            },
+            {
+              rule: 'validation.length_equals',
+              args: ['10'],
+            },
+          ],
         },
       ],
     });

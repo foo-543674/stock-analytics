@@ -21,3 +21,11 @@ reset:
 build_api_doc:
 	mkdir -p dist
 	npx swagger-merger -i openapi/stock-analytics.yaml -o dist/swagger.json
+
+.PHONY: local_run
+local_run:
+	docker-compose -f localexec/docker-compose.yaml up -d --build
+
+.PHONY: local_stop
+local_stop:
+	docker-compose -f localexec/docker-compose.yaml down
