@@ -16,7 +16,7 @@ async fn main() {
   let listener =
     tokio::net::TcpListener::bind(format!("{}:{}", config.server.host, config.server.port))
       .await
-      .expect(format!("Failed to bind to port {}", config.server.port).as_str());
+      .unwrap_or_else(|_| panic!("Failed to bind to port {}", config.server.port));
 
   tracing::info!(
     "Server started on {}:{}",

@@ -20,7 +20,7 @@ impl AppConfig {
           .required(true),
       )
       .add_source(
-        File::with_name(&format!("conf/{}", mode))
+        File::with_name(&format!("conf/{mode}"))
           .format(FileFormat::Toml)
           .required(false),
       )

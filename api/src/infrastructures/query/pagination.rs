@@ -29,8 +29,7 @@ impl ItemsPerPage {
   pub fn new(items_per_page: u32) -> Self {
     if items_per_page > MAX_ITEMS_PER_PAGE {
       panic!(
-        "Items per page must be less than or equal to {}",
-        MAX_ITEMS_PER_PAGE
+        "Items per page must be less than or equal to {MAX_ITEMS_PER_PAGE}",
       );
     }
 
